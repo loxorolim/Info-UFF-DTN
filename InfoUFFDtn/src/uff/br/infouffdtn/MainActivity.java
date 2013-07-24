@@ -46,7 +46,6 @@ public class MainActivity extends Activity
         setContentView(R.layout.main3);
         //mTextEid = (EditText)findViewById(R.id.editEid);
         editText = (TextView) findViewById(R.id.textView1);
-        editText2 = (TextView) findViewById(R.id.textView2);
         
         // assign an action to the ping button
         try
