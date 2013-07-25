@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.tubs.ibr.dtn.api.GroupEndpoint;
 import uff.br.infouffdtn.R;
@@ -30,10 +32,8 @@ public class MainActivity extends Activity
 	
     private InfoService mService = null;
     private boolean mBound = false;
-
-    //Teste do git numero 3 agora é o pull!!!!!!!!
-    //private EditText mTextEid = null;
-    //private TextView mResult = null;
+    private Timer timer;
+    
     int n = 0;
     private TextView editText;
     private TextView editText2;
@@ -46,6 +46,8 @@ public class MainActivity extends Activity
         setContentView(R.layout.main3);
         //mTextEid = (EditText)findViewById(R.id.editEid);
         editText = (TextView) findViewById(R.id.textView1);
+        timer = new Timer();
+        timer.schedule(new RemindTask(), 5*1000);
         
         // assign an action to the ping button
         try
@@ -143,6 +145,16 @@ public class MainActivity extends Activity
         // update the displayed result
         updateResult();
     }
+    class RemindTask extends TimerTask
+    {
+        public void run() 
+        {
+            ping();
+ //           timer.cancel(); //Terminate the timer thread
+            timer.schedule(new RemindTask(), 5*1000);
+        }
+    }
+   
 
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName name, IBinder service) {

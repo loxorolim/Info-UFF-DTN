@@ -48,6 +48,7 @@ public class InfoService extends IntentService {
     // indicates updated data to other components
     public static final String DATA_UPDATED = "uff.br.infouffdtn.DATA_UPDATED";
     public static final String PAYLOAD_UPDATED = "uff.br.infouffdtn.PAYLOAD_UPDATED";
+    public static final String REFRESH = "uff.br.infouffdtn.REFRESH";
     // group EID of this app
     public static final GroupEndpoint PING_GROUP_EID = new GroupEndpoint("dtn://broadcast.dtn/ping");
     
@@ -418,7 +419,8 @@ public class InfoService extends IntentService {
         		String[] contentStrings = payload.split(";");     		
         		Content contentReceived = new Content(contentStrings[0],contentStrings[1],contentStrings[2]);
         		ContentsDatabase.writeTest(contentReceived,InfoService.this);
-        		
+        		Intent i = new Intent(REFRESH);
+        		sendBroadcast(i);
         	}
         	catch(Exception e)
         	{
