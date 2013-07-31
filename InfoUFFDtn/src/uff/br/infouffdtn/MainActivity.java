@@ -8,6 +8,12 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
 import de.tubs.ibr.dtn.api.GroupEndpoint;
 import uff.br.infouffdtn.R;
 import android.app.Activity;
@@ -18,8 +24,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -37,15 +46,18 @@ public class MainActivity extends Activity
     int n = 0;
     private TextView editText;
     private TextView editText2;
+    private Uri uri;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	//remover depois
+    	ContentsDatabase.saveHTMLpage(this);
     	setTitle("Info UFF DTN");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main3);
         //mTextEid = (EditText)findViewById(R.id.editEid);
-        editText = (TextView) findViewById(R.id.textView1);
+//        editText = (TextView) findViewById(R.id.textView1);
         timer = new Timer();
         timer.schedule(new RemindTask(), 5*1000);
         
@@ -197,7 +209,12 @@ public class MainActivity extends Activity
     	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     	Date date = new Date();
     	String d = dateFormat.format(date);  
-    	
+
+    	//uri = ContentsDatabase.readHTMLpage(this);
+    	//Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+    	 //startActivity(intent);
+
+    
     	Content teste = new Content("Arquivo "+ String.valueOf(n++),d,"Mensagem 1 alow alow ! Testando a mensagem 1 é isso ae!");
     	Content teste2 = new Content("Arquivo" + String.valueOf(n++),d,"Mensagem 2 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHEEEEEEE");
     	Content teste3 = new Content("Arquivo"+ String.valueOf(n++),d,"Mensagem 3 TREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEES");
@@ -207,7 +224,9 @@ public class MainActivity extends Activity
     }
     private void ler() throws FileNotFoundException 
     {
+
     	ContentsDatabase.deleteAllArchives(this);
+    	
     }
     
     private void updateResult() {

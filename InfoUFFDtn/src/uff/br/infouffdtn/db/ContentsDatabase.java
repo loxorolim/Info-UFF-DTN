@@ -2,12 +2,16 @@ package uff.br.infouffdtn.db;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,6 +20,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 
 public class ContentsDatabase
 {
@@ -256,5 +261,59 @@ public class ContentsDatabase
 		}
 		return -1;
 	}
+	public static void saveHTMLpage(Context ctx)
+	{
+		Uri uri = Uri.parse("http://www.google.com");
+		try
+		{
+			FileOutputStream fOut = ctx.openFileOutput("URLpage",Context.MODE_PRIVATE);	            	            
+	        ObjectOutputStream oos = new ObjectOutputStream(fOut);
+	        byte[] uriSer = getBytes(uri);
+	        oos.writeObject(uriSer); 
+	        oos.flush();
+	        oos.close();
+		}
+		catch(Exception e)
+		{
+			System.out.print(e);
+		}
+	}
+	public static Uri readHTMLpage(Context ctx)
+	{
+		Uri uri = null;
+		try
+		{
+	        
+	        FileInputStream fIn = ctx.openFileInput ("URLpage");
+	        ObjectInputStream ois = new ObjectInputStream(fIn);
+	        byte[] uriSer = (byte[])(ois.readObject());
+	        uri = (Uri)deserialize(uriSer);	        
+	        ois.close();
+	        return uri;
+
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return uri;
+	}
+	public static byte[] getBytes(Object obj) throws java.io.IOException
+	{
+	      ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+	      ObjectOutputStream oos = new ObjectOutputStream(bos); 
+	      oos.writeObject(obj);
+	      oos.flush(); 
+	      oos.close(); 
+	      bos.close();
+	      byte [] data = bos.toByteArray();
+	      return data;
+	  }
+	public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException 
+	{
+        ByteArrayInputStream b = new ByteArrayInputStream(bytes);
+        ObjectInputStream o = new ObjectInputStream(b);
+        return o.readObject();
+    }
 	
 }
