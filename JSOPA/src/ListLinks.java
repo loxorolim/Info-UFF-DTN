@@ -5,7 +5,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Example program to list links from a URL.
@@ -16,6 +18,11 @@ public class ListLinks {
         String url = "http://www.ic.uff.br/index.php/pt/";
         print("Fetching %s...", url);
 
+        URL URL = new URL("http://www.ic.uff.br/index.php/pt/");
+        
+    	File File = new File("C:\\Users\\Gui\\Desktop\\arquivo.html");
+    	
+    	org.apache.commons.io.FileUtils.copyURLToFile(URL, File);
 //        org.apache.commons.io.FileUtils.copyURLToFile(URL, File)
         Document doc = Jsoup.connect(url).get();
         System.out.println(doc.html());
