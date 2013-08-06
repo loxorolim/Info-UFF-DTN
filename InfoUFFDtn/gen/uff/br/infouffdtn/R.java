@@ -21,7 +21,7 @@ public final class R {
         public static final int button4=0x7f050003;
         public static final int icon=0x7f050000;
         public static final int label=0x7f050001;
-        public static final int textView1=0x7f050007;
+        public static final int webView1=0x7f050007;
     }
     public static final class layout {
         public static final int displayactivitymenu=0x7f030000;

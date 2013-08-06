@@ -1,7 +1,9 @@
 package uff.br.infouffdtn;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,12 +25,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -69,6 +75,18 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View v) {
                 ping();
+                PackageManager m = getPackageManager();
+                String s = getPackageName();
+                try {
+                    PackageInfo p = m.getPackageInfo(s, 0);
+                    s = p.applicationInfo.dataDir;
+                } catch (NameNotFoundException e) {
+                    Log.w("yourtag", "Error Package name not found ", e);
+                }
+                Thread t = new Thread(new HtmlGetterThread(s));
+                t.start();
+                
+
             }
         });
         Button b2 = (Button)findViewById(R.id.button2);

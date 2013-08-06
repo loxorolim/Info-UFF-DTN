@@ -1,6 +1,8 @@
 package uff.br.infouffdtn;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.TimerTask;
 
 import org.apache.http.HttpResponse;
@@ -47,9 +49,21 @@ public class ShowContentActivity extends Activity
 	        super.onCreate(savedInstanceState);
 
 	        setContentView(R.layout.showcontentactivitymenu);
-	        editText = (TextView) findViewById(R.id.textView1);	
-	        HtmlGetterThread gt = new HtmlGetterThread(editText,this);
-	        new Thread(gt).start();
+	       // editText = (TextView) findViewById(R.id.textView1);	
+	        mWebview = (WebView) findViewById(R.id.webView1);
+	//        mWebview.getSettings().setJavaScriptEnabled(true);
+	        try
+	        {
+	        	mWebview.loadUrl("file:///data/data/uff.br.infouffdtn/arquivo.html");
+	        	
+	        }
+	        catch(Exception e)
+	        {
+	        	
+	        }
+	        //HtmlGetterThread gt = new HtmlGetterThread(mWebview,this);
+	       // new Thread(gt).start();
+	        
 	        
 
 	        
