@@ -52,9 +52,15 @@ public class ShowContentActivity extends Activity
 	       // editText = (TextView) findViewById(R.id.textView1);	
 	        mWebview = (WebView) findViewById(R.id.webView1);
 	//        mWebview.getSettings().setJavaScriptEnabled(true);
+	        Intent intent = getIntent();
+	        String archiveName = intent.getStringExtra("archiveName");
 	        try
 	        {
-	        	mWebview.loadUrl("file:///data/data/uff.br.infouffdtn/arquivo.html");
+	        	String payloadString = ContentsDatabase.readArchiveContentPayload(archiveName, this);
+	        	File AuxFile = new File("/data/data/uff.br.infouffdtn/arquivoHtmlAux");
+	        	org.apache.commons.io.FileUtils.writeStringToFile(AuxFile, payloadString);	        	
+	        	mWebview.loadUrl("file:///data/data/uff.br.infouffdtn/arquivoHtmlAux");
+	        //	mWebview.loadUrl(payloadString);
 	        	
 	        }
 	        catch(Exception e)

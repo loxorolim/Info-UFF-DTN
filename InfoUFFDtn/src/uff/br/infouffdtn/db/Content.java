@@ -1,5 +1,6 @@
 package uff.br.infouffdtn.db;
 
+import java.io.File;
 import java.util.Date;
 
 public class Content 
@@ -29,8 +30,8 @@ public class Content
 		return payload;
 	}
 
-	public void setPayload(String payload) {
-		this.payload = payload;
+	public void setPayload(String payload2) {
+		this.payload = payload2;
 	}
 
 	public String getDate() {

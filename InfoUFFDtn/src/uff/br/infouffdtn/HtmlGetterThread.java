@@ -3,11 +3,18 @@ package uff.br.infouffdtn;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import uff.br.infouffdtn.db.Content;
+import uff.br.infouffdtn.db.ContentsDatabase;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -19,17 +26,14 @@ import android.webkit.WebView;
 
 public class HtmlGetterThread implements Runnable
 {
-	private WebView webView;
-	private Activity activity;
+
 	private String path;
-	public HtmlGetterThread(WebView t, Activity ac)
-	{
-		webView = t;
-		activity = ac;
-	}
-	public HtmlGetterThread(String path)
+	private Context ctx;
+	
+	public HtmlGetterThread(String path,Context c)
 	{
 		this.path = path;
+		this.ctx = c;
 	}
 	@Override
 	public void run() 
@@ -37,43 +41,21 @@ public class HtmlGetterThread implements Runnable
         try
         {
         	URL URL = new URL("http://www.ic.uff.br/index.php/pt/");
-        	File File = new File(path + "/arquivo.html");
-        	
+        	File File = new File(path + "/arquivo.html");    	
         	org.apache.commons.io.FileUtils.copyURLToFile(URL, File);
-        	String k = File.getAbsolutePath();
-        	String x = " ";
+        	String fileString = org.apache.commons.io.FileUtils.readFileToString(File);
+        	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        	Date date = new Date();
+        	String d = dateFormat.format(date);
+        	Content newRecover = new Content("WebPage",d,fileString);
+        	ContentsDatabase.writeTest(newRecover, ctx);
         }
         catch(Exception e)
         {
         	Exception x = e;
         	
-        }
-     /*   Document doc;                                      
-        try {                                              
-            doc = Jsoup.connect("http://google.ca/").get();
-            String html = doc.html();           
-            
-            activity.runOnUiThread(new HtmlGetterThreadUI(webView,html));
-            
-            
-        } catch (IOException e) {                          
-            e.printStackTrace();                           
-        }    */                                              
+        }                                             
     } 
 }
-class HtmlGetterThreadUI implements Runnable
-{
-	private WebView webView;
-	private String html;
-	public HtmlGetterThreadUI(WebView t, String h)
-	{
-		webView = t;
-		html = h;
-	}
-	@Override
-	public void run() 
-	{                                      
-        webView.loadData(html, "text/html", "UTF-8");                                           
-    } 
-}
+
 

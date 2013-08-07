@@ -25,7 +25,7 @@ import android.net.Uri;
 public class ContentsDatabase
 {
     private static boolean[] avaiableArchivesNumbers = new boolean[30];
-	//PRECISA SALVAR ESTE VETOR EM UM ARQUIVO PARA NAO PERDER OS DADOS QUANDO RESETAR O CELULAR!!!!!!!
+
 	public static void writeTest(Content content,Context ctx) throws IOException
 	{ 
 		 loadAvaiableArchiveNumbers(ctx);
@@ -42,6 +42,7 @@ public class ContentsDatabase
 		            bwriter.newLine();	        
 		            bwriter.write(content.getDate().toString());
 		            bwriter.newLine();
+		            String x = content.getPayload();
 		            bwriter.write (content.getPayload());	            
 		            avaiableArchivesNumbers[archiveLocation] = true;
 		            saveAvaiableArchiveNumbers(ctx);
@@ -186,20 +187,28 @@ public class ContentsDatabase
 	        	{	        		
 	        		if(avaiableArchivesNumbers[i] && getArchiveName(i,ctx).equals(ArchiveName))
 	        		{
+	        			FileInputStream fIn = ctx.openFileInput (String.valueOf(i));
+			            InputStreamReader isr = new InputStreamReader(fIn) ;
+			            BufferedReader buffreader = new BufferedReader(isr) ;
 		        		try
 		        		{
-		        			FileInputStream fIn = ctx.openFileInput (String.valueOf(i));
-				            InputStreamReader isr = new InputStreamReader(fIn) ;
-				            BufferedReader buffreader = new BufferedReader(isr) ;
+		        			
 			        		buffreader.readLine();	
 			        		buffreader.readLine();	
-			        		ret = buffreader.readLine();	
-			 	            isr.close();			 	           
+			        		while(true)
+			        		{
+			        			ret += buffreader.readLine() +"\n";
+			        		}
+			 	            			 	           
 		        		}
 		        		catch(Exception e)
 		        		{
 		        			
 		        		}	
+		        		finally
+		        		{
+		        			isr.close();
+		        		}
 	        		}
 	        	}
 	        	
@@ -261,59 +270,4 @@ public class ContentsDatabase
 		}
 		return -1;
 	}
-	public static void saveHTMLpage(Context ctx)
-	{
-		Uri uri = Uri.parse("http://www.google.com");
-		try
-		{
-			FileOutputStream fOut = ctx.openFileOutput("URLpage",Context.MODE_PRIVATE);	            	            
-	        ObjectOutputStream oos = new ObjectOutputStream(fOut);
-	        byte[] uriSer = getBytes(uri);
-	        oos.writeObject(uriSer); 
-	        oos.flush();
-	        oos.close();
-		}
-		catch(Exception e)
-		{
-			System.out.print(e);
-		}
-	}
-	public static Uri readHTMLpage(Context ctx)
-	{
-		Uri uri = null;
-		try
-		{
-	        
-	        FileInputStream fIn = ctx.openFileInput ("URLpage");
-	        ObjectInputStream ois = new ObjectInputStream(fIn);
-	        byte[] uriSer = (byte[])(ois.readObject());
-	        uri = (Uri)deserialize(uriSer);	        
-	        ois.close();
-	        return uri;
-
-		}
-		catch(Exception e)
-		{
-			
-		}
-		return uri;
-	}
-	public static byte[] getBytes(Object obj) throws java.io.IOException
-	{
-	      ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
-	      ObjectOutputStream oos = new ObjectOutputStream(bos); 
-	      oos.writeObject(obj);
-	      oos.flush(); 
-	      oos.close(); 
-	      bos.close();
-	      byte [] data = bos.toByteArray();
-	      return data;
-	  }
-	public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException 
-	{
-        ByteArrayInputStream b = new ByteArrayInputStream(bytes);
-        ObjectInputStream o = new ObjectInputStream(b);
-        return o.readObject();
-    }
-	
 }

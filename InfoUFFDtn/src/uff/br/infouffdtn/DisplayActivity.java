@@ -47,7 +47,7 @@ public class DisplayActivity extends ListActivity
 		    String[] values =  ContentsDatabase.readAllArchivesNames(this);
 		    // Use your own layout
 		    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-		        R.layout.displayactivitymenu, R.id.label, values);
+		    R.layout.displayactivitymenu, R.id.label, values);
 		    setListAdapter(adapter);
 		    }
 		    catch(Exception e)

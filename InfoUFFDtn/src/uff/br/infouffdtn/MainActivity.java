@@ -48,24 +48,24 @@ public class MainActivity extends Activity
     private InfoService mService = null;
     private boolean mBound = false;
     private Timer timer;
+    private final int TIMETOFETCH = 10;
     
     int n = 0;
     private TextView editText;
     private TextView editText2;
-    private Uri uri;
+
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	//remover depois
-    	ContentsDatabase.saveHTMLpage(this);
+
     	setTitle("Info UFF DTN");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main3);
         //mTextEid = (EditText)findViewById(R.id.editEid);
 //        editText = (TextView) findViewById(R.id.textView1);
         timer = new Timer();
-        timer.schedule(new RemindTask(), 5*1000);
+        timer.schedule(new RemindTask(), TIMETOFETCH*1000);
         
         // assign an action to the ping button
         try
@@ -75,16 +75,7 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View v) {
                 ping();
-                PackageManager m = getPackageManager();
-                String s = getPackageName();
-                try {
-                    PackageInfo p = m.getPackageInfo(s, 0);
-                    s = p.applicationInfo.dataDir;
-                } catch (NameNotFoundException e) {
-                    Log.w("yourtag", "Error Package name not found ", e);
-                }
-                Thread t = new Thread(new HtmlGetterThread(s));
-                t.start();
+                
                 
 
             }
@@ -179,10 +170,24 @@ public class MainActivity extends Activity
     {
         public void run() 
         {
-            ping();
+            recoverWebPage();
  //           timer.cancel(); //Terminate the timer thread
-            timer.schedule(new RemindTask(), 5*1000);
+            timer.schedule(new RemindTask(), TIMETOFETCH*1000);
         }
+    }
+    public void recoverWebPage()
+    {
+    	PackageManager m = getPackageManager();
+        String s = getPackageName();
+        try {
+            PackageInfo p = m.getPackageInfo(s, 0);
+            s = p.applicationInfo.dataDir;
+        } catch (NameNotFoundException e) {
+            Log.w("yourtag", "Error Package name not found ", e);
+        }
+        Thread t = new Thread(new HtmlGetterThread(s,this));
+        t.start();
+    	
     }
    
 
@@ -233,12 +238,12 @@ public class MainActivity extends Activity
     	 //startActivity(intent);
 
     
-    	Content teste = new Content("Arquivo "+ String.valueOf(n++),d,"Mensagem 1 alow alow ! Testando a mensagem 1 é isso ae!");
-    	Content teste2 = new Content("Arquivo" + String.valueOf(n++),d,"Mensagem 2 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHEEEEEEE");
-    	Content teste3 = new Content("Arquivo"+ String.valueOf(n++),d,"Mensagem 3 TREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEES");
-    	ContentsDatabase.writeTest(teste,this);
-    	ContentsDatabase.writeTest(teste2,this);
-    	ContentsDatabase.writeTest(teste3,this);
+    	//Content teste = new Content("Arquivo "+ String.valueOf(n++),d,"Mensagem 1 alow alow ! Testando a mensagem 1 é isso ae!");
+        //ontent teste2 = new Content("Arquivo" + String.valueOf(n++),d,"Mensagem 2 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHEEEEEEE");
+    	//Content teste3 = new Content("Arquivo"+ String.valueOf(n++),d,"Mensagem 3 TREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEES");
+    	//ContentsDatabase.writeTest(teste,this);
+    	//ContentsDatabase.writeTest(teste2,this);
+    	//ContentsDatabase.writeTest(teste3,this);
     }
     private void ler() throws FileNotFoundException 
     {
