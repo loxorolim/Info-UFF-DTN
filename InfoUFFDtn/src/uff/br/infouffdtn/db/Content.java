@@ -9,7 +9,6 @@ public class Content
 	private String date;
 	private String payload;
 	
-	
 	public Content(String name,String date, String payload)
 	{
 		this.setName(name);

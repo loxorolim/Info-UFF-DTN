@@ -13,6 +13,9 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +35,7 @@ public class ContentsDatabase
 		 try 
 		 {			   
 		
-				int archiveLocation = getAvaiableArchiveNumber();
+				int archiveLocation = getAvaiableArchiveNumber(ctx);
 				if(archiveLocation!=-1)
 				{
 		            FileOutputStream fOut = ctx.openFileOutput(String.valueOf(archiveLocation),Context.MODE_PRIVATE);	            	            
@@ -47,8 +50,11 @@ public class ContentsDatabase
 		            avaiableArchivesNumbers[archiveLocation] = true;
 		            saveAvaiableArchiveNumbers(ctx);
 		            bwriter.flush();
-		            bwriter.close();
-		            
+		            bwriter.close();		        
+				}
+				else
+				{
+					
 				}
 	            
 
@@ -101,6 +107,47 @@ public class ContentsDatabase
 		        			FileInputStream fIn = ctx.openFileInput (String.valueOf(i));
 				            InputStreamReader isr = new InputStreamReader(fIn) ;
 				            BufferedReader buffreader = new BufferedReader(isr) ;
+			        		list.add(buffreader.readLine());	
+			 	            isr.close();			 	           
+		        		}
+		        		catch(Exception e)
+		        		{
+		        			
+		        		}	
+	        		}
+	        	}
+	                        
+	        } 
+	        catch (Exception e ) 
+	        {
+	            
+	        }
+	    String[] ret = new String[list.size()];
+	    for(int i = 0; i< list.size();i++)
+	    {
+	    	ret[i] = list.get(i);
+	    }
+		return ret;
+		
+	}
+	public static String[] readAllArchivesDates(Context ctx)
+	{
+	
+		 loadAvaiableArchiveNumbers(ctx);
+		 LinkedList<String> list = new LinkedList<String>();
+	        try 
+	        {
+	        	
+	        	for(int i = 0; i< avaiableArchivesNumbers.length;i++)
+	        	{
+	        		if(avaiableArchivesNumbers[i])
+	        		{
+		        		try
+		        		{
+		        			FileInputStream fIn = ctx.openFileInput (String.valueOf(i));
+				            InputStreamReader isr = new InputStreamReader(fIn) ;
+				            BufferedReader buffreader = new BufferedReader(isr) ;
+				            buffreader.readLine();
 			        		list.add(buffreader.readLine());	
 			 	            isr.close();			 	           
 		        		}
@@ -185,7 +232,7 @@ public class ContentsDatabase
 	        {	        	
 	        	for(int i = 0; i< avaiableArchivesNumbers.length;i++)
 	        	{	        		
-	        		if(avaiableArchivesNumbers[i] && getArchiveName(i,ctx).equals(ArchiveName))
+	        		if(avaiableArchivesNumbers[i] && getArchiveDate(i,ctx).equals(ArchiveName))
 	        		{
 	        			FileInputStream fIn = ctx.openFileInput (String.valueOf(i));
 			            InputStreamReader isr = new InputStreamReader(fIn) ;
@@ -195,10 +242,13 @@ public class ContentsDatabase
 		        			
 			        		buffreader.readLine();	
 			        		buffreader.readLine();	
-			        		while(true)
+			        		String lineRead;
+			        		while((lineRead = buffreader.readLine()) != null)
 			        		{
-			        			ret += buffreader.readLine() +"\n";
+			        			ret += lineRead +"\n";
 			        		}
+			        		String x = ret;
+			        		String end = "";
 			 	            			 	           
 		        		}
 		        		catch(Exception e)
@@ -238,6 +288,27 @@ public class ContentsDatabase
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        		
+		return ret;
+	}
+	public static String getArchiveDate(int pos, Context ctx)
+	{
+		String ret = "";		
+		try 
+		{
+			FileInputStream fIn;
+			fIn = ctx.openFileInput (String.valueOf(pos));
+			InputStreamReader isr = new InputStreamReader(fIn) ;
+	        BufferedReader buffreader = new BufferedReader(isr) ;
+	        buffreader.readLine();
+			ret = buffreader.readLine();	
+	        isr.close();
+		} 
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
 		
 		return ret;
@@ -258,16 +329,53 @@ public class ContentsDatabase
 		saveAvaiableArchiveNumbers(ctx);
 		
 	}
-	public static int getAvaiableArchiveNumber()
+	public static int getAvaiableArchiveNumber(Context ctx)
 	{
-		
+		String date = null;
+		int olderDatePosition = -1;
 		for(int i = 0; i<30;i++)
 		{
 			if(!avaiableArchivesNumbers[i])
 			{
 				return i;
 			}
+			else
+			{
+				String archiveDate = getArchiveDate(i,ctx);
+				if(dateComparison(date,archiveDate))
+				{
+					date = archiveDate;
+					olderDatePosition = i;
+				}
+			}
 		}
-		return -1;
+		return olderDatePosition;
+	}
+	private static boolean dateComparison(String date1,String date2)
+	{
+		if(date1 == null)
+		{
+			return true;
+		}
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    	Date d1 = new Date();
+    	Date d2 = new Date();
+    	try
+    	{
+    		d1 = dateFormat.parse(date1);
+    		d2 = dateFormat.parse(date2);
+    		if(d1.after(d2))
+    		{
+    			return true;
+    		}
+    		return false;
+    	}
+    	catch(Exception e)
+    	{
+    		
+    	}
+    	
+		return false;
+		
 	}
 }

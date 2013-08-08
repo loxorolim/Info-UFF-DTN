@@ -15,7 +15,6 @@ import org.jsoup.nodes.Document;
 
 import uff.br.infouffdtn.MainActivity.RemindTask;
 import uff.br.infouffdtn.db.ContentsDatabase;
-import uff.br.infouffdtn.db.WebCollector;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
