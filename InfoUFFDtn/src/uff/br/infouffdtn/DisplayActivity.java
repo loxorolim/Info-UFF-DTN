@@ -48,7 +48,7 @@ public class DisplayActivity extends ListActivity
 	  }
 	  private void showContents()
 	  {
-		  ImageView icon = (ImageView)findViewById(R.id.icon);
+//		  ImageView icon = (ImageView)findViewById(R.id.icon);
 		  try
 		    {
 		    String[] values =  ContentsDatabase.readAllArchivesDates(this);	
@@ -75,7 +75,7 @@ public class DisplayActivity extends ListActivity
 	    	  
 	    	  for(int j = i+1; j< values.length; j++)
 	    	  {
-	    		  
+	    		  di = dateFormat.parse(values[i]);
 	    		  dj = dateFormat.parse(values[j]);
 	    		  if(dj.after(di))
 	    		  {
