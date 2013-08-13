@@ -40,7 +40,8 @@ public class HtmlGetterThread implements Runnable
 	{
         try
         {
-        	URL URL = new URL("http://www.ic.uff.br/index.php/pt/");
+        	//URL URL = new URL("http://www.ic.uff.br/index.php/pt/");
+        	URL URL = new URL("http://www.9gag.com");
         	File File = new File(path + "/arquivo.html");    	
         	org.apache.commons.io.FileUtils.copyURLToFile(URL, File);
         	String fileString = org.apache.commons.io.FileUtils.readFileToString(File);
@@ -49,6 +50,7 @@ public class HtmlGetterThread implements Runnable
         	String d = dateFormat.format(date);
         	Content newRecover = new Content("WebPage",d,fileString);
         	ContentsDatabase.writeTest(newRecover, ctx);
+        	
         }
         catch(Exception e)
         {

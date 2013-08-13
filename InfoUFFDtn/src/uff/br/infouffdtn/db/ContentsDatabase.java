@@ -50,7 +50,9 @@ public class ContentsDatabase
 		            avaiableArchivesNumbers[archiveLocation] = true;
 		            saveAvaiableArchiveNumbers(ctx);
 		            bwriter.flush();
-		            bwriter.close();		        
+		            bwriter.close();	
+		            
+		            
 				}
 				else
 				{

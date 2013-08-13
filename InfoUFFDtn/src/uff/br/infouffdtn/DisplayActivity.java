@@ -54,8 +54,11 @@ public class DisplayActivity extends ListActivity
 		    String[] values =  ContentsDatabase.readAllArchivesDates(this);	
 		    sortByDate(values);
 		    // Use your own layout
-		    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-		    R.layout.displayactivitymenu, R.id.label, values);
+		    //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		    //R.layout.displayactivitymenu, R.id.label, values);
+		    DisplayAdapter adapter = new DisplayAdapter(this,values);
+				    
+		    
 		    
 		    setListAdapter(adapter);
 		    }
