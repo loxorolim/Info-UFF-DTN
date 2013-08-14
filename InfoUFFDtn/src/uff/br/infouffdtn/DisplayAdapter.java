@@ -1,6 +1,7 @@
 package uff.br.infouffdtn;
 
 
+import uff.br.infouffdtn.db.ContentsDatabase;
 import android.content.Context;
 import android.graphics.Color;
 //import android.graphics.Color;
@@ -27,17 +28,25 @@ public class DisplayAdapter extends ArrayAdapter<String> {
     View rowView = inflater.inflate(R.layout.displayactivitymenu, parent, false);
     TextView textView = (TextView) rowView.findViewById(R.id.label);
     ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+    ImageView imageView2 = (ImageView) rowView.findViewById(R.id.icon2);
     textView.setText(values[position]);
-    // Change the icon for Windows and iPhone
 
 
-    
+    if(ContentsDatabase.getSourceFromDate(values[position], context))
+    {
+    	imageView2.setImageResource(R.drawable.wifipacket);
+    }
+    else
+    {
+    	imageView2.setImageResource(R.drawable.dtnpacket);
+    }
     imageView.setImageResource(R.drawable.square);
     imageView.setAlpha(1);
-
+ 
     float percent = (float)position/(float)values.length;
     imageView.setBackgroundColor((int)interpolateColor(Color.GREEN,Color.RED,percent));
-    //imageView.setBackgroundColor(color.BLACK);
+    
+
 
     return rowView;
   }

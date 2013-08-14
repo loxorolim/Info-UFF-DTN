@@ -27,6 +27,7 @@ import android.graphics.Picture;
 import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.text.Html;
+import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -50,6 +51,10 @@ public class ShowContentActivity extends Activity
 	        setContentView(R.layout.showcontentactivitymenu);
 	       // editText = (TextView) findViewById(R.id.textView1);	
 	        mWebview = (WebView) findViewById(R.id.webView1);
+	        mWebview.setClickable(false);
+	        mWebview.getSettings().setDefaultZoom(ZoomDensity.FAR);
+	        mWebview.getSettings().setBuiltInZoomControls(true);
+            mWebview.getSettings().setSupportZoom(true);
 	//        mWebview.getSettings().setJavaScriptEnabled(true);
 	        Intent intent = getIntent();
 	        String archiveName = intent.getStringExtra("archiveName");

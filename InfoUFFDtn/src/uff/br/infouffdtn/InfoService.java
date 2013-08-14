@@ -157,7 +157,7 @@ public class InfoService extends IntentService {
     	Date date = new Date();
     	String d = dateFormat.format(date);  
     	
-    	Content content = new Content("A", d, "Olá, estou enviando um content dentro do payload!");
+    	Content content = new Content("A", d,true, "Olá, estou enviando um content dentro do payload!");
     	try
     	{
     		System.out.print(content.toString());
@@ -417,10 +417,9 @@ public class InfoService extends IntentService {
 
         		String payload = new String(data, "UTF-8");
         		String[] contentStrings = payload.split(";");     		
-        		Content contentReceived = new Content(contentStrings[0],contentStrings[1],contentStrings[2]);
+        		Content contentReceived = new Content(contentStrings[0],contentStrings[1],false,contentStrings[2]);
         		ContentsDatabase.writeTest(contentReceived,InfoService.this);
-        		Intent i = new Intent(REFRESH);
-        		sendBroadcast(i);
+
         	}
         	catch(Exception e)
         	{

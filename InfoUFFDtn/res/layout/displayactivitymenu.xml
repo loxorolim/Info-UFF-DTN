@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="100px"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="4px"
-        android:layout_marginRight="10px"
-        android:layout_marginTop="4px"
+        android:layout_width="64dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:src="@drawable/ic_launcher"
         android:visibility="visible" >
     </ImageView>
 
     <TextView
         android:id="@+id/label"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_width="180dp"
+        android:layout_height="80dp"
+        android:layout_alignBaseline="@+id/icon"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/icon"
+        android:gravity="center"
         android:text="@+id/label"
-        android:textSize="50px"
+        android:textSize="30sp"
         android:visibility="visible" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/icon2"
+        android:layout_width="64dp"
+        android:layout_height="80dp"
+        android:layout_alignBaseline="@+id/icon"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/label"
+        android:src="@drawable/ic_launcher"
+        android:visibility="visible" />
+
+</RelativeLayout>

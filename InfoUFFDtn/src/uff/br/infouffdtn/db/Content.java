@@ -7,13 +7,16 @@ public class Content
 {
 	private String name;
 	private String date;
+	private boolean fromWifi; //true = wifi false = dtn
 	private String payload;
 	
-	public Content(String name,String date, String payload)
+	
+	public Content(String name,String date,boolean commSource,String payload)
 	{
 		this.setName(name);
 		this.setDate(date);	
 		this.setPayload(payload);
+		this.setCommSource(commSource);
 
 	}
 
@@ -45,6 +48,14 @@ public class Content
 	{
 		return name + ";" + date + ";" + payload;
 		
+	}
+
+	public boolean isCommSource() {
+		return fromWifi;
+	}
+
+	public void setCommSource(boolean commSource) {
+		this.fromWifi = commSource;
 	}
 
 }

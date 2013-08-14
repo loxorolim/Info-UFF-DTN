@@ -23,12 +23,13 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 
-public class ContentsDatabase
+public class ContentsDatabase extends Activity
 {
     private static boolean[] avaiableArchivesNumbers = new boolean[30];
-
+    private static final String REFRESH = "uff.br.infouffdtn.REFRESH";
 	public static void writeTest(Content content,Context ctx) throws IOException
 	{ 
 		 loadAvaiableArchiveNumbers(ctx);
@@ -45,12 +46,15 @@ public class ContentsDatabase
 		            bwriter.newLine();	        
 		            bwriter.write(content.getDate().toString());
 		            bwriter.newLine();
-		            String x = content.getPayload();
-		            bwriter.write (content.getPayload());	            
+		            bwriter.write (Boolean.toString(content.isCommSource()));
+		            bwriter.newLine();
+		            bwriter.write (content.getPayload());			            
 		            avaiableArchivesNumbers[archiveLocation] = true;
 		            saveAvaiableArchiveNumbers(ctx);
 		            bwriter.flush();
-		            bwriter.close();	
+		            bwriter.close();
+		            Intent i = new Intent(REFRESH);
+	        		ctx.sendBroadcast(i);
 		            
 		            
 				}
@@ -226,7 +230,7 @@ public class ContentsDatabase
 		
 	}
 	
-	public static String readArchiveContentPayload(String ArchiveName, Context ctx)
+	public static String readArchiveContentPayload(String ArchiveDate, Context ctx)
 	{
 		    loadAvaiableArchiveNumbers(ctx);
 			String ret = "";
@@ -234,7 +238,7 @@ public class ContentsDatabase
 	        {	        	
 	        	for(int i = 0; i< avaiableArchivesNumbers.length;i++)
 	        	{	        		
-	        		if(avaiableArchivesNumbers[i] && getArchiveDate(i,ctx).equals(ArchiveName))
+	        		if(avaiableArchivesNumbers[i] && getArchiveDate(i,ctx).equals(ArchiveDate))
 	        		{
 	        			FileInputStream fIn = ctx.openFileInput (String.valueOf(i));
 			            InputStreamReader isr = new InputStreamReader(fIn) ;
@@ -244,6 +248,7 @@ public class ContentsDatabase
 		        			
 			        		buffreader.readLine();	
 			        		buffreader.readLine();	
+			        		buffreader.readLine();
 			        		String lineRead;
 			        		while((lineRead = buffreader.readLine()) != null)
 			        		{
@@ -292,6 +297,49 @@ public class ContentsDatabase
 		}
         		
 		return ret;
+	}
+	public static boolean getSourceFromDate(String ArchiveDate, Context ctx)
+	{
+		    loadAvaiableArchiveNumbers(ctx);
+
+	        try 
+	        {	        	
+	        	for(int i = 0; i< avaiableArchivesNumbers.length;i++)
+	        	{	        		
+	        		if(avaiableArchivesNumbers[i] && getArchiveDate(i,ctx).equals(ArchiveDate))
+	        		{
+	        			FileInputStream fIn = ctx.openFileInput (String.valueOf(i));
+			            InputStreamReader isr = new InputStreamReader(fIn) ;
+			            BufferedReader buffreader = new BufferedReader(isr) ;
+		        		try
+		        		{
+		        			
+			        		buffreader.readLine();	
+			        		buffreader.readLine();	
+			        		
+			        		String commSrc = buffreader.readLine();
+			        		return Boolean.valueOf(commSrc);
+			 	            			 	           
+		        		}
+		        		catch(Exception e)
+		        		{
+		        			
+		        		}	
+		        		finally
+		        		{
+		        			isr.close();
+		        		}
+	        		}
+	        	}
+	        	
+	                        
+	        } 
+	        catch (Exception e ) 
+	        {
+	            
+	        }
+		return true;
+		
 	}
 	public static String getArchiveDate(int pos, Context ctx)
 	{
