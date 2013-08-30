@@ -2,8 +2,8 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/TableLayout1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
+    android:layout_height="match_parent" 
+	android:background="@drawable/wifipacket">
     <Button
         android:id="@+id/button4"
         android:layout_width="wrap_content"
@@ -28,5 +28,10 @@
         android:layout_height="wrap_content"
         android:text="DeletarTudo" />
 
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh" />
 
 </TableLayout>

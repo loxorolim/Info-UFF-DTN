@@ -13,7 +13,6 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import uff.br.infouffdtn.MainActivity.RemindTask;
 import uff.br.infouffdtn.db.ContentsDatabase;
 import android.app.Activity;
 import android.content.Context;
@@ -36,49 +35,45 @@ import android.widget.TextView;
 //Classe responsável por abrir o conteúdo de um Content quando selecionado
 public class ShowContentActivity extends Activity
 {
-	  private Context ctx;
-	  private TextView editText;
-	  private WebView mWebview;
-	  private ImageView imageView;
-	  private static String html;
-	  
-	  Bitmap bm;
-	  @Override
-	  public void onCreate(Bundle savedInstanceState)
-	  {
-	        super.onCreate(savedInstanceState);
+	private Context ctx;
+	private TextView editText;
+	private WebView mWebview;
+	private ImageView imageView;
+	private static String html;
 
-	        setContentView(R.layout.showcontentactivitymenu);
-	       // editText = (TextView) findViewById(R.id.textView1);	
-	        mWebview = (WebView) findViewById(R.id.webView1);
-	        mWebview.setClickable(false);
-	        mWebview.getSettings().setDefaultZoom(ZoomDensity.FAR);
-	        mWebview.getSettings().setBuiltInZoomControls(true);
-            mWebview.getSettings().setSupportZoom(true);
-	//        mWebview.getSettings().setJavaScriptEnabled(true);
-	        Intent intent = getIntent();
-	        String archiveName = intent.getStringExtra("archiveName");
-	        try
-	        {
-	        	String payloadString = ContentsDatabase.readArchiveContentPayload(archiveName, this);
-	        	File AuxFile = new File("/data/data/uff.br.infouffdtn/arquivoHtmlAux");
-	        	org.apache.commons.io.FileUtils.writeStringToFile(AuxFile, payloadString);	        	
-	        	mWebview.loadUrl("file:///data/data/uff.br.infouffdtn/arquivoHtmlAux");
-	        //	mWebview.loadUrl(payloadString);
-	        	
-	        }
-	        catch(Exception e)
-	        {
-	        	
-	        }
-	        //HtmlGetterThread gt = new HtmlGetterThread(mWebview,this);
-	       // new Thread(gt).start();
-	        
-	        
+	Bitmap bm;
 
-	        
-	  }
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
+		setContentView(R.layout.showcontentactivitymenu);
+		// editText = (TextView) findViewById(R.id.textView1);
+		mWebview = (WebView) findViewById(R.id.webView1);
+		mWebview.setClickable(false);
+		mWebview.getSettings().setDefaultZoom(ZoomDensity.FAR);
+		mWebview.getSettings().setBuiltInZoomControls(true);
+		mWebview.getSettings().setSupportZoom(true);
+		// mWebview.getSettings().setJavaScriptEnabled(true);
+		Intent intent = getIntent();
+		String archiveName = intent.getStringExtra("archiveName");
+		try
+		{
+			String payloadString = ContentsDatabase.readArchiveContentPayload(archiveName, this);
+			File AuxFile = new File("/data/data/uff.br.infouffdtn/arquivoHtmlAux");
+			org.apache.commons.io.FileUtils.writeStringToFile(AuxFile, payloadString);
+			mWebview.loadUrl("file:///data/data/uff.br.infouffdtn/arquivoHtmlAux");
+			// mWebview.loadUrl(payloadString);
 
+		}
+		catch (Exception e)
+		{
+
+		}
+		// HtmlGetterThread gt = new HtmlGetterThread(mWebview,this);
+		// new Thread(gt).start();
+
+	}
 
 }

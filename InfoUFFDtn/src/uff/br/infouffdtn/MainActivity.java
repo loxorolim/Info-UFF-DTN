@@ -44,244 +44,309 @@ import uff.br.infouffdtn.db.*;
 
 public class MainActivity extends Activity
 {
-	
-    private InfoService mService = null;
-    private boolean mBound = false;
-    private Timer timer;
-    private final int TIMETOFETCH = 10;
-    
-    int n = 0;
-    private TextView editText;
-    private TextView editText2;
 
-	
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+	private InfoService mService = null;
+	private boolean mBound = false;
+	private Timer timerFetch;
+	private Timer timerShare;
+	private final int TIMETOFETCH = 10;
+	private final int TIMETOSHARE = 10;
+	int n = 0;
+	private TextView editText;
 
-    	setTitle("Info UFF DTN");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main3);
-        //mTextEid = (EditText)findViewById(R.id.editEid);
-//        editText = (TextView) findViewById(R.id.textView1);
-        timer = new Timer();
-        timer.schedule(new RemindTask(), TIMETOFETCH*1000);
-        
-        // assign an action to the ping button
-        try
-        {
-        Button b = (Button)findViewById(R.id.button1);
-        b.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ping();
-                
-                
-
-            }
-        });
-        Button b2 = (Button)findViewById(R.id.button2);
-        b2.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try
-                {
-					save();
-				} 
-                catch (IOException e)
-                {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            }
-        });
-        Button b3 = (Button)findViewById(R.id.button3);
-        b3.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) 
-            {
-                try 
-                {
-					ler();
-				} 
-                catch (FileNotFoundException e) 
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            }
-        });
-        Button b4 = (Button)findViewById(R.id.button4);
-        b4.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) 
-            {
-                	Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
-                	startActivity(intent);         
-            }
-        });
-        }
-        catch(Exception e)
-        {
-        	
-        }
-    }
-    
+	/** Called when the activity is first created. */
 	@Override
-	protected void onDestroy() {
-        // unbind from service
-        if (mBound) {
-            // unbind from the PingService
-            unbindService(mConnection);
-            mBound = false;
-        }
-        
+	public void onCreate(Bundle savedInstanceState)
+	{
+
+		setTitle("Info UFF DTN");
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main3);
+		// mTextEid = (EditText)findViewById(R.id.editEid);
+		// editText = (TextView) findViewById(R.id.textView1);
+		timerFetch = new Timer();
+		timerFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
+		timerShare = new Timer();
+		timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
+
+		// assign an action to the ping button
+		try
+		{
+			Button b = (Button) findViewById(R.id.button1);
+			b.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					alertServiceToSend();
+
+				}
+			});
+			Button b2 = (Button) findViewById(R.id.button2);
+			b2.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					try
+					{
+						save();
+					}
+					catch (IOException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+			Button b3 = (Button) findViewById(R.id.button3);
+			b3.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					try
+					{
+						ler();
+					}
+					catch (FileNotFoundException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+			Button b4 = (Button) findViewById(R.id.button4);
+			b4.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
+					startActivity(intent);
+				}
+			});
+			Button b5 = (Button) findViewById(R.id.button5);
+			b5.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					try
+					{
+						alertServiceToSend();
+					}
+					catch (Exception e)
+					{
+
+					}
+				}
+			});
+		}
+		catch (Exception e)
+		{
+
+		}
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		// unbind from service
+		if (mBound)
+		{
+			// unbind from the PingService
+			unbindService(mConnection);
+			mBound = false;
+		}
+
 		super.onDestroy();
 	}
-	
-    @Override
-    protected void onPause() {
-        super.onPause();
-        
-        // unregister the receiver for the DATA_UPDATED intent
-        unregisterReceiver(mDataReceiver);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        
-        if (!mBound) {
-            // bind to the PingService
-            bindService(new Intent(this, InfoService.class), mConnection, Context.BIND_AUTO_CREATE);
-            mBound = true;
-        }
-        
-        // register an receiver for DATA_UPDATED intent generated by the PingService
-        //IntentFilter filter = new IntentFilter(InfoService.DATA_UPDATED);
-        //registerReceiver(mDataReceiver, filter);
-        IntentFilter filter = new IntentFilter(InfoService.PAYLOAD_UPDATED);
-        registerReceiver(mDataReceiver, filter);
-        
-        // update the displayed result
-        updateResult();
-    }
-    class RemindTask extends TimerTask
-    {
-        public void run() 
-        {
-            recoverWebPage();
- //           timer.cancel(); //Terminate the timer thread
-            timer.schedule(new RemindTask(), TIMETOFETCH*1000);
-        }
-    }
-    public void recoverWebPage()
-    {
-    	PackageManager m = getPackageManager();
-        String s = getPackageName();
-        try {
-            PackageInfo p = m.getPackageInfo(s, 0);
-            s = p.applicationInfo.dataDir;
-        } catch (NameNotFoundException e) {
-            Log.w("yourtag", "Error Package name not found ", e);
-        }
-        Thread t = new Thread(new HtmlGetterThread(s,this));
-        t.start();
-    	
-    }
-   
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mService = ((InfoService.LocalBinder)service).getService();
-        }
+		// unregister the receiver for the DATA_UPDATED intent
+		unregisterReceiver(mDataReceiver);
+	}
 
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-        }
-    };
-    
-    private void ping() {
-    	try
-    	{
-    		
-    	
-        Intent i = new Intent(this, InfoService.class);
-        i.setAction(InfoService.PING_INTENT);
-        
-        //i.putExtra("destination", mTextEid.getText().toString());
-        //i.putExtra("destination", "dtn://androidRolim/example-app");
-        
-        //i.putExtra("destination", "dtn://broadcast.dtn/ping/echo");
-        
-        startService(i);
-         i = new Intent(this, InfoService.class);
-       // i.setAction(InfoService.PING_INTENT);
-        
-        //i.putExtra("destination", mTextEid.getText().toString());
-       // i.putExtra("destination", "dtn://androidRolim");
-     //   startService(i);
-    	}
-    	catch(Exception e)
-    	{
-    		
-    	}
-   }
-    private void save() throws IOException
-    {
-    	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    	Date date = new Date();
-    	String d = dateFormat.format(date);  
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
 
-    	//uri = ContentsDatabase.readHTMLpage(this);
-    	//Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-    	 //startActivity(intent);
+		if (!mBound)
+		{
+			// bind to the PingService
+			bindService(new Intent(this, InfoService.class), mConnection, Context.BIND_AUTO_CREATE);
+			mBound = true;
+		}
 
-    
-    	//Content teste = new Content("Arquivo "+ String.valueOf(n++),d,"Mensagem 1 alow alow ! Testando a mensagem 1 é isso ae!");
-        //ontent teste2 = new Content("Arquivo" + String.valueOf(n++),d,"Mensagem 2 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHEEEEEEE");
-    	//Content teste3 = new Content("Arquivo"+ String.valueOf(n++),d,"Mensagem 3 TREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEES");
-    	//ContentsDatabase.writeTest(teste,this);
-    	//ContentsDatabase.writeTest(teste2,this);
-    	//ContentsDatabase.writeTest(teste3,this);
-    }
-    private void ler() throws FileNotFoundException 
-    {
+		// register an receiver for DATA_UPDATED intent generated by the
+		// PingService
+		// IntentFilter filter = new IntentFilter(InfoService.DATA_UPDATED);
+		// registerReceiver(mDataReceiver, filter);
+		IntentFilter filter = new IntentFilter(InfoService.PAYLOAD_UPDATED);
+		registerReceiver(mDataReceiver, filter);
 
-    	ContentsDatabase.deleteAllArchives(this);
-    	
-    }
-    
-    private void updateResult() {
-        runOnUiThread(new Runnable() {
-            public void run()
-            {
-                if (mService != null) {
-                    //Resources res = getResources();
-                    //String text = String.format(res.getString(R.string.resultText), mService.getPayload());
-                    //editText.setText(mService.getPayload());
-                }
-            }
-        });
-    }
-    
-    private BroadcastReceiver mDataReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            /*if (intent.hasExtra("localeid")) {
-                //mTextEid.setText( intent.getStringExtra("localeid") + "/echo" );
-                
-            } else {
-                // update the displayed result
-                updateResult();
-            }*/
-        	if (intent.hasExtra("payload")) {
-        		editText.setText(intent.getStringExtra("payload"));
-            
-        	} else {
-            // update the displayed result
-            updateResult();
-        	}
-        }
-    };
+		// update the displayed result
+		updateResult();
+	}
+
+	class FetchTask extends TimerTask
+	{
+		public void run()
+		{
+			recoverWebPage();
+			// timer.cancel(); //Terminate the timer thread
+			timerFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
+		}
+	}
+
+	class ShareTask extends TimerTask
+	{
+		public void run()
+		{
+			try
+			{
+				alertServiceToSend();
+			}
+			catch (Exception e)
+			{
+
+			}
+			// timer.cancel(); //Terminate the timer thread
+			timerFetch.schedule(new FetchTask(), TIMETOSHARE * 1000);
+		}
+	}
+
+	public void recoverWebPage()
+	{
+		PackageManager m = getPackageManager();
+		String s = getPackageName();
+		try
+		{
+			PackageInfo p = m.getPackageInfo(s, 0);
+			s = p.applicationInfo.dataDir;
+		}
+		catch (NameNotFoundException e)
+		{
+			Log.w("yourtag", "Error Package name not found ", e);
+		}
+		Thread t = new Thread(new HtmlGetterThread(s, this));
+		t.start();
+
+	}
+
+	private ServiceConnection mConnection = new ServiceConnection()
+	{
+		public void onServiceConnected(ComponentName name, IBinder service)
+		{
+			mService = ((InfoService.LocalBinder) service).getService();
+		}
+
+		public void onServiceDisconnected(ComponentName name)
+		{
+			mService = null;
+		}
+	};
+
+	private void alertServiceToSend()
+	{
+		try
+		{
+
+			Intent i = new Intent(this, InfoService.class);
+			i.setAction(InfoService.SEND_CONTENT_INTENT);
+
+			// i.putExtra("destination", mTextEid.getText().toString());
+			// i.putExtra("destination", "dtn://androidRolim/example-app");
+
+			// i.putExtra("destination", "dtn://broadcast.dtn/ping/echo");
+
+			startService(i);
+			i = new Intent(this, InfoService.class);
+			// i.setAction(InfoService.PING_INTENT);
+
+			// i.putExtra("destination", mTextEid.getText().toString());
+			// i.putExtra("destination", "dtn://androidRolim");
+			// startService(i);
+		}
+		catch (Exception e)
+		{
+
+		}
+	}
+
+	private void save() throws IOException
+	{
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = new Date();
+		String d = dateFormat.format(date);
+
+		// uri = ContentsDatabase.readHTMLpage(this);
+		// Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		// startActivity(intent);
+
+		// Content teste = new Content("Arquivo "+
+		// String.valueOf(n++),d,"Mensagem 1 alow alow ! Testando a mensagem 1 é isso ae!");
+		// ontent teste2 = new Content("Arquivo" +
+		// String.valueOf(n++),d,"Mensagem 2 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHEEEEEEE");
+		// Content teste3 = new Content("Arquivo"+
+		// String.valueOf(n++),d,"Mensagem 3 TREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEES");
+		// ContentsDatabase.writeTest(teste,this);
+		// ContentsDatabase.writeTest(teste2,this);
+		// ContentsDatabase.writeTest(teste3,this);
+	}
+
+	private void ler() throws FileNotFoundException
+	{
+
+		ContentsDatabase.deleteAllArchives(this);
+
+	}
+
+	private void updateResult()
+	{
+		runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				if (mService != null)
+				{
+					// Resources res = getResources();
+					// String text =
+					// String.format(res.getString(R.string.resultText),
+					// mService.getPayload());
+					// editText.setText(mService.getPayload());
+				}
+			}
+		});
+	}
+
+	private BroadcastReceiver mDataReceiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			/*
+			 * if (intent.hasExtra("localeid")) { //mTextEid.setText(
+			 * intent.getStringExtra("localeid") + "/echo" );
+			 * 
+			 * } else { // update the displayed result updateResult(); }
+			 */
+			if (intent.hasExtra("payload"))
+			{
+				editText.setText(intent.getStringExtra("payload"));
+
+			}
+			else
+			{
+				// update the displayed result
+				updateResult();
+			}
+		}
+	};
 }
