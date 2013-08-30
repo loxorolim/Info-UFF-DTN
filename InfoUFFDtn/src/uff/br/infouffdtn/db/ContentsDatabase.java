@@ -29,7 +29,7 @@ import android.net.Uri;
 public class ContentsDatabase extends Activity
 {
 	//SÓ ESTÁ FUNCIONANDO COM 30! DAFUQ?
-	private final static int SIZE = 30;
+	private final static int SIZE = 10;
 	private static boolean[] avaiableArchivesNumbers = new boolean[SIZE];
 	private static final String REFRESH = "uff.br.infouffdtn.REFRESH";
 
@@ -163,7 +163,7 @@ public class ContentsDatabase extends Activity
 			booleanValues = buffreader.readLine();
 			isr.close();
 			String[] booleanValuesSplit = booleanValues.split(";");
-			for (int i = 0; i < booleanValuesSplit.length; i++)
+			for (int i = 0; i < SIZE; i++)
 			{
 				if (booleanValuesSplit[i].equals("true"))
 				{
