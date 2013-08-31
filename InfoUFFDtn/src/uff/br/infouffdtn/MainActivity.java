@@ -64,10 +64,15 @@ public class MainActivity extends Activity
 		setContentView(R.layout.main3);
 		// mTextEid = (EditText)findViewById(R.id.editEid);
 		// editText = (TextView) findViewById(R.id.textView1);
-		timerFetch = new Timer();
-		timerFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
-		timerShare = new Timer();
-		timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
+
+	
+		
+		
+		//DESCOMENTAR DEPOIS
+		//timerFetch = new Timer();
+		//timerFetch.schedule(new FetchTask(), TIMETOFETCH * 2000);
+		//timerShare = new Timer();
+		//timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
 
 		// assign an action to the ping button
 		try
@@ -134,11 +139,18 @@ public class MainActivity extends Activity
 				{
 					try
 					{
-						alertServiceToSend();
+						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+						Date date = new Date();
+						String d = dateFormat.format(date);
+						Content content = new Content("WebPage", d, true, "TESTE" + n);
+						n++;
+						ContentsDatabase.writeContent(content, MainActivity.this);
+				
+						
 					}
-					catch (Exception e)
+					catch(Exception e)
 					{
-
+						
 					}
 				}
 			});
@@ -218,7 +230,7 @@ public class MainActivity extends Activity
 
 			}
 			// timer.cancel(); //Terminate the timer thread
-			timerFetch.schedule(new FetchTask(), TIMETOSHARE * 1000);
+			timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
 		}
 	}
 

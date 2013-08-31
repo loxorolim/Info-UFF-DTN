@@ -121,75 +121,78 @@ public class InfoService extends IntentService
 	private void sendContent()
 	{
 
-/*		
+		
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 		String d = dateFormat.format(date);
-		//VERIFICAR SE ESTOU ENVIANDO UM CONTENT COM FILESTRING VAZIO!!!ISTO Ã‰, QUANDO ELE TA MANDANDO CONTENT SEM TER
+		//VERIFICAR SE ESTOU ENVIANDO UM CONTENT COM FILESTRING VAZIO!!!ISTO É, QUANDO ELE TA MANDANDO CONTENT SEM TER
 		//ARQUIVOS PARA MANDAR!!!!!!!!!!!!!
 		String fileString = ContentsDatabase.getMostRecentFile(this);
-		Content content = new Content("WebPage", d, true, fileString);
-		try
+		if(fileString != null)
 		{
-			List<Node> neighbours = mClient.getDTNService().getNeighbors();
-			for (int i = 0; i < neighbours.size(); i++)
+			Content content = new Content("WebPage", d, true, fileString);			
+			try
 			{
-				String destAddress = neighbours.get(i).endpoint.toString() + "/example-app";
-				SingletonEndpoint destination = new SingletonEndpoint(destAddress);
-
-				// create a new bundle
-				Bundle b = new Bundle();
-
-				// set the destination of the bundle
-				b.setDestination(destination);
-
-				// limit the lifetime of the bundle to 60 seconds
-				b.setLifetime(60L);
-
-				// set status report requests for bundle reception
-				// b.set(ProcFlags.REQUEST_REPORT_OF_BUNDLE_RECEPTION, true);
-
-				// set destination for status reports
-				// b.setReportto(SingletonEndpoint.ME);
-
-				// generate some payload
-				String payload = content.toString();
-
-				try
+				List<Node> neighbours = mClient.getDTNService().getNeighbors();
+				for (int i = 0; i < neighbours.size(); i++)
 				{
-					// get the DTN session
-					Session s = mClient.getSession();
-
-					// store the current time
-					mStart = System.nanoTime();
-
-					// send the bundle
-					BundleID ret = s.send(b, payload.getBytes());
-
-					if (ret == null)
+					String destAddress = neighbours.get(i).endpoint.toString() + "/example-app";
+					SingletonEndpoint destination = new SingletonEndpoint(destAddress);
+	
+					// create a new bundle
+					Bundle b = new Bundle();
+	
+					// set the destination of the bundle
+					b.setDestination(destination);
+	
+					// limit the lifetime of the bundle to 60 seconds
+					b.setLifetime(60L);
+	
+					// set status report requests for bundle reception
+					// b.set(ProcFlags.REQUEST_REPORT_OF_BUNDLE_RECEPTION, true);
+	
+					// set destination for status reports
+					// b.setReportto(SingletonEndpoint.ME);
+	
+					// generate some payload
+					String payload = content.toString();
+	
+					try
 					{
-						Log.e(TAG, "could not send the message");
+						// get the DTN session
+						Session s = mClient.getSession();
+	
+						// store the current time
+						mStart = System.nanoTime();
+	
+						// send the bundle
+						BundleID ret = s.send(b, payload.getBytes());
+	
+						if (ret == null)
+						{
+							Log.e(TAG, "could not send the message");
+						}
+						else
+						{
+							Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
+						}
 					}
-					else
+					catch (SessionDestroyedException e)
 					{
-						Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
+						Log.e(TAG, "could not send the message", e);
 					}
-				}
-				catch (SessionDestroyedException e)
-				{
-					Log.e(TAG, "could not send the message", e);
-				}
-				catch (InterruptedException e)
-				{
-					Log.e(TAG, "could not send the message", e);
+					catch (InterruptedException e)
+					{
+						Log.e(TAG, "could not send the message", e);
+					}
 				}
 			}
+			catch (Exception e)
+			{
+	
+			}
 		}
-		catch (Exception e)
-		{
 
-		}
-*/
 	}
 
 	@Override

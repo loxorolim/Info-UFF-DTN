@@ -25,48 +25,55 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-//Essa classe opera sobre os arquivos da aplica√ß√£o
+
 public class ContentsDatabase extends Activity
 {
-	//S√ì EST√Å FUNCIONANDO COM 30! DAFUQ?
+
 	private final static int SIZE = 10;
 	private static boolean[] avaiableArchivesNumbers = new boolean[SIZE];
 	private static final String REFRESH = "uff.br.infouffdtn.REFRESH";
 
-	// Escreve os dados de um Content em um arquivo cujo nome ser√° a posi√ß√£o do
-	// vetor avaiableArchivesNumbers.
-	// Ex: Se um content estiver na posi√ß√£o 4 do vetor, o nome do seu arquivo
-	// sera 4.
+	// Escreve os dados de um Content em um arquivo cujo nome ser· a posiÁ„o do
+		// vetor avaiableArchivesNumbers.
+		// Ex: Se um content estiver na posiÁ„o 4 do vetor, o nome do seu arquivo
+		// sera 4.
 	public static void writeContent(Content content, Context ctx) throws IOException
 	{
 		loadAvaiableArchiveNumbers(ctx);
 		try
 		{
-
-			int archiveLocation = getAvaiableArchiveNumber(ctx);
-			if (archiveLocation != -1)
+			String recentDate = getMostRecentDate(ctx);
+			if(recentDate == null || dateComparison(content.getDate(),recentDate)) //SE A LISTA TIVER VAZIA OU SE A DATA RECEBIDA FOR MAIS ATUAL QUE A MAIS ATUAL QUE JA EXISTIA, PODE ESCREVER
 			{
-				FileOutputStream fOut = ctx.openFileOutput(String.valueOf(archiveLocation), Context.MODE_PRIVATE);
-				OutputStreamWriter osw = new OutputStreamWriter(fOut);
-				BufferedWriter bwriter = new BufferedWriter(osw);
-				bwriter.write(content.getName());
-				bwriter.newLine();
-				bwriter.write(content.getDate().toString());
-				bwriter.newLine();
-				bwriter.write(Boolean.toString(content.isCommSource()));
-				bwriter.newLine();
-				bwriter.write(content.getPayload());
-				avaiableArchivesNumbers[archiveLocation] = true;
-				saveAvaiableArchiveNumbers(ctx);
-				bwriter.flush();
-				bwriter.close();
-				Intent i = new Intent(REFRESH);
-				ctx.sendBroadcast(i);
-
-			}
-			else
-			{
-
+				int archiveLocation = getAvaiableArchiveNumber(ctx);
+				if (archiveLocation != -1)
+				{
+					FileOutputStream fOut = ctx.openFileOutput(String.valueOf(archiveLocation), Context.MODE_PRIVATE);
+					OutputStreamWriter osw = new OutputStreamWriter(fOut);
+					BufferedWriter bwriter = new BufferedWriter(osw);
+					String cname = content.getName();
+					bwriter.write(cname);
+					bwriter.newLine();
+					String cdate = content.getDate().toString();
+					bwriter.write(cdate);
+					bwriter.newLine();
+					String ccom = Boolean.toString(content.isCommSource());
+					bwriter.write(ccom);
+					bwriter.newLine();
+					String cpay = content.getPayload();
+					bwriter.write(cpay);
+					avaiableArchivesNumbers[archiveLocation] = true;
+					saveAvaiableArchiveNumbers(ctx);
+					bwriter.flush();
+					bwriter.close();
+					Intent i = new Intent(REFRESH);
+					ctx.sendBroadcast(i);
+	
+				}
+				else
+				{
+	
+				}
 			}
 
 		}
@@ -77,7 +84,7 @@ public class ContentsDatabase extends Activity
 	}
 
 	// Le todas as datas dos arquivos e passa para um vetor de String, para que
-	// possa ser usado na classe DisplayActivity
+		// possa ser usado na classe DisplayActivity
 	public static String[] readAllArchivesDates(Context ctx)
 	{
 
@@ -120,7 +127,8 @@ public class ContentsDatabase extends Activity
 
 	}
 
-	// Salva a condi√ß√£o atual do vetor de arquivos no arquivo espec√≠fico
+
+	// Salva a condiÁ„o atual do vetor de arquivos no arquivo especÌfico
 	// AANArchive.
 	public static void saveAvaiableArchiveNumbers(Context ctx)
 	{
@@ -146,12 +154,12 @@ public class ContentsDatabase extends Activity
 
 	}
 
-	// Carrega os valores para o vetor de arquivos, indicando se a posi√ß√£o j√°
-	// est√° alocada(true) ou n√£o (false)
-	// OBS: Esse m√©todo foi criado porque ele reinicializava o vetor quando a
-	// aplica√ß√£o fosse reinicializada/inicializada
-	// embora os arquivos permanesessem l√°. Esse m√©todo carrega o vetor de um
-	// arquivo espec√≠fico chamado AANArchive.
+	// Carrega os valores para o vetor de arquivos, indicando se a posiÁ„o j·
+	// est· alocada(true) ou n„o (false)
+	// OBS: Esse mÈtodo foi criado porque ele reinicializava o vetor quando a
+	// aplicaÁ„o fosse reinicializada/inicializada
+	// embora os arquivos permanesessem l·. Esse mÈtodo carrega o vetor de um
+	// arquivo especÌfico chamado AANArchive.
 	public static void loadAvaiableArchiveNumbers(Context ctx)
 	{
 		String booleanValues = "";
@@ -181,8 +189,7 @@ public class ContentsDatabase extends Activity
 		}
 
 	}
-
-	// Retorna o payload em string do arquivo cuja data √© ArchiveDate
+	// Retorna o payload em string do arquivo cuja data È ArchiveDate
 	public static String readArchiveContentPayload(String ArchiveDate, Context ctx)
 	{
 		loadAvaiableArchiveNumbers(ctx);
@@ -241,7 +248,7 @@ public class ContentsDatabase extends Activity
 	 * 
 	 * return ret; }
 	 */
-	// Retorna o tipo de comunica√ß√£o que o arquivo foi recebido, true = wifi,
+	// Retorna o tipo de comunicaÁ„o que o arquivo foi recebido, true = wifi,
 	// false = dtn
 	public static boolean getSourceFromDate(String ArchiveDate, Context ctx)
 	{
@@ -286,7 +293,7 @@ public class ContentsDatabase extends Activity
 
 	}
 
-	// Retorna a data do arquivo que est√° na posi√ß√£o POS do vetor.
+	// Retorna a data do arquivo que est· na posiÁ„o POS do vetor.
 	public static String getArchiveDate(int pos, Context ctx)
 	{
 		String ret = "";
@@ -308,7 +315,6 @@ public class ContentsDatabase extends Activity
 
 		return ret;
 	}
-
 	// Deleta todos os arquivos e limpa o vetor.
 	public static void deleteAllArchives(Context ctx)
 	{
@@ -327,9 +333,9 @@ public class ContentsDatabase extends Activity
 
 	}
 
-	// Retorna a posi√ß√£o do vetor dispon√≠vel para escrever um arquivo. Caso
-	// esteja cheio, ele vai retornar a posi√ß√£o
-	// do arquivo menos atual para que seja sobrescrito.
+	// Retorna a posiÁ„o do vetor disponÌvel para escrever um arquivo. Caso
+		// esteja cheio, ele vai retornar a posiÁ„o
+		// do arquivo menos atual para que seja sobrescrito.
 	public static int getAvaiableArchiveNumber(Context ctx)
 	{
 		String date = null;
@@ -354,26 +360,45 @@ public class ContentsDatabase extends Activity
 	}
 
 	// Pega a data do arquivo mais recente, e retorna o payload (em String)
-	// dessa data.
+		// dessa data.
 	public static String getMostRecentFile(Context ctx)
 	{
 
-		String date = null;
+		
+		String date = getMostRecentDate(ctx);
+		return readArchiveContentPayload(date, ctx);
 
-		for (int i = 0; i < avaiableArchivesNumbers.length; i++)
+	}
+	private static String getMostRecentDate(Context ctx)
+	{
+		loadAvaiableArchiveNumbers(ctx);
+		if(isEmpty())
+		{
+			return null;
+		}
+		String date = null;
+		for (int i = 0; i < SIZE; i++)
 		{
 			String archiveDate = getArchiveDate(i, ctx);
 			if (dateComparison(archiveDate, date))
 			{
 				date = archiveDate;
 			}
-
 		}
-		return readArchiveContentPayload(date, ctx);
-
+		return date;
+	}
+	private static boolean isEmpty()
+	{
+		for(int i = 0; i< SIZE ;i++)
+		{
+			if(avaiableArchivesNumbers[i] == true)
+				return false;
+		}
+		return true;
+		
 	}
 
-	// Compara se uma data no formato "dd/MM/yyyy HH:mm:ss" √© posterior a outra.
+	// Compara se uma data no formato "dd/MM/yyyy HH:mm:ss" È posterior a outra.
 	private static boolean dateComparison(String date1, String date2)
 	{
 		if (date1 == null)
@@ -425,5 +450,6 @@ public class ContentsDatabase extends Activity
 	 * 
 	 * }
 	 */
+
 
 }
