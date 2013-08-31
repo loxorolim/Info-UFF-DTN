@@ -122,15 +122,14 @@ public class InfoService extends IntentService
 	{
 
 		
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date date = new Date();
-		String d = dateFormat.format(date);
-		//VERIFICAR SE ESTOU ENVIANDO UM CONTENT COM FILESTRING VAZIO!!!ISTO É, QUANDO ELE TA MANDANDO CONTENT SEM TER
-		//ARQUIVOS PARA MANDAR!!!!!!!!!!!!!
-		String fileString = ContentsDatabase.getMostRecentFile(this);
+
+
+		String date = ContentsDatabase.getMostRecentDate(this);
+		String fileString = ContentsDatabase.readArchiveContentPayload(date, this);
+		
 		if(fileString != null)
 		{
-			Content content = new Content("WebPage", d, true, fileString);			
+			Content content = new Content("WebPage", date, true, fileString);			
 			try
 			{
 				List<Node> neighbours = mClient.getDTNService().getNeighbors();
@@ -418,11 +417,14 @@ public class InfoService extends IntentService
 			// payload is received here
 			try
 			{
-
+				// O IBR-DTN ESTÁ ENVIANDO VARIOS BUNDLES PORQUE O ARQUIVO STRING É MUITO GRANDE!
 				String payload = new String(data, "UTF-8");
 				String[] contentStrings = payload.split(";");
-				Content contentReceived = new Content(contentStrings[0], contentStrings[1], false, contentStrings[2]);
-				ContentsDatabase.writeContent(contentReceived, InfoService.this);
+				if(contentStrings[0].equals("WebPage"))
+				{
+					Content contentReceived = new Content(contentStrings[0], contentStrings[1], false, contentStrings[2]);
+					ContentsDatabase.writeContent(contentReceived, InfoService.this);
+				}
 
 			}
 			catch (Exception e)

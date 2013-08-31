@@ -320,13 +320,17 @@ public class ContentsDatabase extends Activity
 	{
 		loadAvaiableArchiveNumbers(ctx);
 		File dir = ctx.getFilesDir();
-		for (int i = 0; i < avaiableArchivesNumbers.length; i++)
+		for (int i = 0; i < SIZE; i++)
 		{
-			if (avaiableArchivesNumbers[i])
+			try
 			{
 				File file = new File(dir, String.valueOf(i));
 				file.delete();
 				avaiableArchivesNumbers[i] = false;
+			}
+			catch(Exception e)
+			{
+				
 			}
 		}
 		saveAvaiableArchiveNumbers(ctx);
@@ -361,15 +365,8 @@ public class ContentsDatabase extends Activity
 
 	// Pega a data do arquivo mais recente, e retorna o payload (em String)
 		// dessa data.
-	public static String getMostRecentFile(Context ctx)
-	{
 
-		
-		String date = getMostRecentDate(ctx);
-		return readArchiveContentPayload(date, ctx);
-
-	}
-	private static String getMostRecentDate(Context ctx)
+	public static String getMostRecentDate(Context ctx)
 	{
 		loadAvaiableArchiveNumbers(ctx);
 		if(isEmpty())

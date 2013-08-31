@@ -95,9 +95,9 @@ public class MainActivity extends Activity
 				{
 					try
 					{
-						save();
+						recoverWebPage();
 					}
-					catch (IOException e)
+					catch (Exception e)
 					{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -112,9 +112,12 @@ public class MainActivity extends Activity
 				{
 					try
 					{
-						ler();
+
+							ContentsDatabase.deleteAllArchives(MainActivity.this);
+
+						
 					}
-					catch (FileNotFoundException e)
+					catch (Exception e)
 					{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -313,12 +316,6 @@ public class MainActivity extends Activity
 		// ContentsDatabase.writeTest(teste3,this);
 	}
 
-	private void ler() throws FileNotFoundException
-	{
-
-		ContentsDatabase.deleteAllArchives(this);
-
-	}
 
 	private void updateResult()
 	{

@@ -4,29 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
 	android:background="@drawable/wifipacket">
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Display Contents" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="156dp"
         android:layout_height="wrap_content"
-        android:text="Teste" />
+        android:text="Send DTN packet" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="148dp"
         android:layout_height="wrap_content"
-        android:text="Salvar" />
+        android:text="Recover WebPage" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DeletarTudo" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Display Contents" />
 
     <Button
         android:id="@+id/button5"
