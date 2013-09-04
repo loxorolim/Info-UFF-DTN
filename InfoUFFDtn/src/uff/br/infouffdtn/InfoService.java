@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import uff.br.infouffdtn.db.Content;
 import uff.br.infouffdtn.db.ContentsDatabase;
@@ -345,6 +347,7 @@ public class InfoService extends IntentService
 	private DataHandler mDataHandler = new DataHandler()
 	{
 
+		ByteArrayOutputStream stream = null;
 		private Bundle mBundle = null;
 
 		@Override
@@ -360,9 +363,7 @@ public class InfoService extends IntentService
 			// complete bundle received
 			BundleID received = new BundleID(mBundle);
 
-			// stop measurement and store result
-			long diffTime = System.nanoTime() - mStart;
-			mLastMeasurement = Double.valueOf(diffTime) / 1000000.0;
+
 
 			// mark the bundle as delivered
 			Intent i = new Intent(InfoService.this, InfoService.class);
@@ -387,6 +388,7 @@ public class InfoService extends IntentService
 			{
 				// return SIMPLE mode to received the payload as "payload()"
 				// calls
+				stream = new ByteArrayOutputStream();
 				return TransferMode.SIMPLE;
 			}
 			else
@@ -399,7 +401,26 @@ public class InfoService extends IntentService
 		@Override
 		public void endBlock()
 		{
-			// nothing to do here.
+			if (stream != null) {
+
+				try
+				{
+			    	String payload = new String(stream.toByteArray());
+					String[] contentStrings = payload.split("<CONTENTSPLIT>");
+					if(contentStrings[0].equals("WebPage"))
+					{
+						Content contentReceived = new Content(contentStrings[0], contentStrings[1], false, contentStrings[2]);
+						ContentsDatabase.writeContent(contentReceived, InfoService.this);
+					}
+				}
+				catch(Exception e)
+				{
+					
+				}
+           
+		    
+                stream = null;
+		    }
 		}
 
 		@Override
@@ -414,24 +435,19 @@ public class InfoService extends IntentService
 		@Override
 		public void payload(byte[] data)
 		{
+			if (stream == null) return;
+		    // write data to the stream
+		    try {
+                stream.write(data);
+            } catch (IOException e) {
+                Log.e(TAG, "error on writing payload", e);
+            }
 			// payload is received here
-			try
-			{
+	
 				// O IBR-DTN ESTÁ ENVIANDO VARIOS BUNDLES PORQUE O ARQUIVO STRING É MUITO GRANDE!
-				String payload = new String(data, "UTF-8");
-				String[] contentStrings = payload.split(";");
-				if(contentStrings[0].equals("WebPage"))
-				{
-					Content contentReceived = new Content(contentStrings[0], contentStrings[1], false, contentStrings[2]);
-					ContentsDatabase.writeContent(contentReceived, InfoService.this);
-				}
+			
 
-			}
-			catch (Exception e)
-			{
 
-			}
-			Log.d(TAG, "payload received: " + data);
 		}
 
 		@Override

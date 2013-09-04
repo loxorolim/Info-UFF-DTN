@@ -157,6 +157,16 @@ public class MainActivity extends Activity
 					}
 				}
 			});
+			Button b6 = (Button) findViewById(R.id.button6);
+			b6.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					Intent intent = new Intent(MainActivity.this, WebFetcherActivity.class);
+					startActivity(intent);
+				}
+			});
 		}
 		catch (Exception e)
 		{

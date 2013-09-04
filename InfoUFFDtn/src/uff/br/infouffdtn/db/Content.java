@@ -52,7 +52,7 @@ public class Content
 	@Override
 	public String toString()
 	{
-		return name + ";" + date + ";" + payload;
+		return name + "<CONTENTSPLIT>" + date + "<CONTENTSPLIT>" + payload;
 
 	}
 
