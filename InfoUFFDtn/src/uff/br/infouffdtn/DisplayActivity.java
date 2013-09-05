@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
+
 import uff.br.infouffdtn.db.ContentsDatabase;
 
 import android.app.Activity;
@@ -15,6 +16,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,43 +25,39 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.view.View;
 
-public class DisplayActivity extends ListActivity
+public class DisplayActivity extends Activity implements OnItemClickListener
 {
+	private ListView listView;
+	private String[] values;
 
 	public void onCreate(Bundle icicle)
 	{
 		super.onCreate(icicle);
 		IntentFilter filter = new IntentFilter(InfoService.REFRESH);
 		registerReceiver(mDataReceiver, filter);
+	//	getListView().setBackgroundResource(R.drawable.infouffdtnbackground);
+		setContentView(R.layout.displayactivitymenu);
+		listView = (ListView)findViewById(R.id.listView1);
 		showContents();
 
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id)
-	{
-		String selectedArchiveDate = (String) getListAdapter().getItem(position);
 
-		Intent intent = new Intent(this, ShowContentActivity.class);
-		intent.putExtra("archiveName", selectedArchiveDate);
-		startActivity(intent);
-
-		// Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
-	}
 
 	private void showContents()
 	{
 		// ImageView icon = (ImageView)findViewById(R.id.icon);
 		try
 		{
-			String[] values = ContentsDatabase.readAllArchivesDates(this);
+			values = ContentsDatabase.readAllArchivesDates(this);
 			sortByDate(values);
 			// Use your own layout
 			// ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 			// R.layout.displayactivitymenu, R.id.label, values);
-			DisplayAdapter adapter = new DisplayAdapter(this, values);
 
-			setListAdapter(adapter);
+			DisplayAdapter adapter = new DisplayAdapter(R.layout.rowlayout ,values,this);
+			listView.setAdapter(adapter);
+			listView.setOnItemClickListener(this);
 		}
 		catch (Exception e)
 		{
@@ -99,5 +98,15 @@ public class DisplayActivity extends ListActivity
 
 		}
 	};
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View v, int position, long id) 
+	{
+		String selectedArchiveDate = values[position];
+		Intent intent = new Intent(this, ShowContentActivity.class);
+		intent.putExtra("archiveName", selectedArchiveDate);
+		startActivity(intent);
+		
+	}
 
 }

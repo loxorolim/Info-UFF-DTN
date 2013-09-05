@@ -16,7 +16,9 @@
         android:label="@string/app_name" >
         <activity
             android:label="@string/app_name"
-            android:name="uff.br.infouffdtn.MainActivity" >
+            android:name="uff.br.infouffdtn.MainActivity" 
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,9 +28,10 @@
        			<category android:name="android.intent.category.DEFAULT" />
     </intent-filter>
         </activity>
-        <activity android:name=".DisplayActivity"></activity>
-        <activity android:name=".ShowContentActivity"></activity>
-        <activity android:name=".WebFetcherActivity"></activity>
+        <activity android:name=".DisplayActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> </activity>
+      
+        <activity android:name=".ShowContentActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> </activity>
+        <activity android:name=".WebFetcherActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> </activity>
         
         <service android:name="uff.br.infouffdtn.InfoService" />
         

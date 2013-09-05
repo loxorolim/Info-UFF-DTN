@@ -1,6 +1,7 @@
 package uff.br.infouffdtn;
 
 import uff.br.infouffdtn.db.ContentsDatabase;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 //import android.graphics.Color;
@@ -13,21 +14,31 @@ import android.widget.TextView;
 
 public class DisplayAdapter extends ArrayAdapter<String>
 {
+	private int layoutID;
 	private final Context context;
 	private final String[] values;
 
-	public DisplayAdapter(Context context, String[] values)
+	public DisplayAdapter(int listViewId, String[] values,Context ctx)
 	{
-		super(context, R.layout.displayactivitymenu, values);
-		this.context = context;
+		super(ctx, listViewId, values);
+		this.layoutID = listViewId;
 		this.values = values;
+		this.context = ctx;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.displayactivitymenu, parent, false);
+		View rowView = convertView;
+		//LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		//View rowView = inflater.inflate(R.layout.displayactivitymenu, parent, false);
+		if(rowView == null)
+		{
+			LayoutInflater inflater = LayoutInflater.from(context);
+        	rowView = inflater.inflate(layoutID, parent, false);
+		}
+        
+		
 		TextView textView = (TextView) rowView.findViewById(R.id.label);
 		ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 		ImageView imageView2 = (ImageView) rowView.findViewById(R.id.icon2);
