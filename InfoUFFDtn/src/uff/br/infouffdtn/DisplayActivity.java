@@ -106,7 +106,14 @@ public class DisplayActivity extends Activity implements OnItemClickListener
 		Intent intent = new Intent(this, ShowContentActivity.class);
 		intent.putExtra("archiveName", selectedArchiveDate);
 		startActivity(intent);
+		SlideTransition.forwardTransition(this);
 		
+	}
+	@Override
+	public void onBackPressed() 
+	{
+	    this.finish();
+	    SlideTransition.backTransition(this);
 	}
 
 }

@@ -139,6 +139,7 @@ public class MainActivity extends Activity
 				{
 					Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
 					startActivity(intent);
+					SlideTransition.forwardTransition(MainActivity.this);
 				}
 			});
 				
@@ -267,6 +268,12 @@ public class MainActivity extends Activity
 		{
 
 		}
+	}
+	@Override
+	public void onBackPressed() 
+	{
+	    this.finish();
+	    SlideTransition.backTransition(this);
 	}
    /* class MyGestureDetector extends SimpleOnGestureListener {
         @Override

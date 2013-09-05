@@ -75,5 +75,11 @@ public class ShowContentActivity extends Activity
 		// new Thread(gt).start();
 
 	}
+	@Override
+	public void onBackPressed() 
+	{
+	    this.finish();
+	    SlideTransition.backTransition(this);
+	}
 
 }
