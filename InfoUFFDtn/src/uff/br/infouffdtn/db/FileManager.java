@@ -113,45 +113,49 @@ public class FileManager extends Activity
 	{		
 		loadListFile(ctx);
 		ArrayList<Item> items = new ArrayList<Item>();
-//		ArrayList<Item> capacetes = new ArrayList<Item>();
-//		ArrayList<Item> ombreiras = new ArrayList<Item>();
-//		ArrayList<Item> terrenos = new ArrayList<Item>();
-//		capacetes.add(new Header("Capacetes"));
-//		ombreiras.add(new Header("Ombreiras"));
-//		terrenos.add(new Header("Terrenos"));
-		//items.add(new Header("Contents"));
-		items = sortByDate(ctx);
-		ArrayList<ArrayList<Item>> lists = new ArrayList<ArrayList<Item>>();
-		for(int i = 0;i<items.size();i++)
+
+		//items = sortByDate(ctx);
+		ArrayList<String> types = new ArrayList<String>();
+		for(int i = 0;i<filesPaths.size();i++)
 		{
-			
+			String[] split = filesPaths.get(i).split("(");
+			String type = split[0];	
+			if(!checkIfTypeExists(type,types))
+			{
+				types.add(type);
+			}			
 		}
+		ArrayList<Item> ret = new ArrayList<Item>();
+		for(int i = 0; i<types.size();i++)
+		{
+			ret.add(new Header(types.get(i)));
+			for(int j = 0; j < filesPaths.size();j++)
+			{
+				Content ct = FileManager.readContent(filesPaths.get(j), ctx);
+				if(ct.getName().equals(types.get(i)))
+				{
+					ret.add(new ListItem(filesPaths.get(j),ct.getDate()));
+				}
+				
+			}
+		}
+
+
+
+		return ret;
+	}
+	
+	private static boolean checkIfTypeExists(String type,ArrayList<String> list)
+	{
+		for(int i = 0; i< list.size();i++)
+		{
+			if(list.get(i).equals(type))
+			{
+				return true;
+			}
+		}	
+		return false;
 		
-
-	/*	items.add(new Header("Terrain Content"));
-        items.add(new ListItem("Default", "Terrain"));
-        items.add(new ListItem("Zézinho", "Terreno de fogo"));
-        items.add(new ListItem("Jurema", "Terreno de gelo"));
-
-		items.add(new Header("Enemy Content"));
-        items.add(new ListItem("Default", "Enemy"));
-        items.add(new ListItem("Zézinho", "Inimigo de fogo"));
-        items.add(new ListItem("Jurema", "Inimigo de gelo"));
-
-		items.add(new Header("Hero Content"));
-        items.add(new ListItem("Default", "Hero"));
-        items.add(new ListItem("Cláudio", "Herói boladão"));
-        items.add(new ListItem("Jeremias", "Obi Juan"));
-        items.add(new ListItem("Francis", "Megaman"));
-
-		items.add(new Header("Background Content"));
-        items.add(new ListItem("Default", "Background"));
-        items.add(new ListItem("Emanuelle", "Chaos"));
-        items.add(new ListItem("Maximillian", "Armageddon"));
-    */    
-
-
-		return items;
 	}
 	public static void deleteContent(String fileName,Context ctx)
 	{

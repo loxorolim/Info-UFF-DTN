@@ -47,4 +47,9 @@ public class ListItem implements Item {
     	return str1+str2;
     }
     
+    public String getType()
+    {
+    	return this.str1;
+    
+    }
 }

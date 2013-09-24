@@ -109,6 +109,10 @@ public class MainActivity extends Activity
 
 						Content ct = new Content("JornalUFF", data, true, "teste");
 						FileManager.writeContent(ct, MainActivity.this);
+						ct = new Content("QuadroUFF", data, true, "teste");
+						FileManager.writeContent(ct, MainActivity.this);
+						ct = new Content("NoticiasUFF", data, true, "teste");
+						FileManager.writeContent(ct, MainActivity.this);
 						//recoverWebPage();
 					}
 					catch (Exception e)
