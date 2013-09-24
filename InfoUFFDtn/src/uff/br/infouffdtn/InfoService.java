@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import uff.br.infouffdtn.db.Content;
-import uff.br.infouffdtn.db.ContentsDatabase;
+
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -125,7 +125,7 @@ public class InfoService extends IntentService
 
 		
 
-
+/*
 		String date = ContentsDatabase.getMostRecentDate(this);
 		String fileString = ContentsDatabase.readArchiveContentPayload(date, this);
 		
@@ -193,7 +193,7 @@ public class InfoService extends IntentService
 	
 			}
 		}
-
+*/
 	}
 
 	@Override
@@ -410,7 +410,7 @@ public class InfoService extends IntentService
 					if(contentStrings[0].equals("WebPage"))
 					{
 						Content contentReceived = new Content(contentStrings[0], contentStrings[1], false, contentStrings[2]);
-						ContentsDatabase.writeContent(contentReceived, InfoService.this);
+					//	ContentsDatabase.writeContent(contentReceived, InfoService.this);
 					}
 				}
 				catch(Exception e)

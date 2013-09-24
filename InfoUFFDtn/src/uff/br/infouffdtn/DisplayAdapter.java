@@ -1,6 +1,5 @@
 package uff.br.infouffdtn;
 
-import uff.br.infouffdtn.db.ContentsDatabase;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -44,7 +43,7 @@ public class DisplayAdapter extends ArrayAdapter<String>
 		ImageView imageView2 = (ImageView) rowView.findViewById(R.id.icon2);
 		textView.setText(values[position]);
 
-		if (ContentsDatabase.getSourceFromDate(values[position], context))
+	/*	if (ContentsDatabase.getSourceFromDate(values[position], context))
 		{
 			imageView2.setImageResource(R.drawable.wifipacket);
 		}
@@ -52,6 +51,7 @@ public class DisplayAdapter extends ArrayAdapter<String>
 		{
 			imageView2.setImageResource(R.drawable.dtnpacket);
 		}
+		*/
 		imageView.setImageResource(R.drawable.square);
 		imageView.setAlpha(1);
 

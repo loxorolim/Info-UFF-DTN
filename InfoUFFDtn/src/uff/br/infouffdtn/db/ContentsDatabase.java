@@ -1,3 +1,4 @@
+/*
 package uff.br.infouffdtn.db;
 
 import java.io.BufferedReader;
@@ -238,16 +239,7 @@ public class ContentsDatabase extends Activity
 
 	}
 
-	/*
-	 * public static String getArchiveName(int pos, Context ctx) { String ret =
-	 * ""; try { FileInputStream fIn; fIn = ctx.openFileInput
-	 * (String.valueOf(pos)); InputStreamReader isr = new InputStreamReader(fIn)
-	 * ; BufferedReader buffreader = new BufferedReader(isr) ; ret =
-	 * buffreader.readLine(); isr.close(); } catch (Exception e) { // TODO
-	 * Auto-generated catch block e.printStackTrace(); }
-	 * 
-	 * return ret; }
-	 */
+	
 	// Retorna o tipo de comunicação que o arquivo foi recebido, true = wifi,
 	// false = dtn
 	public static boolean getSourceFromDate(String ArchiveDate, Context ctx)
@@ -425,28 +417,8 @@ public class ContentsDatabase extends Activity
 		return false;
 
 	}
-	/*
-	 * public static String[] readAllArchivesNames(Context ctx) {
-	 * 
-	 * loadAvaiableArchiveNumbers(ctx); LinkedList<String> list = new
-	 * LinkedList<String>(); try {
-	 * 
-	 * for(int i = 0; i< avaiableArchivesNumbers.length;i++) {
-	 * if(avaiableArchivesNumbers[i]) { try { FileInputStream fIn =
-	 * ctx.openFileInput (String.valueOf(i)); InputStreamReader isr = new
-	 * InputStreamReader(fIn) ; BufferedReader buffreader = new
-	 * BufferedReader(isr) ; list.add(buffreader.readLine()); isr.close(); }
-	 * catch(Exception e) {
-	 * 
-	 * } } }
-	 * 
-	 * } catch (Exception e ) {
-	 * 
-	 * } String[] ret = new String[list.size()]; for(int i = 0; i<
-	 * list.size();i++) { ret[i] = list.get(i); } return ret;
-	 * 
-	 * }
-	 */
+	
 
 
 }
+*/

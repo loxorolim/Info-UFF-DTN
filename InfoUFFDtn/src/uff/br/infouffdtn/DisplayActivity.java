@@ -7,8 +7,15 @@ import java.util.Date;
 import java.util.LinkedList;
 
 
-import uff.br.infouffdtn.db.ContentsDatabase;
+import java.util.List;
 
+
+
+
+
+import uff.br.infouffdtn.db.FileManager;
+import uff.br.infouffdtn.interfacepk.Item;
+import uff.br.infouffdtn.interfacepk.TwoTextArrayAdapter;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
@@ -49,15 +56,9 @@ public class DisplayActivity extends Activity implements OnItemClickListener
 		// ImageView icon = (ImageView)findViewById(R.id.icon);
 		try
 		{
-			values = ContentsDatabase.readAllArchivesDates(this);
-			sortByDate(values);
-			// Use your own layout
-			// ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-			// R.layout.displayactivitymenu, R.id.label, values);
-
-			DisplayAdapter adapter = new DisplayAdapter(R.layout.rowlayout ,values,this);
-			listView.setAdapter(adapter);
-			listView.setOnItemClickListener(this);
+			List<Item> items = FileManager.readAllFilesNames(this);
+	        TwoTextArrayAdapter adapter = new TwoTextArrayAdapter(this, items);
+	        listView.setAdapter(adapter);
 		}
 		catch (Exception e)
 		{

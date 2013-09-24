@@ -11,8 +11,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import uff.br.infouffdtn.db.Content;
-import uff.br.infouffdtn.db.ContentsDatabase;
 
+import uff.br.infouffdtn.db.FileManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -49,7 +49,7 @@ public class HtmlGetterThread implements Runnable
 			Date date = new Date();
 			String d = dateFormat.format(date);
 			Content newRecover = new Content("WebPage", d, true, fileString);
-			ContentsDatabase.writeContent(newRecover, ctx);
+			FileManager.writeContent(newRecover, ctx);
 
 		}
 		catch (Exception e)

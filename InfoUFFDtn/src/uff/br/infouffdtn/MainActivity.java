@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
@@ -102,7 +103,13 @@ public class MainActivity extends Activity
 				{
 					try
 					{
-						recoverWebPage();
+						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+						Date d1 = new Date();
+						String data = dateFormat.format(d1);
+
+						Content ct = new Content("JornalUFF", data, true, "teste");
+						FileManager.writeContent(ct, MainActivity.this);
+						//recoverWebPage();
 					}
 					catch (Exception e)
 					{
@@ -119,8 +126,7 @@ public class MainActivity extends Activity
 				{
 					try
 					{
-
-							ContentsDatabase.deleteAllArchives(MainActivity.this);
+							FileManager.deleteAllFiles(MainActivity.this);
 
 						
 					}
@@ -137,6 +143,7 @@ public class MainActivity extends Activity
 				@Override
 				public void onClick(View v)
 				{
+					
 					Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
 					startActivity(intent);
 					SlideTransition.forwardTransition(MainActivity.this);
@@ -250,12 +257,6 @@ public class MainActivity extends Activity
 
 			Intent i = new Intent(this, InfoService.class);
 			i.setAction(InfoService.SEND_CONTENT_INTENT);
-
-			// i.putExtra("destination", mTextEid.getText().toString());
-			// i.putExtra("destination", "dtn://androidRolim/example-app");
-
-			// i.putExtra("destination", "dtn://broadcast.dtn/ping/echo");
-
 			startService(i);
 			i = new Intent(this, InfoService.class);
 			// i.setAction(InfoService.PING_INTENT);

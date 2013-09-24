@@ -1,9 +1,10 @@
 package uff.br.infouffdtn.db;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Content
+public class Content implements Serializable
 {
 	private String name;
 	private String date;

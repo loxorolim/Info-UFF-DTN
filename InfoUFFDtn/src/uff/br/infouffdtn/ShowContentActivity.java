@@ -13,7 +13,6 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import uff.br.infouffdtn.db.ContentsDatabase;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,12 +59,12 @@ public class ShowContentActivity extends Activity
 		String archiveName = intent.getStringExtra("archiveName");
 		try
 		{
-			String payloadString = ContentsDatabase.readArchiveContentPayload(archiveName, this);
+			/*String payloadString = ContentsDatabase.readArchiveContentPayload(archiveName, this);
 			File AuxFile = new File("/data/data/uff.br.infouffdtn/arquivoHtmlAux");
 			org.apache.commons.io.FileUtils.writeStringToFile(AuxFile, payloadString);
 			mWebview.loadUrl("file:///data/data/uff.br.infouffdtn/arquivoHtmlAux");
 			// mWebview.loadUrl(payloadString);
-
+*/
 		}
 		catch (Exception e)
 		{
