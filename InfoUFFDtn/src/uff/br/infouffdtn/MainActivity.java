@@ -92,6 +92,11 @@ public class MainActivity extends Activity
 				public void onClick(View v)
 				{
 					alertServiceToSend();
+					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					Date d1 = new Date();
+					String data = dateFormat.format(d1);
+					Content ct = new Content("JornalUFF", data, true, "teste");
+					FileManager.writeContent(ct, MainActivity.this);
 
 				}
 			});

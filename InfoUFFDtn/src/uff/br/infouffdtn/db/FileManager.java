@@ -40,33 +40,52 @@ import android.net.Uri;
 public class FileManager extends Activity
 {
 	// Lista que conter� o nome dos contents
-	private static int listSize = 30;
-	private static ArrayList<String> filesPaths = new ArrayList<String>();
+	private static int listSize = 10;
+	private static String regex = "teste";
+	private static ArrayList<String[]> filesPaths = new ArrayList<String[]>();
+	private static ArrayList<Content> contents = new ArrayList<Content>();
 	//private static String contentFilePath ="/data/data/br.uff.pse.dest/contents/";
 
 	public static void writeContent(Content content, Context ctx) 
 	{
 		
 		loadListFile(ctx);
-		String fileName = writeValidation(content.getName(),ctx,1);					
+		String fileName = writeValidation(content.getName(),ctx,1);	
+		//String fileName = content.getName()+regex+content.getDate();
+		
 		try
 		{
-			FileOutputStream fOut = ctx.openFileOutput(fileName, Context.MODE_PRIVATE);
-			BufferedOutputStream buffer = new BufferedOutputStream (fOut);
-			ObjectOutput output = new ObjectOutputStream ( buffer);
-			try
-			{													
-						output.writeObject(content);	
-						filesPaths.add(fileName);
-						saveListFile(ctx);
-			}
-			catch (Exception e)
+			if(dateComparison(content.getDate(),getMostRecentDate(content.getName(),ctx)))
 			{
-				e.printStackTrace();
-			}
-			finally
-			{
-				output.close();
+				
+				FileOutputStream fOut = ctx.openFileOutput(fileName, Context.MODE_PRIVATE);
+				BufferedOutputStream buffer = new BufferedOutputStream (fOut);
+				ObjectOutput output = new ObjectOutputStream ( buffer);
+				try
+				{		
+					if(filesPaths.size() == listSize)
+					{
+						int pos = getLeastRecentDatePos(ctx);
+						ctx.deleteFile(filesPaths.get(pos)[0]);
+						filesPaths.remove(pos);
+						
+					}
+							output.writeObject(content);	
+							String[] info = new String[3];
+							info[0] = fileName;
+							info[1] = content.getName();
+							info[2] = content.getDate();
+							filesPaths.add(info);
+							saveListFile(ctx);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+				finally
+				{
+					output.close();
+				}
 			}
 		}			
 		catch(IOException ex)
@@ -76,6 +95,107 @@ public class FileManager extends Activity
 		
 		
 		
+	}
+	public static boolean canWrite(Content c)
+	{
+		
+		
+		
+		return false;
+	}
+	public static String getMostRecentDate(String type,Context ctx)
+	{
+		loadListFile(ctx);
+		if(filesPaths.isEmpty())
+		{
+			return null;
+		}
+		else
+		{
+			String date = null;
+			for (int i = 0; i < filesPaths.size(); i++)
+			{
+				if(filesPaths.get(i)[1].equals(type))
+				{
+					if(date == null)
+					{
+						date = filesPaths.get(i)[2];
+					}
+					else
+					{										
+						if (dateComparison(filesPaths.get(i)[2],date))
+						{
+							date = filesPaths.get(i)[2];
+						}			
+					}
+				}
+			}
+			return date;
+		}
+	
+	}
+	public static int getLeastRecentDatePos(Context ctx)
+	{
+		loadListFile(ctx);
+		int ret = -1;
+		if(filesPaths.isEmpty())
+		{
+			return ret;
+		}
+		else
+		{
+			String date = null;
+			for (int i = 0; i < filesPaths.size(); i++)
+			{
+
+					if(date == null)
+					{
+						date = filesPaths.get(i)[2];
+						ret = i;
+					}
+					else
+					{										
+						if (dateComparison(date,filesPaths.get(i)[2]))
+						{
+							date = filesPaths.get(i)[2];
+							ret = i;
+						}			
+					}
+				
+			}
+			return ret;
+		}
+	
+	}
+	private static boolean dateComparison(String date1, String date2)
+	{
+		if (date1 == null)
+			return false;
+		else
+			if (date2 == null)
+				return true;
+
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date d1 = new Date();
+		Date d2 = new Date();
+		try
+		{
+			d1 = dateFormat.parse(date1);
+			d2 = dateFormat.parse(date2);
+			
+			if (d1.after(d2))
+			{
+				return true;
+			}
+			return false;
+		}
+		catch (Exception e)
+		{
+
+		}
+
+		return false;
+
 	}
 	public static Content readContent(String fileName, Context ctx) 
 	{
@@ -112,14 +232,13 @@ public class FileManager extends Activity
 	public static ArrayList<Item> readAllFilesNames(Context ctx) throws ParseException
 	{		
 		loadListFile(ctx);
-		ArrayList<Item> items = new ArrayList<Item>();
 
-		//items = sortByDate(ctx);
 		ArrayList<String> types = new ArrayList<String>();
-		for(int i = 0;i<filesPaths.size();i++)
+		ArrayList<String[]> list = sortByDate(ctx);
+		for(int i = 0;i<list.size();i++)
 		{
-			String[] split = filesPaths.get(i).split("(");
-			String type = split[0];	
+
+			String type = list.get(i)[1];	
 			if(!checkIfTypeExists(type,types))
 			{
 				types.add(type);
@@ -129,17 +248,23 @@ public class FileManager extends Activity
 		for(int i = 0; i<types.size();i++)
 		{
 			ret.add(new Header(types.get(i)));
-			for(int j = 0; j < filesPaths.size();j++)
+			for(int j = 0; j < list.size();j++)
 			{
-				Content ct = FileManager.readContent(filesPaths.get(j), ctx);
-				if(ct.getName().equals(types.get(i)))
+				if(list.get(j)[1].equals(types.get(i)))
 				{
-					ret.add(new ListItem(filesPaths.get(j),ct.getDate()));
+					ret.add(new ListItem(list.get(j)[1],list.get(j)[2]));
 				}
 				
 			}
 		}
-
+	/*	ArrayList<Item> ret = new ArrayList<Item>();
+		for(int i = 0; i< filesPaths.size();i++)
+		{
+			
+			ret.add(new ListItem(filesPaths.get(i)[1],filesPaths.get(i)[2]));
+			
+		}
+*/
 
 
 		return ret;
@@ -183,7 +308,7 @@ public class FileManager extends Activity
 		loadListFile(ctx);
 		for(int i = 0; i < filesPaths.size() ; i++)
 		{
-			ctx.deleteFile(filesPaths.get(i));
+			ctx.deleteFile(filesPaths.get(i)[0]);
 		}
 		filesPaths.clear();
 		saveListFile(ctx);
@@ -242,7 +367,7 @@ public class FileManager extends Activity
 	}
 	public static void loadListFile(Context ctx)
 	{
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String[]> list = new ArrayList<String[]>();
 		try
 		{
 		      //use buffering
@@ -251,7 +376,7 @@ public class FileManager extends Activity
 		      ObjectInput input = new ObjectInputStream ( buffer );
 		      try
 		      {
-		        list = (ArrayList<String>) input.readObject();
+		        list = (ArrayList<String[]>) input.readObject();
 		      }
 		      finally
 		      {
@@ -270,49 +395,38 @@ public class FileManager extends Activity
 		
 	}	
 
-	private static ArrayList<Item> sortByDate(Context ctx) throws ParseException
+	private static ArrayList<String[]> sortByDate(Context ctx) throws ParseException
 	{
-		ArrayList<String> ret = (ArrayList<String>) filesPaths.clone();
-		ArrayList<Item> sortedItems = new ArrayList<Item>();
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date daux = null;
-		Content caux = null;
-		int paux = -1;
-		int firstSize = ret.size();
-		// d1 = dateFormat.parse(date1);
-		for (int i = 0; i < firstSize; i++)
+		ArrayList<String[]> ret = new ArrayList<String[]>();
+		ArrayList<String[]> list = (ArrayList<String[]>)filesPaths.clone();
+		int tam = list.size();
+		String[] aux = null;
+		for(int i = 0; i< tam;i++)
 		{
-			for (int j = 0; j < ret.size(); j++)
+			
+			for(int j = 0 ;j<list.size();j++)
 			{
-				if(daux == null)
-				{
-					Content c1 = FileManager.readContent(ret.get(j), ctx);
-					Date d = new Date();
-					d = dateFormat.parse(c1.getDate());
-					daux = d;
-					caux = c1;
-					paux = j;
-				}
-				else
-				{
-					Content c1 = FileManager.readContent(ret.get(j), ctx);
-					Date d = new Date();
-					d = dateFormat.parse(c1.getDate());
-					if(d.after(daux))
+				
+					if(aux == null)
 					{
-						daux = d;		
-						caux = c1;
-						paux = j;
+						aux = list.get(j);
 					}
-				}				
+					else
+					{
+						if(dateComparison(list.get(j)[2],aux[2]))
+						{
+							aux = list.get(j);
+						}
+					}
 			}
-			// sortedItems.add(new ListItem("Maximillian", "Armageddon"));
-			 daux = null;
-			 sortedItems.add(new ListItem(caux.getName(),caux.getDate()));
-			 ret.remove(paux);			
+			list.remove(aux);
+			ret.add(aux);
+			aux = null;
 		}
-
-		return sortedItems;
+		return ret;
+		
+		
+		
 	}
 
 	

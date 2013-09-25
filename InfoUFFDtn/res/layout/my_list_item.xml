@@ -31,7 +31,7 @@
         android:paddingBottom="1dip"
         android:paddingTop="1dip"
         android:text="sample"
-        android:textColor="#6d6d6d"
+        android:textColor="#5B0C0C"
         android:textSize="17dip" />
 
 </LinearLayout>
