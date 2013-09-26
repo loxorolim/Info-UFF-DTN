@@ -5,12 +5,6 @@
     android:layout_height="fill_parent"
     android:background="@drawable/infouffdtnbackground" >
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/infouffdtnlogo" />
-
     <Button
         android:id="@+id/displayactivity"
         style="@style/button_text"
@@ -41,5 +35,14 @@
         android:layout_below="@+id/button1"
         android:background="@drawable/button"
         android:text="Recover WebPage" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="center"
+        android:src="@drawable/infouffdtnlogo" />
 
 </RelativeLayout>
