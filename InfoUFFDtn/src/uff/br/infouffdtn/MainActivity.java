@@ -127,26 +127,8 @@ public class MainActivity extends Activity
 					}
 				}
 			});
-			Button b3 = (Button) findViewById(R.id.button3);
-			b3.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					try
-					{
-							FileManager.deleteAllFiles(MainActivity.this);
 
-						
-					}
-					catch (Exception e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			});
-			Button b4 = (Button) findViewById(R.id.button4);
+			Button b4 = (Button) findViewById(R.id.displayactivity);
 			b4.setOnClickListener(new OnClickListener()
 			{
 				@Override

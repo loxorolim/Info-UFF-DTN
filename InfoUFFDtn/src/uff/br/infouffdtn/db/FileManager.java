@@ -252,7 +252,7 @@ public class FileManager extends Activity
 			{
 				if(list.get(j)[1].equals(types.get(i)))
 				{
-					ret.add(new ListItem(list.get(j)[1],list.get(j)[2]));
+					ret.add(new ListItem(list.get(j)[0],list.get(j)[1],list.get(j)[2]));
 				}
 				
 			}
@@ -298,7 +298,7 @@ public class FileManager extends Activity
 	{
 		for(int i = 0 ; i < filesPaths.size();i++)
 		{
-			if(filesPaths.get(i).equals(filename))
+			if(filesPaths.get(i)[0].equals(filename))
 				return i;
 		}
 		return -1;
@@ -318,7 +318,7 @@ public class FileManager extends Activity
 		loadListFile(ctx);
 		for(int i = 0;i<filesPaths.size();i++)
 		{
-			if(filename.equals(filesPaths.get(i)))		
+			if(filename.equals(filesPaths.get(i)[0]))		
 			{
 				if(num ==1)
 					return writeValidation(filename+"("+num+")",ctx,++num);
