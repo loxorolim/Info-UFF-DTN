@@ -1,4 +1,4 @@
-package uff.br.infouffdtn;
+package uff.br.infouffdtn.dtn;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

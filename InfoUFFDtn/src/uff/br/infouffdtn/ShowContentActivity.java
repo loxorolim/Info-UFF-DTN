@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import uff.br.infouffdtn.interfacepk.SlideTransition;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;

@@ -45,6 +45,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import uff.br.infouffdtn.db.*;
+import uff.br.infouffdtn.dtn.InfoService;
+import uff.br.infouffdtn.interfacepk.SlideTransition;
 
 public class MainActivity extends Activity
 {

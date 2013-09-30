@@ -1,15 +1,22 @@
-package uff.br.infouffdtn;
+package uff.br.infouffdtn.dtn;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 
 import uff.br.infouffdtn.db.Content;
 
 
+import uff.br.infouffdtn.db.FileManager;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Binder;
@@ -124,14 +131,9 @@ public class InfoService extends IntentService
 	{
 
 		
-
-/*
-		String date = ContentsDatabase.getMostRecentDate(this);
-		String fileString = ContentsDatabase.readArchiveContentPayload(date, this);
+			ArrayList<Content> files = FileManager.getFilesToSend(this);
 		
-		if(fileString != null)
-		{
-			Content content = new Content("WebPage", date, true, fileString);			
+		
 			try
 			{
 				List<Node> neighbours = mClient.getDTNService().getNeighbors();
@@ -153,38 +155,63 @@ public class InfoService extends IntentService
 					// b.set(ProcFlags.REQUEST_REPORT_OF_BUNDLE_RECEPTION, true);
 	
 					// set destination for status reports
-					// b.setReportto(SingletonEndpoint.ME);
+					 b.setReportto(SingletonEndpoint.ME);
 	
 					// generate some payload
-					String payload = content.toString();
+					
+
+					
 	
 					try
 					{
+						
 						// get the DTN session
 						Session s = mClient.getSession();
 	
-						// store the current time
-						mStart = System.nanoTime();
+
 	
 						// send the bundle
-						BundleID ret = s.send(b, payload.getBytes());
-	
-						if (ret == null)
+						//BundleID ret = s.send(b, payload.getBytes());
+						
+						for(int j = 0 ; j < files.size(); j++)
 						{
-							Log.e(TAG, "could not send the message");
+							ByteArrayOutputStream bos = new ByteArrayOutputStream();
+							ObjectOutput out = null;
+							try 
+							{
+							  out = new ObjectOutputStream(bos);   
+							  out.writeObject(files.get(j));
+							  byte[] contentBytes = bos.toByteArray();
+							  BundleID ret = s.send(b, contentBytes);
+							  
+							  	if (ret == null)
+								{
+									Log.e(TAG, "could not send the message");
+									DtnLog.writeErrorLog();
+								}
+								else
+								{
+									Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
+									DtnLog.writeSendLog(SingletonEndpoint.ME.toString(), files.get(j), neighbours.get(i).endpoint.toString());
+								}
+							} 
+							finally
+							{
+							  out.close();
+							  bos.close();
+							}													
 						}
-						else
-						{
-							Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
-						}
+						
 					}
 					catch (SessionDestroyedException e)
 					{
 						Log.e(TAG, "could not send the message", e);
+						DtnLog.writeErrorLog();
 					}
 					catch (InterruptedException e)
 					{
 						Log.e(TAG, "could not send the message", e);
+						DtnLog.writeErrorLog();
 					}
 				}
 			}
@@ -192,8 +219,8 @@ public class InfoService extends IntentService
 			{
 	
 			}
-		}
-*/
+		
+
 	}
 
 	@Override
@@ -364,7 +391,7 @@ public class InfoService extends IntentService
 			BundleID received = new BundleID(mBundle);
 
 
-
+			
 			// mark the bundle as delivered
 			Intent i = new Intent(InfoService.this, InfoService.class);
 			i.setAction(MARK_DELIVERED_INTENT);
@@ -405,17 +432,35 @@ public class InfoService extends IntentService
 
 				try
 				{
-			    	String payload = new String(stream.toByteArray());
+			    	/*String payload = new String(stream.toByteArray());
 					String[] contentStrings = payload.split("<CONTENTSPLIT>");
 					if(contentStrings[0].equals("WebPage"))
 					{
 						Content contentReceived = new Content(contentStrings[0], contentStrings[1], false, contentStrings[2]);
 					//	ContentsDatabase.writeContent(contentReceived, InfoService.this);
 					}
+					*/
+					
+					byte[] streamBytes = stream.toByteArray();
+					ByteArrayInputStream bis = new ByteArrayInputStream(streamBytes);
+					ObjectInput in = null;
+					try 
+					{
+					  in = new ObjectInputStream(bis);
+					  Content c = (Content) in.readObject(); 
+					  FileManager.writeContent(c, InfoService.this);
+					  DtnLog.writeReceiveLog(mBundle.getReportto().toString(), c, SingletonEndpoint.ME.toString());
+
+					} 
+					finally 
+					{
+					  bis.close();
+					  in.close();
+					}
 				}
 				catch(Exception e)
 				{
-					
+					DtnLog.writeErrorLog();
 				}
            
 		    

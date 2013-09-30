@@ -134,6 +134,37 @@ public class FileManager extends Activity
 		}
 	
 	}
+	public static Content getMostRecentContent(String type,Context ctx)
+	{
+		loadListFile(ctx);
+		if(filesPaths.isEmpty())
+		{
+			return null;
+		}
+		else
+		{
+			Content ct = null;
+			for (int i = 0; i < filesPaths.size(); i++)
+			{
+				if(filesPaths.get(i)[1].equals(type))
+				{
+					if(ct == null)
+					{
+						ct = readContent(filesPaths.get(i)[0],ctx);
+					}
+					else
+					{										
+						if (dateComparison(filesPaths.get(i)[2],ct.getDate()))
+						{							
+							ct = readContent(filesPaths.get(i)[0],ctx);
+						}			
+					}
+				}
+			}
+			return ct;
+		}
+	
+	}
 	public static int getLeastRecentDatePos(Context ctx)
 	{
 		loadListFile(ctx);
@@ -426,6 +457,35 @@ public class FileManager extends Activity
 		return ret;
 		
 		
+		
+	}
+	
+	//TESTAAAAAAAAAAAAR
+	public static ArrayList<Content> getFilesToSend(Context ctx)
+	{
+		loadListFile(ctx);
+		ArrayList<Content> ret = new ArrayList<Content>();
+		ArrayList<String> types = new ArrayList<String>();		
+		for(int i = 0;i<filesPaths.size();i++)
+		{
+
+			String type = filesPaths.get(i)[1];	
+			if(!checkIfTypeExists(type,types))
+			{
+				types.add(type);
+			}			
+		}
+		for(int i = 0; i < types.size();i++)
+		{
+		
+			Content c = getMostRecentContent(types.get(i),ctx);
+			if(c!=null)
+			{
+				ret.add(c);
+			}
+		}
+		
+		return contents;
 		
 	}
 

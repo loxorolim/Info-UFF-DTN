@@ -1,5 +1,7 @@
-package uff.br.infouffdtn;
+package uff.br.infouffdtn.interfacepk;
 
+import uff.br.infouffdtn.R;
+import uff.br.infouffdtn.R.anim;
 import android.app.Activity;
 
 public class SlideTransition {

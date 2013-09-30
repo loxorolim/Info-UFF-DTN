@@ -22,10 +22,14 @@ import java.util.List;
 
 
 
+
+
 import uff.br.infouffdtn.db.Content;
 import uff.br.infouffdtn.db.FileManager;
+import uff.br.infouffdtn.dtn.InfoService;
 import uff.br.infouffdtn.interfacepk.Item;
 import uff.br.infouffdtn.interfacepk.ListItem;
+import uff.br.infouffdtn.interfacepk.SlideTransition;
 import uff.br.infouffdtn.interfacepk.TwoTextArrayAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;

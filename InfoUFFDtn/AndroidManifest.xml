@@ -35,11 +35,11 @@
         <activity android:name=".ShowContentActivity" android:theme="@android:style/Theme.NoTitleBar"> </activity>
         <activity android:name=".WebFetcherActivity" android:theme="@android:style/Theme.NoTitleBar"> </activity>
         
-        <service android:name="uff.br.infouffdtn.InfoService" />
+        <service android:name="uff.br.infouffdtn.dtn.InfoService" />
         
 	    <receiver
 	        android:enabled="true"
-	        android:name="uff.br.infouffdtn.InfoReceiver"
+	        android:name="uff.br.infouffdtn.dtn.InfoReceiver"
 	        android:exported="true"
 	        android:permission="de.tubs.ibr.dtn.permission.DTN_SERVER">
 	        <!-- Add intent filter for notification of incoming bundles -->
