@@ -44,6 +44,7 @@ public class FileManager extends Activity
 	private static String regex = "teste";
 	private static ArrayList<String[]> filesPaths = new ArrayList<String[]>();
 	private static ArrayList<Content> contents = new ArrayList<Content>();
+	private static final String REFRESH = "uff.br.infouffdtn.REFRESH";
 	//private static String contentFilePath ="/data/data/br.uff.pse.dest/contents/";
 
 	public static void writeContent(Content content, Context ctx) 
@@ -77,6 +78,8 @@ public class FileManager extends Activity
 							info[2] = content.getDate();
 							filesPaths.add(info);
 							saveListFile(ctx);
+							Intent i = new Intent(REFRESH);
+							ctx.sendBroadcast(i);
 				}
 				catch (Exception e)
 				{
@@ -485,7 +488,7 @@ public class FileManager extends Activity
 			}
 		}
 		
-		return contents;
+		return ret;
 		
 	}
 
