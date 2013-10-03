@@ -192,9 +192,14 @@ public class InfoService extends IntentService
 								else
 								{
 									Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
-									DtnLog.writeSendLog(SingletonEndpoint.ME.toString(), files.get(j), neighbours.get(i).endpoint.toString());
+									DtnLog.writeSendLog(mClient.getDTNService().getEndpoint(), files.get(j), neighbours.get(i).endpoint.toString());
+									
 								}
 							} 
+							catch(Exception e)
+							{
+								
+							}
 							finally
 							{
 							  out.close();
@@ -449,9 +454,13 @@ public class InfoService extends IntentService
 					  in = new ObjectInputStream(bis);
 					  Content c = (Content) in.readObject(); 
 					  FileManager.writeContent(c, InfoService.this);
-					  DtnLog.writeReceiveLog(mBundle.getReportto().toString(), c, SingletonEndpoint.ME.toString());
+					  DtnLog.writeReceiveLog(mBundle.getReportto().toString(), c, mClient.getDTNService().getEndpoint());
 
 					} 
+					catch(Exception e)
+					{
+						
+					}
 					finally 
 					{
 					  bis.close();

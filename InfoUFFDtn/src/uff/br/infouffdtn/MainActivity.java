@@ -129,6 +129,25 @@ public class MainActivity extends Activity
 					}
 				}
 			});
+			Button b3 = (Button) findViewById(R.id.logButton);
+			b3.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					try
+					{
+						Intent intent = new Intent(MainActivity.this, ShowLogActivity.class);
+						startActivity(intent);
+						//recoverWebPage();
+					}
+					catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
 
 			Button b4 = (Button) findViewById(R.id.displayactivity);
 			b4.setOnClickListener(new OnClickListener()

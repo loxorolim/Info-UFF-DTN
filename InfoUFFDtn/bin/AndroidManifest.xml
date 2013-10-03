@@ -34,6 +34,7 @@
       
         <activity android:name=".ShowContentActivity" android:theme="@android:style/Theme.NoTitleBar"> </activity>
         <activity android:name=".WebFetcherActivity" android:theme="@android:style/Theme.NoTitleBar"> </activity>
+         <activity android:name=".ShowLogActivity" android:theme="@android:style/Theme.NoTitleBar"> </activity>
         
         <service android:name="uff.br.infouffdtn.dtn.InfoService" />
         
