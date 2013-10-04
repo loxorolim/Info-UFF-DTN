@@ -78,6 +78,25 @@ public class DisplayActivity extends Activity
 		}
 		
 	};
+	private OnItemClickListener listener = new OnItemClickListener()
+	{
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1,
+				int arg2, long arg3) {
+			
+			String filepath = ((ListItem)(values.get(arg2))).getFilePath();
+			Intent intent = new Intent(DisplayActivity.this, ShowContentActivity.class);
+			intent.putExtra("filepath", filepath);
+			startActivity(intent);
+			SlideTransition.forwardTransition(DisplayActivity.this);
+			// TODO Auto-generated method stub
+			//setDeleteDialogBuilder(arg2);
+			//deleteDialog.show();
+
+		}
+		
+	};
 	public void onCreate(Bundle icicle)
 	{
 		super.onCreate(icicle);
@@ -88,6 +107,7 @@ public class DisplayActivity extends Activity
 		listView = (ListView)findViewById(R.id.listView1);
 		//registerForContextMenu(listView);
 		listView.setOnItemLongClickListener(llistener);
+		listView.setOnItemClickListener(listener);
 		
 		
 		setDeleteAllDialogBuilder();

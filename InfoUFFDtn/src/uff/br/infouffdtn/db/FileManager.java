@@ -51,15 +51,16 @@ public class FileManager extends Activity
 	{
 		
 		loadListFile(ctx);
-		String fileName = writeValidation(content.getName(),ctx,1);	
-		//String fileName = content.getName()+regex+content.getDate();
+		//String fileName = writeValidation(content.getName(),ctx,1);	
+		String fileName = content.getFilepath();
 		
 		try
 		{
 			if(dateComparison(content.getDate(),getMostRecentDate(content.getName(),ctx)))
 			{
 				
-				FileOutputStream fOut = ctx.openFileOutput(fileName, Context.MODE_PRIVATE);
+				//FileOutputStream fOut = ctx.openFileOutput(fileName, Context.MODE_PRIVATE);
+				FileOutputStream fOut = new FileOutputStream(fileName);
 				BufferedOutputStream buffer = new BufferedOutputStream (fOut);
 				ObjectOutput output = new ObjectOutputStream ( buffer);
 				try
@@ -67,7 +68,9 @@ public class FileManager extends Activity
 					if(filesPaths.size() == listSize)
 					{
 						int pos = getLeastRecentDatePos(ctx);
-						ctx.deleteFile(filesPaths.get(pos)[0]);
+						//ctx.deleteFile(filesPaths.get(pos)[0]);
+						File f = new File(filesPaths.get(pos)[0]);
+						f.delete();
 						filesPaths.remove(pos);
 						
 					}
@@ -238,7 +241,8 @@ public class FileManager extends Activity
 		try
 		{
 		      //use buffering
-		      FileInputStream file = ctx.openFileInput(fileName);
+		     // FileInputStream file = ctx.openFileInput(fileName);
+			  FileInputStream file = new FileInputStream(fileName);
 		      BufferedInputStream buffer = new BufferedInputStream( file );
 		      ObjectInput input = new ObjectInputStream ( buffer );
 		      try
@@ -322,7 +326,9 @@ public class FileManager extends Activity
 		int pos = getContentListPosition(fileName);
 		if(pos != -1)
 		{
-			ctx.deleteFile(fileName);
+			//ctx.deleteFile(fileName);
+			File f = new File(filesPaths.get(pos)[0]);
+			f.delete();
 		//	filesPaths.remove(fileName);
 			filesPaths.remove(pos);
 		}
@@ -342,7 +348,9 @@ public class FileManager extends Activity
 		loadListFile(ctx);
 		for(int i = 0; i < filesPaths.size() ; i++)
 		{
-			ctx.deleteFile(filesPaths.get(i)[0]);
+			//ctx.deleteFile(filesPaths.get(i)[0]);
+			File f = new File(filesPaths.get(i)[0]);
+			f.delete();
 		}
 		filesPaths.clear();
 		saveListFile(ctx);

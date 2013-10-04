@@ -13,6 +13,8 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import uff.br.infouffdtn.db.Content;
+import uff.br.infouffdtn.db.FileManager;
 import uff.br.infouffdtn.interfacepk.SlideTransition;
 import android.app.Activity;
 import android.content.Context;
@@ -49,15 +51,21 @@ public class ShowContentActivity extends Activity
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.showcontentactivitymenu);
-		// editText = (TextView) findViewById(R.id.textView1);
-		mWebview = (WebView) findViewById(R.id.webView1);
-		mWebview.setClickable(false);
-		mWebview.getSettings().setDefaultZoom(ZoomDensity.FAR);
-		mWebview.getSettings().setBuiltInZoomControls(true);
-		mWebview.getSettings().setSupportZoom(true);
-		// mWebview.getSettings().setJavaScriptEnabled(true);
+		imageView = (ImageView) findViewById(R.id.imageView1);
 		Intent intent = getIntent();
-		String archiveName = intent.getStringExtra("archiveName");
+		String filepath = intent.getStringExtra("filepath");
+		Content ct = FileManager.readContent(filepath, this);
+		Bitmap bm = ct.getBitmap();
+		try
+		{
+			imageView.setImageBitmap(bm);
+		}
+		catch(Exception e)
+		{
+			Exception x = e;
+		}
+		
+		
 		try
 		{
 			/*String payloadString = ContentsDatabase.readArchiveContentPayload(archiveName, this);

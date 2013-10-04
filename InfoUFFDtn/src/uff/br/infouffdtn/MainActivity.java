@@ -30,6 +30,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -113,12 +114,15 @@ public class MainActivity extends Activity
 						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 						Date d1 = new Date();
 						String data = dateFormat.format(d1);
-
-						Content ct = new Content("JornalUFF", data, true, "teste");
+						String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);
+						Content ct = new Content("JornalUFF", data, true, "teste",getFilesDir() + "/"+fp);
+						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
 						FileManager.writeContent(ct, MainActivity.this);
-						ct = new Content("QuadroUFF", data, true, "teste");
+						fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
+						ct = new Content("QuadroUFF", data, true, "teste",getFilesDir()+"/"+fp);
 						FileManager.writeContent(ct, MainActivity.this);
-						ct = new Content("NoticiasUFF", data, true, "teste");
+						fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
+						ct = new Content("NoticiasUFF", data, true, "teste",getFilesDir()+"/"+fp);
 						FileManager.writeContent(ct, MainActivity.this);
 						//recoverWebPage();
 					}

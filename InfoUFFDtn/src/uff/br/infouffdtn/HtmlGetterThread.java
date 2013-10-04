@@ -48,8 +48,8 @@ public class HtmlGetterThread implements Runnable
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Date date = new Date();
 			String d = dateFormat.format(date);
-			Content newRecover = new Content("WebPage", d, true, fileString);
-			FileManager.writeContent(newRecover, ctx);
+			//Content newRecover = new Content("WebPage", d, true, fileString);
+			//FileManager.writeContent(newRecover, ctx);
 
 		}
 		catch (Exception e)
