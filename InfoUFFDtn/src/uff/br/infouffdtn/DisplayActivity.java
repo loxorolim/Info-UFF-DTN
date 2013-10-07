@@ -71,9 +71,17 @@ public class DisplayActivity extends Activity
 		@Override
 		public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 				int arg2, long arg3) {
+			try
+			{
 			// TODO Auto-generated method stub
 			setDeleteDialogBuilder(arg2);
 			deleteDialog.show();
+
+			}
+			catch(Exception e)
+			{
+				
+			}
 			return false;
 		}
 		
@@ -84,7 +92,8 @@ public class DisplayActivity extends Activity
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1,
 				int arg2, long arg3) {
-			
+			try
+			{
 			String filepath = ((ListItem)(values.get(arg2))).getFilePath();
 			Intent intent = new Intent(DisplayActivity.this, ShowContentActivity.class);
 			intent.putExtra("filepath", filepath);
@@ -93,6 +102,11 @@ public class DisplayActivity extends Activity
 			// TODO Auto-generated method stub
 			//setDeleteDialogBuilder(arg2);
 			//deleteDialog.show();
+			}
+			catch(Exception e)
+			{
+				
+			}
 
 		}
 		

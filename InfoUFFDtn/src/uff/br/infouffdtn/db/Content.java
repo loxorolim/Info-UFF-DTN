@@ -1,6 +1,8 @@
 package uff.br.infouffdtn.db;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.Date;
@@ -14,14 +16,12 @@ public class Content implements Serializable
 	private String name;
 	private String date;
 	private boolean fromWifi; // true = wifi false = dtn
-	private String payload;
 	private String filepath;
 
-	public Content(String name, String date, boolean commSource, String payload,String filepath)
+	public Content(String name, String date, boolean commSource,String filepath)
 	{
 		this.setName(name);
 		this.setDate(date);
-		this.setPayload(payload);
 		this.setCommSource(commSource);
 		this.setFilepath(filepath);
 
@@ -37,15 +37,6 @@ public class Content implements Serializable
 		this.name = name;
 	}
 
-	public String getPayload()
-	{
-		return payload;
-	}
-
-	public void setPayload(String payload2)
-	{
-		this.payload = payload2;
-	}
 
 	public String getDate()
 	{
@@ -60,7 +51,7 @@ public class Content implements Serializable
 	@Override
 	public String toString()
 	{
-		return name + "<CONTENTSPLIT>" + date + "<CONTENTSPLIT>" + payload;
+		return name + "<CONTENTSPLIT>" + date + "<CONTENTSPLIT>" + filepath;
 
 	}
 
@@ -92,6 +83,26 @@ public class Content implements Serializable
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	public byte[] getBitmapBytes()
+	{
+		byte[] byteArray = null;
+		try 
+		{
+			Bitmap bm = getBitmap();
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			byteArray = stream.toByteArray();
+			
+			
+		} 
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return byteArray;
+		
 	}
 
 

@@ -1,5 +1,6 @@
 package uff.br.infouffdtn.db;
 
+import java.nio.ByteBuffer;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.ByteOrder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import android.graphics.BitmapFactory;
 
 import uff.br.infouffdtn.interfacepk.Header;
 import uff.br.infouffdtn.interfacepk.Item;
@@ -34,6 +37,7 @@ import de.tubs.ibr.dtn.util.Base64.OutputStream;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 
@@ -499,6 +503,76 @@ public class FileManager extends Activity
 		return ret;
 		
 	}
+	public static byte[] prepareContentToSend(Content c)
+	{
+		//byte[] 0 a 1023 vai ter o Content, o resto será a imagem
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput out = null;
+		byte[] cBytes = new byte[1024];
+		byte[] bmBytes = null;
+		try 
+		{
+		  out = new ObjectOutputStream(bos);   
+		  out.writeObject(c);
+		  cBytes = bos.toByteArray();
+		  byte[] intBytes = ByteBuffer.allocate(4).putInt(cBytes.length).array();
+		  int x = byteArrayToInt(intBytes);
+		  bmBytes = c.getBitmapBytes();
+		  byte[] retBytes = new byte[cBytes.length + bmBytes.length + intBytes.length];
+		  System.arraycopy(intBytes, 0, retBytes, 0, intBytes.length);
+		  System.arraycopy(cBytes, 0, retBytes, intBytes.length, cBytes.length);
+		  System.arraycopy(bmBytes, 0, retBytes, intBytes.length + cBytes.length, bmBytes.length);
+		  return retBytes;
+		
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return null;
+	}
+	public static void writeContentFromBytes(byte[] b, Context ctx)
+	{
+		byte[] tam = new byte[4];
+		tam[0] = b[0];
+		tam[1] = b[1];
+		tam[2] = b[2];
+		tam[3] = b[3];
+		int contentSize = byteArrayToInt(tam);
+		byte[] contentBytes = new byte[contentSize];
+		System.arraycopy(b, 4 , contentBytes, 0, contentBytes.length);
+		byte[] bitMapBytes = new byte[b.length - contentSize - 4];
+		System.arraycopy(b, contentSize + 4 , bitMapBytes, 0, b.length - contentSize - 4);
+		
+		try
+		{
+			ByteArrayInputStream bos = new ByteArrayInputStream(contentBytes);
+			ObjectInputStream ois = new ObjectInputStream(bos);
+			Content c = (Content) ois.readObject();
+			Bitmap bitmap = BitmapFactory.decodeByteArray(bitMapBytes , 0, bitMapBytes.length);
+			c.setBitmap(bitmap);
+			FileManager.writeContent(c, ctx);
+		
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		
+		
+	}
+	public static int byteArrayToInt(byte[] b) 
+	{
+	    return   b[3] & 0xFF |
+	            (b[2] & 0xFF) << 8 |
+	            (b[1] & 0xFF) << 16 |
+	            (b[0] & 0xFF) << 24;
+	}
+
+
 
 	
 

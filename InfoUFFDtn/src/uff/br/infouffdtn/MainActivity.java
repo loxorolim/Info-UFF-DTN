@@ -115,15 +115,20 @@ public class MainActivity extends Activity
 						Date d1 = new Date();
 						String data = dateFormat.format(d1);
 						String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);
-						Content ct = new Content("JornalUFF", data, true, "teste",getFilesDir() + "/"+fp);
+						Content ct = new Content("JornalUFF", data, true,getFilesDir() + "/"+fp);
 						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
-						FileManager.writeContent(ct, MainActivity.this);
+					//	FileManager.writeContent(ct, MainActivity.this);
 						fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
-						ct = new Content("QuadroUFF", data, true, "teste",getFilesDir()+"/"+fp);
-						FileManager.writeContent(ct, MainActivity.this);
+						ct = new Content("QuadroUFF", data, true,getFilesDir()+"/"+fp);
+						//FileManager.writeContent(ct, MainActivity.this);
 						fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
-						ct = new Content("NoticiasUFF", data, true, "teste",getFilesDir()+"/"+fp);
-						FileManager.writeContent(ct, MainActivity.this);
+						ct = new Content("NoticiasUFF", data, true,getFilesDir()+"/"+fp);
+						//FileManager.writeContent(ct, MainActivity.this);
+						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
+						byte[] teste = null;
+						teste = FileManager.prepareContentToSend(ct);
+						FileManager.writeContentFromBytes(teste,MainActivity.this);
+						System.out.print(teste);
 						//recoverWebPage();
 					}
 					catch (Exception e)
