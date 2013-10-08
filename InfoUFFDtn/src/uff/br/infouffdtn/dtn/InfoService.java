@@ -449,9 +449,11 @@ public class InfoService extends IntentService
 					{
 					  //in = new ObjectInputStream(bis);
 					  //Content c = (Content) in.readObject(); 
-					  //FileManager.writeContent(c, InfoService.this);
-					  //DtnLog.writeReceiveLog(mBundle.getReportto().toString(), c, mClient.getDTNService().getEndpoint());
-						FileManager.writeContentFromBytes(streamBytes, InfoService.this);
+					  Content c = FileManager.getContentFromBytes(streamBytes, InfoService.this);
+					  FileManager.writeContent(c, InfoService.this);
+					  
+					  DtnLog.writeReceiveLog(mBundle.getReportto().toString(), c, mClient.getDTNService().getEndpoint());
+						//FileManager.writeContentFromBytes(streamBytes, InfoService.this);
 
 					} 
 					catch(Exception e)

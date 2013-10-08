@@ -564,6 +564,38 @@ public class FileManager extends Activity
 		
 		
 	}
+	public static Content getContentFromBytes(byte[] b, Context ctx)
+	{
+		byte[] tam = new byte[4];
+		tam[0] = b[0];
+		tam[1] = b[1];
+		tam[2] = b[2];
+		tam[3] = b[3];
+		int contentSize = byteArrayToInt(tam);
+		byte[] contentBytes = new byte[contentSize];
+		System.arraycopy(b, 4 , contentBytes, 0, contentBytes.length);
+		byte[] bitMapBytes = new byte[b.length - contentSize - 4];
+		System.arraycopy(b, contentSize + 4 , bitMapBytes, 0, b.length - contentSize - 4);
+		
+		try
+		{
+			ByteArrayInputStream bos = new ByteArrayInputStream(contentBytes);
+			ObjectInputStream ois = new ObjectInputStream(bos);
+			Content c = (Content) ois.readObject();
+			Bitmap bitmap = BitmapFactory.decodeByteArray(bitMapBytes , 0, bitMapBytes.length);
+			c.setBitmap(bitmap);
+			return c;
+		
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return null;
+		
+		
+		
+	}
 	public static int byteArrayToInt(byte[] b) 
 	{
 	    return   b[3] & 0xFF |

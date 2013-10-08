@@ -114,21 +114,24 @@ public class MainActivity extends Activity
 						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 						Date d1 = new Date();
 						String data = dateFormat.format(d1);
-						String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);
+						
+						String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
 						Content ct = new Content("JornalUFF", data, true,getFilesDir() + "/"+fp);
 						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
-					//	FileManager.writeContent(ct, MainActivity.this);
+						FileManager.writeContent(ct, MainActivity.this);
+						
 						fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
 						ct = new Content("QuadroUFF", data, true,getFilesDir()+"/"+fp);
-						//FileManager.writeContent(ct, MainActivity.this);
+						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+						FileManager.writeContent(ct, MainActivity.this);
+						
 						fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
 						ct = new Content("NoticiasUFF", data, true,getFilesDir()+"/"+fp);
-						//FileManager.writeContent(ct, MainActivity.this);
-						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
-						byte[] teste = null;
-						teste = FileManager.prepareContentToSend(ct);
-						FileManager.writeContentFromBytes(teste,MainActivity.this);
-						System.out.print(teste);
+						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
+						FileManager.writeContent(ct, MainActivity.this);
+						
+					
+						
 						//recoverWebPage();
 					}
 					catch (Exception e)
