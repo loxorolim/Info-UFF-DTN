@@ -175,13 +175,10 @@ public class InfoService extends IntentService
 						
 						for(int j = 0 ; j < files.size(); j++)
 						{
-							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-							ObjectOutput out = null;
+							
 							try 
 							{
-							  out = new ObjectOutputStream(bos);   
-							  out.writeObject(files.get(j));
-							  byte[] contentBytes = bos.toByteArray();
+							  byte[] contentBytes = FileManager.prepareContentToSend(files.get(j));
 							  BundleID ret = s.send(b, contentBytes);
 							  
 							  	if (ret == null)
@@ -202,8 +199,7 @@ public class InfoService extends IntentService
 							}
 							finally
 							{
-							  out.close();
-							  bos.close();
+
 							}													
 						}
 						
@@ -447,14 +443,15 @@ public class InfoService extends IntentService
 					*/
 					
 					byte[] streamBytes = stream.toByteArray();
-					ByteArrayInputStream bis = new ByteArrayInputStream(streamBytes);
-					ObjectInput in = null;
+					//ByteArrayInputStream bis = new ByteArrayInputStream(streamBytes);
+					//ObjectInput in = null;
 					try 
 					{
-					  in = new ObjectInputStream(bis);
-					  Content c = (Content) in.readObject(); 
-					  FileManager.writeContent(c, InfoService.this);
-					  DtnLog.writeReceiveLog(mBundle.getReportto().toString(), c, mClient.getDTNService().getEndpoint());
+					  //in = new ObjectInputStream(bis);
+					  //Content c = (Content) in.readObject(); 
+					  //FileManager.writeContent(c, InfoService.this);
+					  //DtnLog.writeReceiveLog(mBundle.getReportto().toString(), c, mClient.getDTNService().getEndpoint());
+						FileManager.writeContentFromBytes(streamBytes, InfoService.this);
 
 					} 
 					catch(Exception e)
@@ -463,8 +460,7 @@ public class InfoService extends IntentService
 					}
 					finally 
 					{
-					  bis.close();
-					  in.close();
+
 					}
 				}
 				catch(Exception e)
