@@ -18,12 +18,13 @@ public class Content implements Serializable
 	private boolean fromWifi; // true = wifi false = dtn
 	private String filepath;
 
-	public Content(String name, String date, boolean commSource,String filepath)
+	public Content(String name, String date, boolean commSource,String filepath,Bitmap b)
 	{
 		this.setName(name);
 		this.setDate(date);
 		this.setCommSource(commSource);
 		this.setFilepath(filepath);
+		this.setBitmap(b);
 
 	}
 
@@ -66,13 +67,13 @@ public class Content implements Serializable
 	}
 	public Bitmap getBitmap()
 	{
-		return BitmapFactory.decodeFile(getFilepath()+".png");
+		return BitmapFactory.decodeFile(getFilepath());
 	}
 	public void setBitmap(Bitmap bm)
 	{
 		try 
 		{
-			FileOutputStream fos = new FileOutputStream(getFilepath()+".png");
+			FileOutputStream fos = new FileOutputStream(getFilepath());
 			bm.compress(Bitmap.CompressFormat.PNG, 100, fos);
 			fos.flush();
 			fos.close();

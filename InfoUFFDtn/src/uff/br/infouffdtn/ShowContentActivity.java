@@ -54,8 +54,7 @@ public class ShowContentActivity extends Activity
 		imageView = (ImageView) findViewById(R.id.imageView1);
 		Intent intent = getIntent();
 		String filepath = intent.getStringExtra("filepath");
-		Content ct = FileManager.readContent(filepath, this);
-		Bitmap bm = ct.getBitmap();
+		Bitmap bm = FileManager.getBitmapFromFilepath(filepath);
 		try
 		{
 			imageView.setImageBitmap(bm);

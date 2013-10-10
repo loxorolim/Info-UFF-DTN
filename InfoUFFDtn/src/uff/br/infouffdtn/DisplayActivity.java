@@ -94,7 +94,7 @@ public class DisplayActivity extends Activity
 				int arg2, long arg3) {
 			try
 			{
-			String filepath = ((ListItem)(values.get(arg2))).getFilePath();
+			String filepath = ((ListItem)(values.get(arg2))).getContent().getFilepath();
 			Intent intent = new Intent(DisplayActivity.this, ShowContentActivity.class);
 			intent.putExtra("filepath", filepath);
 			startActivity(intent);
@@ -105,7 +105,7 @@ public class DisplayActivity extends Activity
 			}
 			catch(Exception e)
 			{
-				
+				Exception x = e;
 			}
 
 		}
@@ -198,7 +198,7 @@ public class DisplayActivity extends Activity
 	}
 	private void itemClickDelete(int pos)
 	{
-		String filepath = ((ListItem)(values.get(pos))).getFilePath();
+		String filepath = ((ListItem)(values.get(pos))).getContent().getFilepath();
 		FileManager.deleteContent(filepath, DisplayActivity.this);
 		showContents();
 	}

@@ -28,8 +28,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import android.graphics.BitmapFactory;
 
+import android.graphics.BitmapFactory;
+import uff.br.infouffdtn.MainActivity;
 import uff.br.infouffdtn.interfacepk.Header;
 import uff.br.infouffdtn.interfacepk.Item;
 import uff.br.infouffdtn.interfacepk.ListItem;
@@ -46,7 +47,7 @@ public class FileManager extends Activity
 	// Lista que conter� o nome dos contents
 	private static int listSize = 10;
 	private static String regex = "teste";
-	private static ArrayList<String[]> filesPaths = new ArrayList<String[]>();
+	private static ArrayList<Content> filesPaths = new ArrayList<Content>();
 	private static ArrayList<Content> contents = new ArrayList<Content>();
 	private static final String REFRESH = "uff.br.infouffdtn.REFRESH";
 	//private static String contentFilePath ="/data/data/br.uff.pse.dest/contents/";
@@ -56,34 +57,32 @@ public class FileManager extends Activity
 		
 		loadListFile(ctx);
 		//String fileName = writeValidation(content.getName(),ctx,1);	
-		String fileName = content.getFilepath();
+		//String fileName = content.getFilepath();
 		
-		try
-		{
+
 			if(dateComparison(content.getDate(),getMostRecentDate(content.getName(),ctx)))
 			{
-				
-				//FileOutputStream fOut = ctx.openFileOutput(fileName, Context.MODE_PRIVATE);
-				FileOutputStream fOut = new FileOutputStream(fileName);
-				BufferedOutputStream buffer = new BufferedOutputStream (fOut);
-				ObjectOutput output = new ObjectOutputStream ( buffer);
+
+				//FileOutputStream fOut = new FileOutputStream(fileName);
+				//BufferedOutputStream buffer = new BufferedOutputStream (fOut);
+				//ObjectOutput output = new ObjectOutputStream ( buffer);
 				try
 				{		
 					if(filesPaths.size() == listSize)
 					{
 						int pos = getLeastRecentDatePos(ctx);
 						//ctx.deleteFile(filesPaths.get(pos)[0]);
-						File f = new File(filesPaths.get(pos)[0]);
+						File f = new File(filesPaths.get(pos).getFilepath());
 						f.delete();
 						filesPaths.remove(pos);
 						
 					}
-							output.writeObject(content);	
-							String[] info = new String[3];
-							info[0] = fileName;
-							info[1] = content.getName();
-							info[2] = content.getDate();
-							filesPaths.add(info);
+						//	output.writeObject(content);	
+						//	String[] info = new String[3];
+						//	info[0] = fileName;
+						//	info[1] = content.getName();
+						//	info[2] = content.getDate();
+							filesPaths.add(content);
 							saveListFile(ctx);
 							Intent i = new Intent(REFRESH);
 							ctx.sendBroadcast(i);
@@ -94,15 +93,10 @@ public class FileManager extends Activity
 				}
 				finally
 				{
-					output.close();
+					//output.close();
 				}
 			}
-		}			
-		catch(IOException ex)
-		{
-		    ex.printStackTrace();
-		}
-		
+
 		
 		
 	}
@@ -125,17 +119,17 @@ public class FileManager extends Activity
 			String date = null;
 			for (int i = 0; i < filesPaths.size(); i++)
 			{
-				if(filesPaths.get(i)[1].equals(type))
+				if(filesPaths.get(i).getName().equals(type))
 				{
 					if(date == null)
 					{
-						date = filesPaths.get(i)[2];
+						date = filesPaths.get(i).getDate();
 					}
 					else
 					{										
-						if (dateComparison(filesPaths.get(i)[2],date))
+						if (dateComparison(filesPaths.get(i).getDate(),date))
 						{
-							date = filesPaths.get(i)[2];
+							date = filesPaths.get(i).getDate();
 						}			
 					}
 				}
@@ -156,17 +150,17 @@ public class FileManager extends Activity
 			Content ct = null;
 			for (int i = 0; i < filesPaths.size(); i++)
 			{
-				if(filesPaths.get(i)[1].equals(type))
+				if(filesPaths.get(i).getName().equals(type))
 				{
 					if(ct == null)
 					{
-						ct = readContent(filesPaths.get(i)[0],ctx);
+						ct = filesPaths.get(i);
 					}
 					else
 					{										
-						if (dateComparison(filesPaths.get(i)[2],ct.getDate()))
+						if (dateComparison(filesPaths.get(i).getDate(),ct.getDate()))
 						{							
-							ct = readContent(filesPaths.get(i)[0],ctx);
+							ct = filesPaths.get(i);
 						}			
 					}
 				}
@@ -191,14 +185,14 @@ public class FileManager extends Activity
 
 					if(date == null)
 					{
-						date = filesPaths.get(i)[2];
+						date = filesPaths.get(i).getDate();
 						ret = i;
 					}
 					else
 					{										
-						if (dateComparison(date,filesPaths.get(i)[2]))
+						if (dateComparison(date,filesPaths.get(i).getDate()))
 						{
-							date = filesPaths.get(i)[2];
+							date = filesPaths.get(i).getDate();
 							ret = i;
 						}			
 					}
@@ -238,7 +232,7 @@ public class FileManager extends Activity
 		return false;
 
 	}
-	public static Content readContent(String fileName, Context ctx) 
+/*	public static Content readContent(String fileName, Context ctx) 
 	{
 		loadListFile(ctx);
 		Content content = null;
@@ -269,18 +263,17 @@ public class FileManager extends Activity
 	    }
 		return content;
 		
-		
-	}
+	}*/
 	public static ArrayList<Item> readAllFilesNames(Context ctx) throws ParseException
 	{		
 		loadListFile(ctx);
 
 		ArrayList<String> types = new ArrayList<String>();
-		ArrayList<String[]> list = sortByDate(ctx);
+		ArrayList<Content> list = sortByDate(ctx);
 		for(int i = 0;i<list.size();i++)
 		{
 
-			String type = list.get(i)[1];	
+			String type = list.get(i).getName();	
 			if(!checkIfTypeExists(type,types))
 			{
 				types.add(type);
@@ -292,9 +285,9 @@ public class FileManager extends Activity
 			ret.add(new Header(types.get(i)));
 			for(int j = 0; j < list.size();j++)
 			{
-				if(list.get(j)[1].equals(types.get(i)))
+				if(list.get(j).getName().equals(types.get(i)))
 				{
-					ret.add(new ListItem(list.get(j)[0],list.get(j)[1],list.get(j)[2]));
+					ret.add(new ListItem(filesPaths.get(j)));
 				}
 				
 			}
@@ -331,7 +324,7 @@ public class FileManager extends Activity
 		if(pos != -1)
 		{
 			//ctx.deleteFile(fileName);
-			File f = new File(filesPaths.get(pos)[0]);
+			File f = new File(filesPaths.get(pos).getFilepath());
 			f.delete();
 		//	filesPaths.remove(fileName);
 			filesPaths.remove(pos);
@@ -342,7 +335,7 @@ public class FileManager extends Activity
 	{
 		for(int i = 0 ; i < filesPaths.size();i++)
 		{
-			if(filesPaths.get(i)[0].equals(filename))
+			if(filesPaths.get(i).getFilepath().equals(filename))
 				return i;
 		}
 		return -1;
@@ -353,20 +346,20 @@ public class FileManager extends Activity
 		for(int i = 0; i < filesPaths.size() ; i++)
 		{
 			//ctx.deleteFile(filesPaths.get(i)[0]);
-			File f = new File(filesPaths.get(i)[0]);
+			File f = new File(filesPaths.get(i).getFilepath());
 			f.delete();
 		}
 		filesPaths.clear();
 		saveListFile(ctx);
 	}
-	public static String writeValidation(String filename,Context ctx, int num)
+/*	public static String writeValidation(String filename,Context ctx, int num)
 	{
 		loadListFile(ctx);
 		for(int i = 0;i<filesPaths.size();i++)
 		{
-			if(filename.equals(filesPaths.get(i)[0]))		
+			if(filename.equals(filesPaths.get(i).getName()))		
 			{
-				if(num ==1)
+				if(num == 1)
 					return writeValidation(filename+"("+num+")",ctx,++num);
 				else
 				{
@@ -385,6 +378,7 @@ public class FileManager extends Activity
 		}
 		return filename;
 	}
+	*/
 
 	public static void saveListFile(Context ctx)
 	{
@@ -413,7 +407,7 @@ public class FileManager extends Activity
 	}
 	public static void loadListFile(Context ctx)
 	{
-		ArrayList<String[]> list = new ArrayList<String[]>();
+		ArrayList<Content> list = new ArrayList<Content>();
 		try
 		{
 		      //use buffering
@@ -422,7 +416,7 @@ public class FileManager extends Activity
 		      ObjectInput input = new ObjectInputStream ( buffer );
 		      try
 		      {
-		        list = (ArrayList<String[]>) input.readObject();
+		        list = (ArrayList<Content>) input.readObject();
 		      }
 		      finally
 		      {
@@ -441,12 +435,12 @@ public class FileManager extends Activity
 		
 	}	
 
-	private static ArrayList<String[]> sortByDate(Context ctx) throws ParseException
+	private static ArrayList<Content> sortByDate(Context ctx) throws ParseException
 	{
-		ArrayList<String[]> ret = new ArrayList<String[]>();
-		ArrayList<String[]> list = (ArrayList<String[]>)filesPaths.clone();
+		ArrayList<Content> ret = new ArrayList<Content>();
+		ArrayList<Content> list = (ArrayList<Content>)filesPaths.clone();
 		int tam = list.size();
-		String[] aux = null;
+		Content aux = null;
 		for(int i = 0; i< tam;i++)
 		{
 			
@@ -459,7 +453,7 @@ public class FileManager extends Activity
 					}
 					else
 					{
-						if(dateComparison(list.get(j)[2],aux[2]))
+						if(dateComparison(list.get(j).getDate(),aux.getDate()))
 						{
 							aux = list.get(j);
 						}
@@ -484,7 +478,7 @@ public class FileManager extends Activity
 		for(int i = 0;i<filesPaths.size();i++)
 		{
 
-			String type = filesPaths.get(i)[1];	
+			String type = filesPaths.get(i).getName();	
 			if(!checkIfTypeExists(type,types))
 			{
 				types.add(type);
@@ -533,7 +527,7 @@ public class FileManager extends Activity
 		
 		return null;
 	}
-	public static void writeContentFromBytes(byte[] b, Context ctx)
+/*	public static void writeContentFromBytes(byte[] b, Context ctx)
 	{
 		byte[] tam = new byte[4];
 		tam[0] = b[0];
@@ -553,6 +547,7 @@ public class FileManager extends Activity
 			Content c = (Content) ois.readObject();
 			Bitmap bitmap = BitmapFactory.decodeByteArray(bitMapBytes , 0, bitMapBytes.length);
 			c.setBitmap(bitmap);
+			
 			FileManager.writeContent(c, ctx);
 		
 		}
@@ -564,6 +559,7 @@ public class FileManager extends Activity
 		
 		
 	}
+	*/
 	public static Content getContentFromBytes(byte[] b, Context ctx)
 	{
 		byte[] tam = new byte[4];
@@ -583,6 +579,8 @@ public class FileManager extends Activity
 			ObjectInputStream ois = new ObjectInputStream(bos);
 			Content c = (Content) ois.readObject();
 			Bitmap bitmap = BitmapFactory.decodeByteArray(bitMapBytes , 0, bitMapBytes.length);
+			//String fp = FileManager.writeValidation(c.getName(), ctx, 0);
+			c.setFilepath(ctx.getFilesDir()+"/"+fp);
 			c.setBitmap(bitmap);
 			return c;
 		
@@ -596,12 +594,17 @@ public class FileManager extends Activity
 		
 		
 	}
+	
 	public static int byteArrayToInt(byte[] b) 
 	{
 	    return   b[3] & 0xFF |
 	            (b[2] & 0xFF) << 8 |
 	            (b[1] & 0xFF) << 16 |
 	            (b[0] & 0xFF) << 24;
+	}
+	public static Bitmap getBitmapFromFilepath(String filepath)
+	{
+		return BitmapFactory.decodeFile(filepath);
 	}
 
 

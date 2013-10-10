@@ -3,6 +3,7 @@ package uff.br.infouffdtn.interfacepk;
 
 
 import uff.br.infouffdtn.R;
+import uff.br.infouffdtn.db.Content;
 import uff.br.infouffdtn.interfacepk.TwoTextArrayAdapter.RowType;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,13 +12,15 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class ListItem implements Item {
-    private final String         type;
-    private final String         date;
-    private final String filepath;
-    public ListItem( String filepath,String text1, String text2) {
-        this.type = text1;
-        this.date = text2;
-        this.filepath = filepath;
+   // private final String         type;
+   // private final String         date;
+   //private final String filepath;
+    private final Content content;
+    public ListItem(Content c) {
+        //this.type = text1;
+        //this.date = text2;
+        //this.filepath = filepath;
+        content = c;
     }
 
     @Override
@@ -38,24 +41,14 @@ public class ListItem implements Item {
         TextView text1 = (TextView) view.findViewById(R.id.list_content1);
         TextView text2 = (TextView) view.findViewById(R.id.list_content2);
   //      cb.setChecked(FileManager.getCheckOptionFromFile(str2,ctx));
-        text1.setText(type);
-        text2.setText(date);
+        text1.setText(content.getName());
+        text2.setText(content.getDate());
 
         return view;
     }
-    @Override
-    public String toString()
+    public Content getContent()
     {
-    	return type+date;
+    	return content;
     }
-    
-    public String getType()
-    {
-    	return this.type;
-    
-    }
-    public String getFilePath()
-    {
-    	return this.filepath;
-    }
+
 }

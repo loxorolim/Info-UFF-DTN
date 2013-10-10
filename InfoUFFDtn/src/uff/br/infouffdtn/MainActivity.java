@@ -116,19 +116,38 @@ public class MainActivity extends Activity
 						String data = dateFormat.format(d1);
 						
 						String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
-						Content ct = new Content("JornalUFF", data, true,getFilesDir() + "/"+fp);
-						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
+						Content ct = new Content("JornalUFF", data, true,getFilesDir() + "/"+fp,BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
 						FileManager.writeContent(ct, MainActivity.this);
+
+						fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
+						 ct = new Content("JornalUFF", data, true,getFilesDir() + "/"+fp,BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
+						FileManager.writeContent(ct, MainActivity.this);
+
+						fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
+						ct = new Content("JornalUFF", data, true,getFilesDir() + "/"+fp,BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
+						FileManager.writeContent(ct, MainActivity.this);
+
+						fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
+					    ct = new Content("JornalUFF", data, true,getFilesDir() + "/"+fp,BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
+						FileManager.writeContent(ct, MainActivity.this);
+						
+						
 						
 						fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
-						ct = new Content("QuadroUFF", data, true,getFilesDir()+"/"+fp);
-						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+						ct = new Content("QuadroUFF", data, true,getFilesDir()+"/"+fp,BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
 						FileManager.writeContent(ct, MainActivity.this);
 						
-						fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
-						ct = new Content("NoticiasUFF", data, true,getFilesDir()+"/"+fp);
+						byte[] b = FileManager.prepareContentToSend(ct);
 						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
+						Content x = FileManager.getContentFromBytes(b, MainActivity.this);
+						FileManager.writeContent(x, MainActivity.this);
+						
+						fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
+						ct = new Content("NoticiasUFF", data, true,getFilesDir()+"/"+fp,BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
 						FileManager.writeContent(ct, MainActivity.this);
+						
+						//String x1 = "Teste";
+								
 						
 					
 						
