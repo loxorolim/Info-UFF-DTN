@@ -580,7 +580,7 @@ public class FileManager extends Activity
 			Content c = (Content) ois.readObject();
 			Bitmap bitmap = BitmapFactory.decodeByteArray(bitMapBytes , 0, bitMapBytes.length);
 			//String fp = FileManager.writeValidation(c.getName(), ctx, 0);
-			c.setFilepath(ctx.getFilesDir()+"/"+fp);
+			//c.setFilepath(ctx.getFilesDir()+"/"+fp);
 			c.setBitmap(bitmap);
 			return c;
 		
@@ -605,6 +605,27 @@ public class FileManager extends Activity
 	public static Bitmap getBitmapFromFilepath(String filepath)
 	{
 		return BitmapFactory.decodeFile(filepath);
+	}
+	public static String getAvaiableFilepath(String type,Context ctx,int num)
+	{
+		loadListFile(ctx);
+		String fp = ctx.getFilesDir().getAbsolutePath();
+		for(int i = 0; i < filesPaths.size();i++)
+		{
+			if(filesPaths.get(i).getFilepath().equals(fp+"/"+type))
+			{
+				if(num == 0 )
+					return getAvaiableFilepath(type+"("+(num+1)+")",ctx,++num);
+				else
+				{
+					String newType = type.substring(0, type.indexOf("("));
+					return getAvaiableFilepath(newType+"("+(num+1)+")",ctx,++num);
+				}
+			}
+		}
+		String x = fp+"/"+type;
+		return fp+"/"+type;
+			
 	}
 
 
