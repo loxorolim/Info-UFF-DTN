@@ -131,7 +131,7 @@ public class InfoService extends IntentService
 	{
 
 		
-			ArrayList<Content> files = FileManager.getFilesToSend(this);
+			ArrayList<Content> files = FileManager.getFilesToSend();
 		
 		
 			try
@@ -449,9 +449,9 @@ public class InfoService extends IntentService
 					{
 					  //in = new ObjectInputStream(bis);
 					  //Content c = (Content) in.readObject(); 
-					  Content c = FileManager.getContentFromBytes(streamBytes, InfoService.this);
+					  Content c = FileManager.getContentFromBytes(streamBytes);
 					 
-					  FileManager.writeContent(c, InfoService.this);
+					  FileManager.writeContent(c);
 					  
 					  
 					  DtnLog.writeReceiveLog(mBundle.getReportto().toString(), c, mClient.getDTNService().getEndpoint());

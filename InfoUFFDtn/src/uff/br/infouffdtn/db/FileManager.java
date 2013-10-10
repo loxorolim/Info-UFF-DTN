@@ -40,6 +40,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 
 
 public class FileManager extends Activity
@@ -50,17 +51,19 @@ public class FileManager extends Activity
 	private static ArrayList<Content> filesPaths = new ArrayList<Content>();
 	private static ArrayList<Content> contents = new ArrayList<Content>();
 	private static final String REFRESH = "uff.br.infouffdtn.REFRESH";
+	private static Context ctx = null;
+	private static String appPath = "";
 	//private static String contentFilePath ="/data/data/br.uff.pse.dest/contents/";
 
-	public static void writeContent(Content content, Context ctx) 
+	public static void writeContent(Content content) 
 	{
 		
-		loadListFile(ctx);
+		loadListFile();
 		//String fileName = writeValidation(content.getName(),ctx,1);	
 		//String fileName = content.getFilepath();
 		
 
-			if(dateComparison(content.getDate(),getMostRecentDate(content.getName(),ctx)))
+			if(dateComparison(content.getDate(),getMostRecentDate(content.getName())))
 			{
 
 				//FileOutputStream fOut = new FileOutputStream(fileName);
@@ -70,7 +73,7 @@ public class FileManager extends Activity
 				{		
 					if(filesPaths.size() == listSize)
 					{
-						int pos = getLeastRecentDatePos(ctx);
+						int pos = getLeastRecentDatePos();
 						//ctx.deleteFile(filesPaths.get(pos)[0]);
 						File f = new File(filesPaths.get(pos).getFilepath());
 						f.delete();
@@ -83,7 +86,7 @@ public class FileManager extends Activity
 						//	info[1] = content.getName();
 						//	info[2] = content.getDate();
 							filesPaths.add(content);
-							saveListFile(ctx);
+							saveListFile();
 							Intent i = new Intent(REFRESH);
 							ctx.sendBroadcast(i);
 				}
@@ -107,9 +110,9 @@ public class FileManager extends Activity
 		
 		return false;
 	}
-	public static String getMostRecentDate(String type,Context ctx)
+	public static String getMostRecentDate(String type)
 	{
-		loadListFile(ctx);
+		loadListFile();
 		if(filesPaths.isEmpty())
 		{
 			return null;
@@ -138,9 +141,9 @@ public class FileManager extends Activity
 		}
 	
 	}
-	public static Content getMostRecentContent(String type,Context ctx)
+	public static Content getMostRecentContent(String type)
 	{
-		loadListFile(ctx);
+		loadListFile();
 		if(filesPaths.isEmpty())
 		{
 			return null;
@@ -169,9 +172,9 @@ public class FileManager extends Activity
 		}
 	
 	}
-	public static int getLeastRecentDatePos(Context ctx)
+	public static int getLeastRecentDatePos()
 	{
-		loadListFile(ctx);
+		loadListFile();
 		int ret = -1;
 		if(filesPaths.isEmpty())
 		{
@@ -264,12 +267,12 @@ public class FileManager extends Activity
 		return content;
 		
 	}*/
-	public static ArrayList<Item> readAllFilesNames(Context ctx) throws ParseException
+	public static ArrayList<Item> readAllFilesNames() throws ParseException
 	{		
-		loadListFile(ctx);
+		loadListFile();
 
 		ArrayList<String> types = new ArrayList<String>();
-		ArrayList<Content> list = sortByDate(ctx);
+		ArrayList<Content> list = sortByDate();
 		for(int i = 0;i<list.size();i++)
 		{
 
@@ -287,7 +290,7 @@ public class FileManager extends Activity
 			{
 				if(list.get(j).getName().equals(types.get(i)))
 				{
-					ret.add(new ListItem(filesPaths.get(j)));
+					ret.add(new ListItem(list.get(j)));
 				}
 				
 			}
@@ -317,9 +320,9 @@ public class FileManager extends Activity
 		return false;
 		
 	}
-	public static void deleteContent(String fileName,Context ctx)
+	public static void deleteContent(String fileName)
 	{
-		loadListFile(ctx);
+		loadListFile();
 		int pos = getContentListPosition(fileName);
 		if(pos != -1)
 		{
@@ -329,7 +332,7 @@ public class FileManager extends Activity
 		//	filesPaths.remove(fileName);
 			filesPaths.remove(pos);
 		}
-		saveListFile(ctx);
+		saveListFile();
 	}
 	public static int getContentListPosition(String filename)
 	{
@@ -342,7 +345,7 @@ public class FileManager extends Activity
 	}
 	public static void deleteAllFiles(Context ctx)
 	{
-		loadListFile(ctx);
+		loadListFile();
 		for(int i = 0; i < filesPaths.size() ; i++)
 		{
 			//ctx.deleteFile(filesPaths.get(i)[0]);
@@ -350,7 +353,7 @@ public class FileManager extends Activity
 			f.delete();
 		}
 		filesPaths.clear();
-		saveListFile(ctx);
+		saveListFile();
 	}
 /*	public static String writeValidation(String filename,Context ctx, int num)
 	{
@@ -380,11 +383,13 @@ public class FileManager extends Activity
 	}
 	*/
 
-	public static void saveListFile(Context ctx)
+	public static void saveListFile()
 	{
 		try
 		{
-			FileOutputStream fOut = ctx.openFileOutput("SpecialListArchive", Context.MODE_PRIVATE);
+			
+			//FileOutputStream fOut = ctx.openFileOutput("SpecialListArchive", Context.MODE_PRIVATE);
+			FileOutputStream fOut = new FileOutputStream(new File(appPath+"/"+"SpecialListArchive"));
 			BufferedOutputStream buffer = new BufferedOutputStream (fOut);
 			ObjectOutput output = new ObjectOutputStream ( buffer);
 			try
@@ -405,14 +410,17 @@ public class FileManager extends Activity
 		    ex.printStackTrace();
 		}	
 	}
-	public static void loadListFile(Context ctx)
+	public static void loadListFile()
 	{
 		ArrayList<Content> list = new ArrayList<Content>();
 		try
 		{
 		      //use buffering
-		      FileInputStream file = ctx.openFileInput("SpecialListArchive");
-		      BufferedInputStream buffer = new BufferedInputStream( file );
+			
+			
+		   //   FileInputStream file = ctx.openFileInput("SpecialListArchive");
+			  FileInputStream fOut = new FileInputStream(new File(appPath+"/"+"SpecialListArchive"));
+		      BufferedInputStream buffer = new BufferedInputStream( fOut);
 		      ObjectInput input = new ObjectInputStream ( buffer );
 		      try
 		      {
@@ -435,7 +443,7 @@ public class FileManager extends Activity
 		
 	}	
 
-	private static ArrayList<Content> sortByDate(Context ctx) throws ParseException
+	private static ArrayList<Content> sortByDate() throws ParseException
 	{
 		ArrayList<Content> ret = new ArrayList<Content>();
 		ArrayList<Content> list = (ArrayList<Content>)filesPaths.clone();
@@ -470,9 +478,9 @@ public class FileManager extends Activity
 	}
 	
 	//TESTAAAAAAAAAAAAR
-	public static ArrayList<Content> getFilesToSend(Context ctx)
+	public static ArrayList<Content> getFilesToSend()
 	{
-		loadListFile(ctx);
+		loadListFile();
 		ArrayList<Content> ret = new ArrayList<Content>();
 		ArrayList<String> types = new ArrayList<String>();		
 		for(int i = 0;i<filesPaths.size();i++)
@@ -487,7 +495,7 @@ public class FileManager extends Activity
 		for(int i = 0; i < types.size();i++)
 		{
 		
-			Content c = getMostRecentContent(types.get(i),ctx);
+			Content c = getMostRecentContent(types.get(i));
 			if(c!=null)
 			{
 				ret.add(c);
@@ -560,7 +568,7 @@ public class FileManager extends Activity
 		
 	}
 	*/
-	public static Content getContentFromBytes(byte[] b, Context ctx)
+	public static Content getContentFromBytes(byte[] b)
 	{
 		byte[] tam = new byte[4];
 		tam[0] = b[0];
@@ -579,7 +587,7 @@ public class FileManager extends Activity
 			ObjectInputStream ois = new ObjectInputStream(bos);
 			Content c = (Content) ois.readObject();
 			Bitmap bitmap = BitmapFactory.decodeByteArray(bitMapBytes , 0, bitMapBytes.length);
-			//String fp = FileManager.writeValidation(c.getName(), ctx, 0);
+			String fp = FileManager.getAvaiableFilepath();
 			//c.setFilepath(ctx.getFilesDir()+"/"+fp);
 			c.setBitmap(bitmap);
 			return c;
@@ -606,26 +614,35 @@ public class FileManager extends Activity
 	{
 		return BitmapFactory.decodeFile(filepath);
 	}
-	public static String getAvaiableFilepath(String type,Context ctx,int num)
+	public static String writeValidation(String type,int num)
 	{
-		loadListFile(ctx);
-		String fp = ctx.getFilesDir().getAbsolutePath();
+		loadListFile();
+		String fp = appPath;
 		for(int i = 0; i < filesPaths.size();i++)
 		{
 			if(filesPaths.get(i).getFilepath().equals(fp+"/"+type))
 			{
 				if(num == 0 )
-					return getAvaiableFilepath(type+"("+(num+1)+")",ctx,++num);
+					return writeValidation(type+"("+(num+1)+")",++num);
 				else
 				{
 					String newType = type.substring(0, type.indexOf("("));
-					return getAvaiableFilepath(newType+"("+(num+1)+")",ctx,++num);
+					return writeValidation(newType+"("+(num+1)+")",++num);
 				}
 			}
 		}
 		String x = fp+"/"+type;
-		return fp+"/"+type;
-			
+		return fp+"/"+type;			
+	}
+	public static String getAvaiableFilepath()
+	{
+		
+		return writeValidation("InfoUffDtnFile",0);
+	}
+	public static void setAppPath(String  path)
+	{
+
+		appPath= path;
 	}
 
 

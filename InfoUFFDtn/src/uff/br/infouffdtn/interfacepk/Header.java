@@ -35,5 +35,11 @@ public class Header implements Item {
 
         return view;
     }
+    @Override
+    public String toString()
+    {
+		return name;
+    	
+    }
 
 }

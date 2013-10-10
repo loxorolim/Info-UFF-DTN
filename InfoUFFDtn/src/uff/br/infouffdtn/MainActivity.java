@@ -69,7 +69,7 @@ public class MainActivity extends Activity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-
+		FileManager.setAppPath(MainActivity.this.getFilesDir().getAbsolutePath());
 		setTitle("Info UFF DTN");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main3);
@@ -116,25 +116,25 @@ public class MainActivity extends Activity
 						String data = dateFormat.format(d1);
 						
 						//String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
-						Content ct = new Content("JornalUFF", data, true,FileManager.getAvaiableFilepath("InfoUFFDTNFile", MainActivity.this, 0),BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
-						FileManager.writeContent(ct, MainActivity.this);
+						Content ct = new Content("JornalUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
+						FileManager.writeContent(ct);
 
 
 						
 						
 						
 						//fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
-						ct = new Content("QuadroUFF", data, true,FileManager.getAvaiableFilepath("InfoUFFDTNFile", MainActivity.this, 0),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
-						FileManager.writeContent(ct, MainActivity.this);
+						ct = new Content("QuadroUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+						FileManager.writeContent(ct);
 						
 						byte[] b = FileManager.prepareContentToSend(ct);
 						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
-						Content x = FileManager.getContentFromBytes(b, MainActivity.this);
-						FileManager.writeContent(x, MainActivity.this);
+						Content x = FileManager.getContentFromBytes(b);
+						FileManager.writeContent(x);
 						
 						//fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
-						ct = new Content("NoticiasUFF", data, true,FileManager.getAvaiableFilepath("InfoUFFDTNFile", MainActivity.this, 0),BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
-						FileManager.writeContent(ct, MainActivity.this);
+						ct = new Content("NoticiasUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
+						FileManager.writeContent(ct);
 						
 						//String x1 = "Teste";
 								

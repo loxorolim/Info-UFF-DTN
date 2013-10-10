@@ -187,7 +187,7 @@ public class DisplayActivity extends Activity
 		// ImageView icon = (ImageView)findViewById(R.id.icon);
 		try
 		{
-			values = FileManager.readAllFilesNames(this);
+			values = FileManager.readAllFilesNames();
 	        TwoTextArrayAdapter adapter = new TwoTextArrayAdapter(this, values);
 	        listView.setAdapter(adapter);
 		}
@@ -199,7 +199,7 @@ public class DisplayActivity extends Activity
 	private void itemClickDelete(int pos)
 	{
 		String filepath = ((ListItem)(values.get(pos))).getContent().getFilepath();
-		FileManager.deleteContent(filepath, DisplayActivity.this);
+		FileManager.deleteContent(filepath);
 		showContents();
 	}
 

@@ -50,5 +50,10 @@ public class ListItem implements Item {
     {
     	return content;
     }
+    @Override
+    public String toString()
+    {
+    	return content.getName() +" "+ content.getDate()+" "+ content.getFilepath();
+    }
 
 }
