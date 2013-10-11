@@ -55,40 +55,7 @@ public class FileManager
 		
 		
 	}
-	public static Content readFile(String fileName) 
-	{
-		loadListFile();
-		Content content = null;
-		try
-		{
-		      //use buffering
-			  File file = new File(pathname+fileName);
-		      FileInputStream fIn = new FileInputStream(file);
-		      BufferedInputStream buffer = new BufferedInputStream(fIn );
-		      ObjectInput input = new ObjectInputStream ( buffer );
-		      try
-		      {
-		    	if(decrementAndCheckIfFetchable(fileName))
-		    		content = (Content)input.readObject();
-		        
-		      }
-		      finally
-		      {
-		        input.close();
-		      }
-	    }
-	    catch(ClassNotFoundException ex)
-	    {
-	      ex.printStackTrace();
-	    }
-	    catch(IOException ex)
-	    {
-	     ex.printStackTrace();
-	    }
-		return content;
-		
-		
-	}
+
 	public static void deleteFile(String fileName)
 	{
 		loadListFile();
@@ -181,28 +148,6 @@ public class FileManager
 		fileNames = list;
 		
 	}
-
-	public static boolean decrementAndCheckIfFetchable(String filename)
-	{
-		for(int i = 0; i< fileNames.size(); i++)
-		{
-			if(fileNames.get(i).getFilepath().equals(filename))
-			{
-				Integer counter = fileNames.get(i).getCounter();
-				if(counter > 0)
-				{
-					fileNames.get(i).setCounter(counter-1);
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-											
-			}		
-		}
-		return false;
-	}
 	public static String writeValidation(String type,int num)
 	{
 		loadListFile();
@@ -265,10 +210,23 @@ public class FileManager
 	}
 	public static ArrayList<BufferedImage> getImagesToSend()
 	{
+		loadListFile();
 		ArrayList<BufferedImage> ret = new ArrayList<BufferedImage>();
 		for(int i = 0 ; i < fileNames.size() ; i++)
 		{
-			ret.add(FileManager.readImageFromFile(fileNames.get(i).getFilepath()));
+			try
+			{
+				if(fileNames.get(i).getCounter() > 0)
+				{
+					ret.add(FileManager.readImageFromFile(fileNames.get(i).getFilepath()));
+					fileNames.get(i).setCounter(fileNames.get(i).getCounter() - 1);
+					saveListFile();
+				}
+			}
+			catch(Exception e)
+			{
+				
+			}
 		}
 		return ret;
 	}

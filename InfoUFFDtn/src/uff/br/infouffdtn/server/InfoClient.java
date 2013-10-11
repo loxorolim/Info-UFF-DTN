@@ -1,7 +1,10 @@
+package uff.br.infouffdtn.server;
 
-import java.awt.image.BufferedImage;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,20 +14,24 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import javax.imageio.ImageIO;
+import org.apache.commons.io.IOUtils;
+
+import android.graphics.Bitmap;
+import uff.br.infouffdtn.db.FileManager;
+
 
 /**
  * A Simple Socket client that connects to our socket server
  * @author faheem
  *
  */
-public class Client {
+public class InfoClient {
 
     private String hostname;
     private int port;
     Socket socketClient;
 
-    public Client(String hostname, int port){
+    public InfoClient(String hostname, int port){
         this.hostname = hostname;
         this.port = port;
     }
@@ -40,12 +47,10 @@ public class Client {
       //  BufferedReader stdIn = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
         //InputStream socketInputStream = socketClient.getInputStream();
         //socketInputStream.
-    	BufferedImage bi = ImageIO.read(socketClient.getInputStream());
-    	if(bi != null)
-    	{
-    		File f = new File("\\\\GAIVOTAS\\UserFolders$\\grolim\\Desktop\\Teste.png");
-    		ImageIO.write(bi, "PNG", f);
-    	}
+
+    	InputStream is = socketClient.getInputStream();
+    	byte[] bytes = IOUtils.toByteArray(is);
+    	Bitmap b = FileManager.getBitmapFromBytes(bytes);
         //  System.out.println("Response from server:");
       //  while ((userInput = stdIn.readLine()) != null) {
       //      System.out.println(userInput);
@@ -54,7 +59,7 @@ public class Client {
 
     public static void main(String arg[]){
         //Creating a SocketClient object
-        Client client = new Client ("localhost",9990);
+        InfoClient client = new InfoClient ("localhost",9990);
         try {
             //trying to establish connection to the server
             client.connect();

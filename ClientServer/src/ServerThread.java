@@ -1,5 +1,6 @@
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -43,7 +44,12 @@ public class ServerThread implements Runnable
 	    //	BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
 	        //Content c6 = FileManager.readFile("nome3");
 	    	
-    		ImageIO.write(imgs.get(i), "png", client.getOutputStream());
+    		//ImageIO.write(imgs.get(i), "png", client.getOutputStream());
+    		ByteArrayOutputStream out = new ByteArrayOutputStream();
+    		ImageIO.write(imgs.get(i), "BMP", out);
+    		byte[] b = out.toByteArray();
+    		OutputStream os = client.getOutputStream();
+    		os.write(b);
     		
     	/*	OutputStream socketOutputStream = client.getOutputStream();
 	        try

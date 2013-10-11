@@ -602,6 +602,19 @@ public class FileManager extends Activity
 		
 		
 	}
+	public static Bitmap getBitmapFromBytes(byte[] b)
+	{				
+		try
+		{
+			Bitmap bitmap = BitmapFactory.decodeByteArray(b , 0, b.length);
+			return bitmap;		
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return null;		
+	}
 	
 	public static int byteArrayToInt(byte[] b) 
 	{
