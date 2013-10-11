@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -28,6 +29,17 @@ public class Server {
         //Listen for clients. Block till one connects
         
         System.out.println("Waiting for clients...");
+        FileManager.deleteAllFiles();
+        BufferedImage img1 = null;
+        try
+        {
+        	img1 = FileManager.readImageFromFile("\\\\GAIVOTAS\\UserFolders$\\grolim\\Desktop\\Chrysanthemum.jpg");
+        }
+        catch(Exception e)
+        {
+        	Exception x = e;
+        }
+        FileManager.writeFile(img1, 3);
         while(true)
         {
 	        Socket client = serverSocket.accept();
@@ -53,6 +65,8 @@ public class Server {
             // initializing the Socket Server
             Server socketServer = new Server(portNumber);
             socketServer.start();
+            
+
             
             } catch (IOException e) {
             e.printStackTrace();

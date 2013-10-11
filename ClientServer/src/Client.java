@@ -1,10 +1,16 @@
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import javax.imageio.ImageIO;
 
 /**
  * A Simple Socket client that connects to our socket server
@@ -29,13 +35,17 @@ public class Client {
     }
 
     public void readResponse() throws IOException{
-        String userInput;
-        BufferedReader stdIn = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
-
-        System.out.println("Response from server:");
-        while ((userInput = stdIn.readLine()) != null) {
-            System.out.println(userInput);
-        }
+      //  String userInput;
+      //  BufferedReader stdIn = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
+        //InputStream socketInputStream = socketClient.getInputStream();
+        //socketInputStream.
+    	BufferedImage bi = ImageIO.read(socketClient.getInputStream());
+    	File f = new File("\\\\GAIVOTAS\\UserFolders$\\grolim\\Desktop\\Teste.png");
+    	ImageIO.write(bi, "PNG", f);
+        //  System.out.println("Response from server:");
+      //  while ((userInput = stdIn.readLine()) != null) {
+      //      System.out.println(userInput);
+      //  }
     }
 
     public static void main(String arg[]){

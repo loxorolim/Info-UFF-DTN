@@ -1,7 +1,13 @@
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.sql.Connection;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 
 public class ServerThread implements Runnable
@@ -29,19 +35,30 @@ public class ServerThread implements Runnable
 	}
     
     private void sendWelcomeMessage(Socket client) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-        Content c6 = FileManager.readFile("nome3");
-        try
-        {
-        	writer.write(c6.data);
-        }
-        catch(Exception e)
-        {
-        	writer.write("Cabou!");
-        }
-        
-        writer.flush();
-        writer.close();
+       
+    	//ArrayList<ServerFile> files = FileManager.getFilesToSend();
+    	ArrayList<BufferedImage>imgs = FileManager.getImagesToSend();
+    	for(int i = 0;i<imgs.size();i++)
+    	{
+	    //	BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+	        //Content c6 = FileManager.readFile("nome3");
+	    	
+    		ImageIO.write(imgs.get(i), "png", client.getOutputStream());
+    		
+    	/*	OutputStream socketOutputStream = client.getOutputStream();
+	        try
+	        {
+	        	socketOutputStream.write(files.get(i).getImageBytes());
+	        }
+	        catch(Exception e)
+	        {
+	        	//socketOutputStream.write("Cabou!");
+	        }
+	        
+	        socketOutputStream.flush();
+	        socketOutputStream.close();
+	        */
+    	}
     }
 
 }

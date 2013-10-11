@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -11,36 +12,35 @@ import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+
 
 
 
 
 public class FileManager 
 {
-	private static ArrayList<String> fileNames = new ArrayList<String>();
-	private static ArrayList<Integer> fileCounters = new ArrayList<Integer>();
+	private static ArrayList<ServerFile> fileNames = new ArrayList<ServerFile>();
+	//private static ArrayList<Integer> fileCounters = new ArrayList<Integer>();
 	
 	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 	private static String pathname = "\\\\GAIVOTAS\\UserFolders$\\grolim\\Desktop\\";
-	public static void writeFile(Content content, int counter) 
+	public static void writeFile(BufferedImage img, int counter) 
 	{
 		
 		loadListFile();
-		loadCounterListFile();
-		String fileName = writeValidation(content.name,1);					
-		try
-		{
-			File file = new File(pathname+fileName);
-			FileOutputStream fOut = new FileOutputStream(file);
-			BufferedOutputStream buffer = new BufferedOutputStream (fOut);
-			ObjectOutput output = new ObjectOutputStream ( buffer);
+		//loadCounterListFile();
+		String fileName = getAvaiableFilepath();				
+
+			//File file = new File(pathname+fileName);
+			//FileOutputStream fOut = new FileOutputStream(file);
+			//BufferedOutputStream buffer = new BufferedOutputStream (fOut);
+			//ObjectOutput output = new ObjectOutputStream ( buffer);
 			try
 			{													
-						output.writeObject(content);	
-						fileNames.add(fileName);
-						fileCounters.add(counter);
+						//output.writeObject(content);	
+						fileNames.add(new ServerFile(fileName,counter,img));
 						saveListFile();
-						saveCounterListFile();
 			}
 			catch (Exception e)
 			{
@@ -48,13 +48,9 @@ public class FileManager
 			}
 			finally
 			{
-				output.close();
 			}
-		}			
-		catch(IOException ex)
-		{
-		    ex.printStackTrace();
-		}
+					
+
 		
 		
 		
@@ -62,7 +58,6 @@ public class FileManager
 	public static Content readFile(String fileName) 
 	{
 		loadListFile();
-		loadCounterListFile();
 		Content content = null;
 		try
 		{
@@ -121,46 +116,15 @@ public class FileManager
 		loadListFile();
 		for(int i = 0; i < fileNames.size() ; i++)
 		{
-			File file = new File(pathname+fileNames.get(i));
+			File file = new File(fileNames.get(i).getFilepath());
 			file.delete();
 		}
-		for(int i = 0; i < fileCounters.size() ; i++)
-		{
-			File file2 = new File(pathname+fileCounters.get(i));
-			file2.delete();
-		}
+
 		
 		fileNames.clear();
-		fileCounters.clear();
-		saveListFile();
-		saveCounterListFile();
 
-	}
-	public static String writeValidation(String filename, int num)
-	{
-		loadListFile();
-		for(int i = 0;i<fileNames.size();i++)
-		{
-			if(filename.equals(fileNames.get(i)))		
-			{
-				if(num ==1)
-					return writeValidation(filename+"("+num+")",++num);
-				else
-				{
-					try
-					{
-					String file = filename.substring(0, filename.indexOf("("));
-					return writeValidation(file+"("+num+")",++num);
-					}
-					catch(Exception e)
-					{
-						System.out.print(e);
-					}
-					
-				}
-			}
-		}
-		return filename;
+		saveListFile();
+
 	}
 
 	public static void saveListFile()
@@ -190,7 +154,7 @@ public class FileManager
 	}
 	public static void loadListFile()
 	{
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<ServerFile> list = new ArrayList<ServerFile>();
 		try
 		{
 		      //use buffering
@@ -199,7 +163,7 @@ public class FileManager
 		      ObjectInput input = new ObjectInputStream ( buffer );
 		      try
 		      {
-		        list = (ArrayList<String>) input.readObject();
+		        list = (ArrayList<ServerFile>) input.readObject();
 		      }
 		      finally
 		      {
@@ -217,71 +181,17 @@ public class FileManager
 		fileNames = list;
 		
 	}
-	public static void saveCounterListFile()
-	{
-		try
-		{
-			FileOutputStream fOut = new FileOutputStream(new File(pathname + "CounterList"));
-			BufferedOutputStream buffer = new BufferedOutputStream (fOut);
-			ObjectOutput output = new ObjectOutputStream ( buffer);
-			try
-			{													
-						output.writeObject(fileCounters);	
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			finally
-			{
-				output.close();
-			}
-		}			
-		catch(IOException ex)
-		{
-		    ex.printStackTrace();
-		}	
-	}
-	public static void loadCounterListFile()
-	{
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		try
-		{
-		      //use buffering
-		      FileInputStream file = new FileInputStream(new File(pathname+"CounterList"));
-		      BufferedInputStream buffer = new BufferedInputStream( file );
-		      ObjectInput input = new ObjectInputStream ( buffer );
-		      try
-		      {
-		        list = (ArrayList<Integer>) input.readObject();
-		      }
-		      finally
-		      {
-		        input.close();
-		      }
-	    }
-	    catch(ClassNotFoundException ex)
-	    {
-	      ex.printStackTrace();
-	    }
-	    catch(IOException ex)
-	    {
-	     ex.printStackTrace();
-	    }
-		fileCounters = list;
-		
-	}
+
 	public static boolean decrementAndCheckIfFetchable(String filename)
 	{
 		for(int i = 0; i< fileNames.size(); i++)
 		{
-			if(fileNames.get(i).equals(filename))
+			if(fileNames.get(i).getFilepath().equals(filename))
 			{
-				Integer counter = fileCounters.get(i);
+				Integer counter = fileNames.get(i).getCounter();
 				if(counter > 0)
 				{
-					fileCounters.set(i, counter.intValue()-1);
-					saveCounterListFile();
+					fileNames.get(i).setCounter(counter-1);
 					return true;
 				}
 				else
@@ -293,6 +203,76 @@ public class FileManager
 		}
 		return false;
 	}
+	public static String writeValidation(String type,int num)
+	{
+		loadListFile();
+		String fp = pathname;
+		for(int i = 0; i < fileNames.size();i++)
+		{
+			if(fileNames.get(i).getFilepath().equals(fp+type))
+			{
+				if(num == 0 )
+					return writeValidation(type+"("+(num+1)+")",++num);
+				else
+				{
+					String newType = type.substring(0, type.indexOf("("));
+					return writeValidation(newType+"("+(num+1)+")",++num);
+				}
+			}
+		}
+		String x = fp+type;
+		return fp+type;			
+	}
+	public static String getAvaiableFilepath()
+	{
+		
+		return writeValidation("InfoUffServerFile",0);
+	}
+	public static void writeImageToFile(BufferedImage img, String dest)
+	{
+		 try
+		 {
+	            ImageIO.write(img, "png",new File(dest));
+	 
+	     } 
+		 catch (IOException e) 
+		 {
+	        	e.printStackTrace();
+	     }
+	}
+	public static BufferedImage readImageFromFile(String filepath)
+	{
+		 BufferedImage image = null;
+		 	try 
+		 	{			 
+	            return ImageIO.read(new File(filepath));
+	         
+	        } 
+		 	catch (IOException e) 
+	        {
+	        	e.printStackTrace();
+	        }
+			return image;
+	}
+	public static ArrayList<ServerFile> getFilesToSend()
+	{
+		ArrayList<ServerFile> ret = new ArrayList<ServerFile>();
+		for(int i = 0 ; i < fileNames.size() ; i++)
+		{
+			ret.add(fileNames.get(i));
+		}
+		return ret;
+	}
+	public static ArrayList<BufferedImage> getImagesToSend()
+	{
+		ArrayList<BufferedImage> ret = new ArrayList<BufferedImage>();
+		for(int i = 0 ; i < fileNames.size() ; i++)
+		{
+			ret.add(FileManager.readImageFromFile(fileNames.get(i).getFilepath()));
+		}
+		return ret;
+	}
+	
 
 
 
