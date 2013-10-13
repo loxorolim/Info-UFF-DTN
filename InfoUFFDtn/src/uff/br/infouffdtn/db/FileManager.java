@@ -34,6 +34,7 @@ import uff.br.infouffdtn.MainActivity;
 import uff.br.infouffdtn.interfacepk.Header;
 import uff.br.infouffdtn.interfacepk.Item;
 import uff.br.infouffdtn.interfacepk.ListItem;
+import uff.br.infouffdtn.server.CommFile;
 import de.tubs.ibr.dtn.util.Base64.OutputStream;
 import android.app.Activity;
 import android.content.Context;
@@ -55,9 +56,11 @@ public class FileManager extends Activity
 	private static String appPath = "";
 	//private static String contentFilePath ="/data/data/br.uff.pse.dest/contents/";
 
-	public static void writeContent(Content content) 
+	public static synchronized void writeContent(Content content) 
 	{
-		
+	
+		String x = content.getDate();
+		String y = content.getName();
 		loadListFile();
 		//String fileName = writeValidation(content.getName(),ctx,1);	
 		//String fileName = content.getFilepath();
@@ -515,8 +518,9 @@ public class FileManager extends Activity
 		byte[] bmBytes = null;
 		try 
 		{
+		  CommFile comm = new CommFile(c.getName(),c.getDate());
 		  out = new ObjectOutputStream(bos);   
-		  out.writeObject(c);
+		  out.writeObject(comm);
 		  cBytes = bos.toByteArray();
 		  byte[] intBytes = ByteBuffer.allocate(4).putInt(cBytes.length).array();
 		  int x = byteArrayToInt(intBytes);
@@ -568,7 +572,7 @@ public class FileManager extends Activity
 		
 	}
 	*/
-	public static Content getContentFromBytes(byte[] b)
+	public static Content getContentFromBytes(byte[] b, boolean fromWifi)
 	{
 		byte[] tam = new byte[4];
 		tam[0] = b[0];
@@ -585,17 +589,18 @@ public class FileManager extends Activity
 		{
 			ByteArrayInputStream bos = new ByteArrayInputStream(contentBytes);
 			ObjectInputStream ois = new ObjectInputStream(bos);
-			Content c = (Content) ois.readObject();
+			CommFile comm = (CommFile) ois.readObject();
 			Bitmap bitmap = BitmapFactory.decodeByteArray(bitMapBytes , 0, bitMapBytes.length);
 			String fp = FileManager.getAvaiableFilepath();
 			//c.setFilepath(ctx.getFilesDir()+"/"+fp);
-			c.setBitmap(bitmap);
+			//c.setBitmap(bitmap);
+			Content c = new Content(comm.getName(),comm.getDate(),fromWifi,fp , bitmap);
 			return c;
 		
 		}
 		catch(Exception e)
 		{
-			
+			Exception x = e;
 		}
 		return null;
 		
@@ -627,7 +632,7 @@ public class FileManager extends Activity
 	{
 		return BitmapFactory.decodeFile(filepath);
 	}
-	public static String writeValidation(String type,int num)
+	public static synchronized String writeValidation(String type,int num)
 	{
 		loadListFile();
 		String fp = appPath;
@@ -647,7 +652,7 @@ public class FileManager extends Activity
 		String x = fp+"/"+type;
 		return fp+"/"+type;			
 	}
-	public static String getAvaiableFilepath()
+	public static synchronized String getAvaiableFilepath()
 	{
 		
 		return writeValidation("InfoUffDtnFile",0);

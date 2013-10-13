@@ -36,20 +36,7 @@ public class Client {
     }
 
     public void readResponse() throws IOException{
-      //  String userInput;
-      //  BufferedReader stdIn = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
-        //InputStream socketInputStream = socketClient.getInputStream();
-        //socketInputStream.
-    	BufferedImage bi = ImageIO.read(socketClient.getInputStream());
-    	if(bi != null)
-    	{
-    		File f = new File("\\\\GAIVOTAS\\UserFolders$\\grolim\\Desktop\\Teste.png");
-    		ImageIO.write(bi, "PNG", f);
-    	}
-        //  System.out.println("Response from server:");
-      //  while ((userInput = stdIn.readLine()) != null) {
-      //      System.out.println(userInput);
-      //  }
+
     }
 
     public static void main(String arg[]){

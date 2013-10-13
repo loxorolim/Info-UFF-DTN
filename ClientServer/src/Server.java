@@ -1,12 +1,16 @@
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import javax.swing.JOptionPane;
 
 /**
 * A simple socket server
@@ -31,15 +35,26 @@ public class Server {
         System.out.println("Waiting for clients...");
         FileManager.deleteAllFiles();
         BufferedImage img1 = null;
+        BufferedImage img2 = null;
+        BufferedImage img3 = null;
+        BufferedImage img4 = null;
+        
         try
         {
-        	img1 = FileManager.readImageFromFile("\\\\GAIVOTAS\\UserFolders$\\grolim\\Desktop\\Chrysanthemum.jpg");
+        	img1 = FileManager.readImageFromFile("C:\\Users\\Guilherme\\Pictures\\derpcat.png");
+        	img2 = FileManager.readImageFromFile("C:\\Users\\Guilherme\\Pictures\\babykoala.png");
+        	img3 = FileManager.readImageFromFile("C:\\Users\\Guilherme\\Pictures\\Cute-Cat-1920x1080-HD-Wallpaper.jpg");
+        	img4 = FileManager.readImageFromFile("C:\\Users\\Guilherme\\Pictures\\funny-cat-full-hd-wallpaper-praying-kitten-cute-animal-picture.jpg");
+        	
         }
         catch(Exception e)
         {
         	Exception x = e;
         }
-        FileManager.writeFile(img1, 3);
+        FileManager.writeFile("Gato1",img1, 15);
+        FileManager.writeFile("Gato2",img2, 5);
+        FileManager.writeFile("Gato3",img3, 20);
+        FileManager.writeFile("Gato4",img4, 30);
         while(true)
         {
 	        Socket client = serverSocket.accept();
@@ -63,6 +78,8 @@ public class Server {
         
         try {
             // initializing the Socket Server
+  
+  
             Server socketServer = new Server(portNumber);
             socketServer.start();
             

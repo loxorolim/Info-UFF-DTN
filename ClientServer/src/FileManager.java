@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,9 +11,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
+
+import uff.br.infouffdtn.server.CommFile;
+
 
 
 
@@ -24,8 +32,8 @@ public class FileManager
 	//private static ArrayList<Integer> fileCounters = new ArrayList<Integer>();
 	
 	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-	private static String pathname = "\\\\GAIVOTAS\\UserFolders$\\grolim\\Desktop\\";
-	public static void writeFile(BufferedImage img, int counter) 
+	private static String pathname = "";
+	public static void writeFile(String name,BufferedImage img, int counter) 
 	{
 		
 		loadListFile();
@@ -39,8 +47,11 @@ public class FileManager
 			try
 			{													
 						//output.writeObject(content);	
-						fileNames.add(new ServerFile(fileName,counter,img));
-						saveListFile();
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				Date d1 = new Date();
+				String data = dateFormat.format(d1);
+				fileNames.add(new ServerFile(fileName,counter,img,data,name));
+				saveListFile();
 			}
 			catch (Exception e)
 			{
@@ -137,14 +148,11 @@ public class FileManager
 		        input.close();
 		      }
 	    }
-	    catch(ClassNotFoundException ex)
+	    catch(Exception e)
 	    {
-	      ex.printStackTrace();
+	     // e.printStackTrace();
 	    }
-	    catch(IOException ex)
-	    {
-	     ex.printStackTrace();
-	    }
+
 		fileNames = list;
 		
 	}
@@ -199,12 +207,12 @@ public class FileManager
 	        }
 			return image;
 	}
-	public static ArrayList<ServerFile> getFilesToSend()
+	public static ArrayList<byte[]> getBytessToSend()
 	{
-		ArrayList<ServerFile> ret = new ArrayList<ServerFile>();
-		for(int i = 0 ; i < fileNames.size() ; i++)
+		ArrayList<byte[]> ret = new ArrayList<byte[]>();
+		for(int i = 0;i<fileNames.size();i++)
 		{
-			ret.add(fileNames.get(i));
+			ret.add(FileManager.prepareFileToSend(fileNames.get(i)));
 		}
 		return ret;
 	}
@@ -229,6 +237,44 @@ public class FileManager
 			}
 		}
 		return ret;
+	}
+	public static byte[] prepareFileToSend(ServerFile c)
+	{
+		//byte[] 0 a 1023 vai ter o Content, o resto será a imagem
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput out = null;
+		byte[] cBytes = new byte[1024];
+		byte[] bmBytes = null;
+		try 
+		{
+		  CommFile comm = new CommFile(c.getName(),c.getDate());
+		  out = new ObjectOutputStream(bos);   
+		  out.writeObject(comm);
+		  cBytes = bos.toByteArray();
+		  byte[] intBytes = ByteBuffer.allocate(4).putInt(cBytes.length).array();
+		  int x = byteArrayToInt(intBytes);
+		  bmBytes = c.getImageBytes();
+		  byte[] retBytes = new byte[cBytes.length + bmBytes.length + intBytes.length];
+		  System.arraycopy(intBytes, 0, retBytes, 0, intBytes.length);
+		  System.arraycopy(cBytes, 0, retBytes, intBytes.length, cBytes.length);
+		  System.arraycopy(bmBytes, 0, retBytes, intBytes.length + cBytes.length, bmBytes.length);
+		  return retBytes;
+		
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return null;
+	}
+	public static int byteArrayToInt(byte[] b) 
+	{
+	    return   b[3] & 0xFF |
+	            (b[2] & 0xFF) << 8 |
+	            (b[1] & 0xFF) << 16 |
+	            (b[0] & 0xFF) << 24;
 	}
 	
 

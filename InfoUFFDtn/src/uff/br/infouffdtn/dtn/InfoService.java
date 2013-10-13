@@ -449,7 +449,7 @@ public class InfoService extends IntentService
 					{
 					  //in = new ObjectInputStream(bis);
 					  //Content c = (Content) in.readObject(); 
-					  Content c = FileManager.getContentFromBytes(streamBytes);
+					  Content c = FileManager.getContentFromBytes(streamBytes,false);
 					 
 					  FileManager.writeContent(c);
 					  

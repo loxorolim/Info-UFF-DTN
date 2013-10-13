@@ -7,9 +7,20 @@ import java.io.Serializable;
 import javax.imageio.ImageIO;
 
 public class ServerFile implements Serializable{
-	String filepath;
-	int counter;
+	String name;
 
+
+	String filepath;
+	String date;
+	int counter;
+	
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
 	public String getFilepath() 
 	{
 		return filepath;
@@ -23,6 +34,13 @@ public class ServerFile implements Serializable{
 	public int getCounter()
 	{
 		return counter;
+	}
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setCounter(int counter) 
@@ -51,10 +69,12 @@ public class ServerFile implements Serializable{
 			   	
 	}
 
-	public ServerFile(String filepath, int counter,BufferedImage img) 
+	public ServerFile(String filepath, int counter,BufferedImage img, String date , String name) 
 	{
 		this.filepath = filepath;
 		this.counter = counter;
+		this.date = date;
+		this.name = name;
 		FileManager.writeImageToFile(img,filepath);
 	}
 

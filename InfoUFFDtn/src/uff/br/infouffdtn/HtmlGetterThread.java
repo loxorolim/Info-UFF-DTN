@@ -11,8 +11,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import uff.br.infouffdtn.db.Content;
-
 import uff.br.infouffdtn.db.FileManager;
+import uff.br.infouffdtn.server.InfoClient;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -26,13 +26,13 @@ import android.webkit.WebView;
 public class HtmlGetterThread implements Runnable
 {
 
-	private String path;
-	private Context ctx;
+	private String ip;
+	private int port;
 
-	public HtmlGetterThread(String path, Context c)
+	public HtmlGetterThread(String ip, int i)
 	{
-		this.path = path;
-		this.ctx = c;
+		this.ip = ip;
+		this.port = i;
 	}
 
 	@Override
@@ -40,16 +40,9 @@ public class HtmlGetterThread implements Runnable
 	{
 		try
 		{
-			// URL URL = new URL("http://www.ic.uff.br/index.php/pt/");
-			URL URL = new URL("http://www.ic.uff.br/index.php/pt/");
-			File File = new File(path + "/arquivo.html");
-			org.apache.commons.io.FileUtils.copyURLToFile(URL, File);
-			String fileString = org.apache.commons.io.FileUtils.readFileToString(File);
-			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date date = new Date();
-			String d = dateFormat.format(date);
-			//Content newRecover = new Content("WebPage", d, true, fileString);
-			//FileManager.writeContent(newRecover, ctx);
+
+			InfoClient ic = new InfoClient("177.40.233.154",9990);
+			ic.initialize();
 
 		}
 		catch (Exception e)

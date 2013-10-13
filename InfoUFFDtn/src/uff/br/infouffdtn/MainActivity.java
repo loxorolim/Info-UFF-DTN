@@ -48,6 +48,7 @@ import android.widget.TextView;
 import uff.br.infouffdtn.db.*;
 import uff.br.infouffdtn.dtn.InfoService;
 import uff.br.infouffdtn.interfacepk.SlideTransition;
+import uff.br.infouffdtn.server.InfoClient;
 
 public class MainActivity extends Activity
 {
@@ -111,6 +112,11 @@ public class MainActivity extends Activity
 				{
 					try
 					{
+						
+						Thread t = new Thread(new HtmlGetterThread("177.40.233.154", 9990));
+						t.start();
+				/*		
+						
 						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 						Date d1 = new Date();
 						String data = dateFormat.format(d1);
@@ -139,7 +145,7 @@ public class MainActivity extends Activity
 						//String x1 = "Teste";
 								
 						
-					
+					*/
 						
 						//recoverWebPage();
 					}
@@ -265,8 +271,8 @@ public class MainActivity extends Activity
 		{
 			Log.w("yourtag", "Error Package name not found ", e);
 		}
-		Thread t = new Thread(new HtmlGetterThread(s, this));
-		t.start();
+	//	Thread t = new Thread(new HtmlGetterThread(s, this));
+	//	t.start();
 
 	}
 
