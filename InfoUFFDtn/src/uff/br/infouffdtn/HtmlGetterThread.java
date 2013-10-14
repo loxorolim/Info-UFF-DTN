@@ -28,11 +28,13 @@ public class HtmlGetterThread implements Runnable
 
 	private String ip;
 	private int port;
+	private boolean fetch;
 
-	public HtmlGetterThread(String ip, int i)
+	public HtmlGetterThread(String ip, int i, boolean fetch)
 	{
 		this.ip = ip;
 		this.port = i;
+		this.fetch = fetch;
 	}
 
 	@Override
@@ -41,8 +43,8 @@ public class HtmlGetterThread implements Runnable
 		try
 		{
 
-			InfoClient ic = new InfoClient("177.40.233.154",9990);
-			ic.initialize();
+			InfoClient ic = new InfoClient(ip,port);
+			ic.initialize(fetch);
 
 		}
 		catch (Exception e)

@@ -71,6 +71,7 @@ public class MainActivity extends Activity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		FileManager.setAppPath(MainActivity.this.getFilesDir().getAbsolutePath());
+		FileManager.setContext(MainActivity.this);
 		setTitle("Info UFF DTN");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main3);
@@ -113,7 +114,7 @@ public class MainActivity extends Activity
 					try
 					{
 						
-						Thread t = new Thread(new HtmlGetterThread("177.40.233.154", 9990));
+						Thread t = new Thread(new HtmlGetterThread("177.19.61.142 ", 9990,true));
 						t.start();
 				/*		
 						
@@ -164,8 +165,10 @@ public class MainActivity extends Activity
 				{
 					try
 					{
-						Intent intent = new Intent(MainActivity.this, ShowLogActivity.class);
-						startActivity(intent);
+						Thread t = new Thread(new HtmlGetterThread("177.19.61.142 ", 9990,false));
+						t.start();
+						//Intent intent = new Intent(MainActivity.this, ShowLogActivity.class);
+						//startActivity(intent);
 						//recoverWebPage();
 					}
 					catch (Exception e)

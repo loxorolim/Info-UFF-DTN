@@ -3,6 +3,7 @@ package uff.br.infouffdtn.server;
 
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -14,6 +15,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -28,6 +31,7 @@ import org.apache.commons.io.IOUtils;
 import android.graphics.Bitmap;
 import uff.br.infouffdtn.db.Content;
 import uff.br.infouffdtn.db.FileManager;
+import uff.br.infouffdtn.dtn.DtnLog;
 
 
 /**
@@ -74,35 +78,75 @@ public class InfoClient {
         {
         	Content c =FileManager.getContentFromBytes(bytesList.get(i),true);
         	FileManager.writeContent(c);
+        	DtnLog.writeReceiveLogFromServer(c);
         }
 	  
-    	
-    	//InputStream is = socketClient.getInputStream();
-    	//byte[] bytes = IOUtils.toByteArray(is);
-    	
-    	//Bitmap b = FileManager.getBitmapFromBytes(bytes);
-    	//DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		//Date d1 = new Date();
-		//String data = dateFormat.format(d1);
-    	//if( b != null)
-    //	{
-    		//Content x = new Content("Teste", data, true,FileManager.getAvaiableFilepath(),b);
-    		//FileManager.writeContent(x);
-    //		FileManager.getContentFromBytes(b)
-    //	}
-        //  System.out.println("Response from server:");
-      //  while ((userInput = stdIn.readLine()) != null) {
-      //      System.out.println(userInput);
-      //  }
+
     }
-    public void initialize()
+    public void sendDtnLog() 
+    {
+    	OutputStream os = null;
+	  	BufferedOutputStream buffer = null;   	   
+	  	ObjectOutput output = null;
+    	try
+    	{
+    		 //Send the message to the server   	  	
+    	   ArrayList<String> log = DtnLog.getLog();
+      	   os = socketClient.getOutputStream();
+      	   buffer = new BufferedOutputStream( os );
+      	   output = new ObjectOutputStream ( buffer ); 
+     	  // output.writeUTF("Log");
+      	   output.writeObject(log);	
+      	   
+      	   output.flush();
+      	   output.close();
+
+    	}
+    	catch(Exception e)
+    	{
+    		
+    	}
+    }
+    public void writeHeader(String header)
+    {
+    	OutputStream os = null;
+	  	BufferedOutputStream buffer = null;   	   
+	  	ObjectOutput output = null;
+    	try
+    	{
+    		 //Send the message to the server   	  	
+      	   os = socketClient.getOutputStream();
+      	   buffer = new BufferedOutputStream( os );
+      	   output = new ObjectOutputStream ( buffer ); 
+     	   output.writeUTF(header);
+      	   
+      	   output.flush();
+      	  // output.close();
+
+    	}
+    	catch(Exception e)
+    	{
+    		
+    	}
+    	
+    }
+    public void initialize(boolean fetch)
     {
     	 InfoClient client = new InfoClient (hostname,port);
          try {
              //trying to establish connection to the server
              client.connect();
              //if successful, read response from server
-             client.readResponse();
+             if(fetch)
+             {
+                 client.writeHeader("Fetch");
+            	 client.readResponse();
+             }
+             else
+             {
+            	 client.writeHeader("Log");
+            	 client.sendDtnLog();
+             }
 
          } catch (UnknownHostException e) {
              System.err.println("Host unknown. Cannot establish connection");

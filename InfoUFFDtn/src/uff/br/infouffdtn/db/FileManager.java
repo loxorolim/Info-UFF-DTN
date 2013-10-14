@@ -51,7 +51,7 @@ public class FileManager extends Activity
 	private static String regex = "teste";
 	private static ArrayList<Content> filesPaths = new ArrayList<Content>();
 	private static ArrayList<Content> contents = new ArrayList<Content>();
-	private static final String REFRESH = "uff.br.infouffdtn.REFRESH";
+	public static final String REFRESH = "uff.br.infouffdtn.REFRESH";
 	private static Context ctx = null;
 	private static String appPath = "";
 	//private static String contentFilePath ="/data/data/br.uff.pse.dest/contents/";
@@ -661,6 +661,10 @@ public class FileManager extends Activity
 	{
 
 		appPath= path;
+	}
+	public static void setContext(Context c) {
+		ctx = c;
+		
 	}
 
 

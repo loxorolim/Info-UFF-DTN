@@ -189,7 +189,7 @@ public class InfoService extends IntentService
 								else
 								{
 									Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
-									DtnLog.writeSendLog(mClient.getDTNService().getEndpoint(), files.get(j), neighbours.get(i).endpoint.toString());
+									DtnLog.writeSendLog(files.get(j), neighbours.get(i).endpoint.toString());
 									
 								}
 							} 
@@ -329,7 +329,7 @@ public class InfoService extends IntentService
 
 		// create a new DTN client
 		mClient = new DTNClient(mSession);
-
+		DtnLog.setMyPhoneName(getLocalEndpoint());
 		// create registration with "example-app" as endpoint
 		// if the EID of this device is "dtn://device" then the
 		// address of this app will be "dtn://device/example-app"
@@ -454,7 +454,7 @@ public class InfoService extends IntentService
 					  FileManager.writeContent(c);
 					  
 					  
-					  DtnLog.writeReceiveLog(mBundle.getReportto().toString(), c, mClient.getDTNService().getEndpoint());
+					  DtnLog.writeReceiveLog( c,mBundle.getReportto().toString());
 						//FileManager.writeContentFromBytes(streamBytes, InfoService.this);
 
 					} 

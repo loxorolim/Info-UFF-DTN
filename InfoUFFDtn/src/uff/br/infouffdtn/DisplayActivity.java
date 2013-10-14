@@ -115,7 +115,9 @@ public class DisplayActivity extends Activity
 	{
 		super.onCreate(icicle);
 		IntentFilter filter = new IntentFilter(InfoService.REFRESH);
+		IntentFilter filter2 = new IntentFilter(FileManager.REFRESH);
 		registerReceiver(mDataReceiver, filter);
+		registerReceiver(mDataReceiver, filter2);
 	//	getListView().setBackgroundResource(R.drawable.infouffdtnbackground);
 		setContentView(R.layout.displayactivitymenu);
 		listView = (ListView)findViewById(R.id.listView1);
