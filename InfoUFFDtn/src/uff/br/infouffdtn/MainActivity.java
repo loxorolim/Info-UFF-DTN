@@ -116,14 +116,14 @@ public class MainActivity extends Activity
 						
 						Thread t = new Thread(new HtmlGetterThread("177.19.61.142 ", 9990,true));
 						t.start();
-				/*		
+						
 						
 						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 						Date d1 = new Date();
 						String data = dateFormat.format(d1);
 						
 						//String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
-						Content ct = new Content("JornalUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.dtnpacket));
+						Content ct = new Content("JornalUFF", data, false,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
 						FileManager.writeContent(ct);
 
 
@@ -132,11 +132,11 @@ public class MainActivity extends Activity
 						
 						//fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
 						ct = new Content("QuadroUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
-						FileManager.writeContent(ct);
+						//FileManager.writeContent(ct);
 						
 						byte[] b = FileManager.prepareContentToSend(ct);
 						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
-						Content x = FileManager.getContentFromBytes(b);
+						Content x = FileManager.getContentFromBytes(b,true);
 						FileManager.writeContent(x);
 						
 						//fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
@@ -146,7 +146,7 @@ public class MainActivity extends Activity
 						//String x1 = "Teste";
 								
 						
-					*/
+					
 						
 						//recoverWebPage();
 					}

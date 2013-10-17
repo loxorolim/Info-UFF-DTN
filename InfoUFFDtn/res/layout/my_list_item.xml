@@ -8,7 +8,7 @@
         android:id="@+id/list_content1"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_margin="5dip"
+        android:layout_margin="1dip"
         android:clickable="false"
         android:gravity="center"
         android:longClickable="false"
@@ -17,7 +17,9 @@
         android:text="sample"
         android:textColor="#ff7f1d"
         android:textSize="17dip"
-        android:textStyle="bold" />
+        android:textStyle="bold" 
+        android:width="120dp"
+       />
 
     <TextView
         android:id="@+id/list_content2"
@@ -32,6 +34,15 @@
         android:paddingTop="1dip"
         android:text="sample"
         android:textColor="#5B0C0C"
-        android:textSize="17dip" />
+        android:textSize="17dip"
+        android:width="100dp"
+		 />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/square"
+        android:width="50dp" />
 
 </LinearLayout>

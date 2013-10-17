@@ -9,6 +9,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ListItem implements Item {
@@ -40,9 +41,18 @@ public class ListItem implements Item {
 
         TextView text1 = (TextView) view.findViewById(R.id.list_content1);
         TextView text2 = (TextView) view.findViewById(R.id.list_content2);
+        ImageView img = (ImageView) view.findViewById(R.id.imageView1);
   //      cb.setChecked(FileManager.getCheckOptionFromFile(str2,ctx));
         text1.setText(content.getName());
         text2.setText(content.getDate());
+        if(content.isCommSource())
+        	img.setImageResource(R.drawable.wifipacket);
+        else
+        	img.setImageResource(R.drawable.dtnpacket);
+        	
+        
+        
+        
 
         return view;
     }
