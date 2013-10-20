@@ -2,6 +2,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +19,8 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+
+import org.apache.commons.io.IOUtils;
 
 import uff.br.infouffdtn.dtn.DtnLog;
 
@@ -47,22 +50,32 @@ public class ServerThread implements Runnable
      	   {
      		   receiveLog();
      	   }
-     	   else
+     	   if(req.equals("Fetch"))
      	   {
      		  sendWelcomeMessage(client);
+     	   }
+     	   if(req.equals("DeleteAll"))
+     	   {
+     		   FileManager.deleteAllFiles();
+     	   }
+     	   if(req.equals("Write"))
+     	   {
+     		   try
+     		   {
+     			  byte[] bytes = (byte[]) input.readObject();
+        		   FileManager.writeImageFromBytes(bytes);
+     		   }
+     		   catch(Exception e)
+     		   {
+     			   Exception x = e;
+     		   }
+     		  
      	   }
     	}
     	catch(Exception e)
     	{
     		
     	}
-
-    	
-		
-
-    		 
-
-
 		
 	}
 	private void receiveLog()

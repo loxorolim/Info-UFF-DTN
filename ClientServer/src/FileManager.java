@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +20,9 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import uff.br.infouffdtn.db.Content;
 import uff.br.infouffdtn.server.CommFile;
 
 
@@ -255,7 +259,7 @@ public class FileManager
 		  byte[] intBytes = ByteBuffer.allocate(4).putInt(cBytes.length).array();
 		  int x = byteArrayToInt(intBytes);
 		  bmBytes = c.getImageBytes();
-		  byte[] retBytes = new byte[cBytes.length + bmBytes.length + intBytes.length];
+		  byte[] retBytes = new byte[intBytes.length + intBytes.length];
 		  System.arraycopy(intBytes, 0, retBytes, 0, intBytes.length);
 		  System.arraycopy(cBytes, 0, retBytes, intBytes.length, cBytes.length);
 		  System.arraycopy(bmBytes, 0, retBytes, intBytes.length + cBytes.length, bmBytes.length);
@@ -269,12 +273,58 @@ public class FileManager
 		
 		return null;
 	}
+	public static Content writeImageFromBytes(byte[] b)
+	{
+		byte[] tam = new byte[4];
+		tam[0] = b[0];
+		tam[1] = b[1];
+		tam[2] = b[2];
+		tam[3] = b[3];
+		int stringSize = byteArrayToInt(tam);
+				
+		tam[0] = b[4];
+		tam[1] = b[5];
+		tam[2] = b[6];
+		tam[3] = b[7];
+		int counter = byteArrayToInt(tam);
+		
+		
+		byte[] strBytes = new byte[stringSize];
+		System.arraycopy(b, 8 , strBytes, 0, strBytes.length);
+		byte[] bitMapBytes = new byte[b.length - stringSize - 8];
+		System.arraycopy(b, stringSize + 8 , bitMapBytes, 0, b.length - stringSize - 8);
+		
+		try
+		{
+			String name = new String(strBytes, "Cp1252");
+			BufferedImage bi = createImageFromBytes(bitMapBytes);
+			writeFile(name, bi, counter);
+
+		
+		}
+		catch(Exception e)
+		{
+			Exception x = e;
+		}
+		return null;
+		
+		
+		
+	}
 	public static int byteArrayToInt(byte[] b) 
 	{
 	    return   b[3] & 0xFF |
 	            (b[2] & 0xFF) << 8 |
 	            (b[1] & 0xFF) << 16 |
 	            (b[0] & 0xFF) << 24;
+	}
+	public static BufferedImage createImageFromBytes(byte[] imageData) {
+	    ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
+	    try {
+	        return ImageIO.read(bais);
+	    } catch (IOException e) {
+	        throw new RuntimeException(e);
+	    }
 	}
 	
 

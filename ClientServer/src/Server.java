@@ -34,26 +34,6 @@ public class Server {
         
         System.out.println("Waiting for clients...");
         FileManager.deleteAllFiles();
-        BufferedImage img1 = null;
-        BufferedImage img2 = null;
-        BufferedImage img3 = null;
-      //  BufferedImage img4 = null;
-        
-        try
-        {
-        	img1 = FileManager.readImageFromFile("C:\\Users\\Guilherme\\Pictures\\derpcat.png");
-        	img2 = FileManager.readImageFromFile("C:\\Users\\Guilherme\\Pictures\\babykoala.png");
-        	img3 = FileManager.readImageFromFile("C:\\Users\\Guilherme\\Pictures\\cute_seal-4872.jpg");
-        
-        	
-        }
-        catch(Exception e)
-        {
-        	Exception x = e;
-        }
-        FileManager.writeFile("Gato1",img1, 15);
-        FileManager.writeFile("Gato2",img2, 5);
-        FileManager.writeFile("Foca",img3, 20);
         while(true)
         {
 	        Socket client = serverSocket.accept();
