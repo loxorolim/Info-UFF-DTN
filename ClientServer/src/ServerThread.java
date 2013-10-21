@@ -58,6 +58,10 @@ public class ServerThread implements Runnable
      	   {
      		   FileManager.deleteAllFiles();
      	   }
+     	   if(req.equals("GetLog"))
+    	   {
+    		   sendDtnLog(client);
+    	   }
      	   if(req.equals("Write"))
      	   {
      		   try
@@ -120,29 +124,31 @@ public class ServerThread implements Runnable
        }
     	
     	
+   
+    }
+    private void sendDtnLog(Socket client) throws IOException 
+    {
+       OutputStream os = null;
+  	   BufferedOutputStream buffer = null;
+  	   ObjectOutput output = null;
+       try
+       {
+    	   String log = FileManager.loadLog();
+    	   os = client.getOutputStream();
+    	   buffer = new BufferedOutputStream( os );
+    	   output = new ObjectOutputStream ( buffer );   	    
+    	   output.writeObject(log);	
+       }
+       catch(Exception e)
+       {
+    	   
+       }
+       finally
+       {
+    	   output.flush();
+    	   output.close();
+       }
     	
-    	
-    	
-    	
-    	
-    	/*
-    	ArrayList<BufferedImage>imgs = FileManager.getImagesToSend();
-    	OutputStream os = client.getOutputStream();
-    	for(int i = 0;i<imgs.size();i++)
-    	{
-
-    		ByteArrayOutputStream out = new ByteArrayOutputStream();
-    		ImageIO.write(imgs.get(i), "BMP", out);
-    		byte[] b = out.toByteArray();  		
-    		os.write(b);
-    		
-    		
-
-    	}
-    	os.flush();
-		os.close();
-		*/
-		
    
     }
 

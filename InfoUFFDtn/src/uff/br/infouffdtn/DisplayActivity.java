@@ -57,6 +57,14 @@ import android.view.View;
 
 public class DisplayActivity extends Activity 
 {
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(mDataReceiver);
+		super.onDestroy();
+	}
+
+
+
 	private ListView listView;
 	private List<Item> values;	
 	private AlertDialog.Builder deleteAllBuilder;

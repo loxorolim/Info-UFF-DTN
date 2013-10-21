@@ -20,8 +20,7 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import uff.br.infouffdtn.db.Content;
 import uff.br.infouffdtn.server.CommFile;
 
@@ -33,6 +32,7 @@ import uff.br.infouffdtn.server.CommFile;
 public class FileManager 
 {
 	private static ArrayList<ServerFile> fileNames = new ArrayList<ServerFile>();
+	private static ArrayList<String> log = new ArrayList<String>();
 	//private static ArrayList<Integer> fileCounters = new ArrayList<Integer>();
 	
 	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -104,9 +104,10 @@ public class FileManager
 
 		
 		fileNames.clear();
+		log.clear();
 
 		saveListFile();
-
+		saveLogFile();
 	}
 
 	public static void saveListFile()
@@ -325,6 +326,81 @@ public class FileManager
 	    } catch (IOException e) {
 	        throw new RuntimeException(e);
 	    }
+	}
+	public static void saveLogFile()
+	{
+		try
+		{
+			FileOutputStream fOut = new FileOutputStream(new File(pathname + "LogList"));
+			BufferedOutputStream buffer = new BufferedOutputStream (fOut);
+			ObjectOutput output = new ObjectOutputStream ( buffer);
+			try
+			{													
+						output.writeObject(log);	
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				output.close();
+			}
+		}			
+		catch(IOException ex)
+		{
+		    ex.printStackTrace();
+		}	
+	}
+	public static void loadLogFile()
+	{
+		ArrayList<String> list = new ArrayList<String>();
+		try
+		{
+		      //use buffering
+		      FileInputStream file = new FileInputStream(new File(pathname+"LogList"));
+		      BufferedInputStream buffer = new BufferedInputStream( file );
+		      ObjectInput input = new ObjectInputStream ( buffer );
+		      try
+		      {
+		        list = (ArrayList<String>) input.readObject();
+		      }
+		      finally
+		      {
+		        input.close();
+		      }
+	    }
+	    catch(Exception e)
+	    {
+	     // e.printStackTrace();
+	    }
+
+		log = list;		
+	}
+	public static void saveLog(ArrayList<String> list)
+	{
+		loadLogFile();
+		
+		for(int i = 0 ; i< list.size(); i++)
+		{
+			log.add(list.get(i));
+		}
+		
+		saveLogFile();
+	}
+	public static String loadLog()
+	{
+		loadLogFile();
+		String ret = "";
+		
+		for(int i = 0 ; i<log.size();i++)
+		{
+			ret += log.get(i) + "\n";
+		}
+		
+		return ret;
+		
+		
 	}
 	
 

@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -33,7 +34,17 @@ public class Server {
         //Listen for clients. Block till one connects
         
         System.out.println("Waiting for clients...");
+       
+        
         FileManager.deleteAllFiles();
+        
+        
+        ArrayList<String> teste = new ArrayList<String>();
+        teste.add("Xico");
+        teste.add("Kibe");
+        teste.add("Xapoca");
+        FileManager.saveLog(teste);
+        
         while(true)
         {
 	        Socket client = serverSocket.accept();

@@ -32,4 +32,5 @@ public class InfoReceiver extends BroadcastReceiver
 				context.startService(i);
 			}
 	}
+
 }

@@ -30,6 +30,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -114,16 +115,18 @@ public class MainActivity extends Activity
 					try
 					{
 						
-						Thread t = new Thread(new HtmlGetterThread("177.19.61.142 ", 9990,true));
-						t.start();
+						//Thread t = new Thread(new HtmlGetterThread("177.19.61.142 ", 9990,true));
+						//t.start();
 						
 						
 						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 						Date d1 = new Date();
 						String data = dateFormat.format(d1);
+						String filepath = FileManager.getAvaiableFilepath();
+						Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
 						
 						//String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
-						Content ct = new Content("JornalUFF", data, false,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+						Content ct = new Content("JornalUFF", data, false,filepath,bm);
 						FileManager.writeContent(ct);
 
 

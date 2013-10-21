@@ -139,7 +139,7 @@ public class InfoService extends IntentService
 				List<Node> neighbours = mClient.getDTNService().getNeighbors();
 				for (int i = 0; i < neighbours.size(); i++)
 				{
-					String destAddress = neighbours.get(i).endpoint.toString() + "/example-app";
+					String destAddress = neighbours.get(i).endpoint.toString() + "/InfoUffDtn";
 					SingletonEndpoint destination = new SingletonEndpoint(destAddress);
 	
 					// create a new bundle
@@ -333,7 +333,7 @@ public class InfoService extends IntentService
 		// create registration with "example-app" as endpoint
 		// if the EID of this device is "dtn://device" then the
 		// address of this app will be "dtn://device/example-app"
-		Registration registration = new Registration("example-app");
+		Registration registration = new Registration("InfoUffDtn");
 
 		// additionally join a group
 		registration.add(PING_GROUP_EID);
@@ -365,9 +365,10 @@ public class InfoService extends IntentService
 		// terminate the DTN service
 		mClient.terminate();
 		mClient = null;
-
+		
 		super.onDestroy();
 	}
+	
 
 	/**
 	 * This data handler is used to process incoming bundles
@@ -496,9 +497,7 @@ public class InfoService extends IntentService
             } catch (IOException e) {
                 Log.e(TAG, "error on writing payload", e);
             }
-			// payload is received here
-	
-				// O IBR-DTN ESTÁ ENVIANDO VARIOS BUNDLES PORQUE O ARQUIVO STRING É MUITO GRANDE!
+
 			
 
 

@@ -1,5 +1,6 @@
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -19,6 +22,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import uff.br.infouffdtn.db.Content;
+import uff.br.infouffdtn.db.FileManager;
 import uff.br.infouffdtn.dtn.DtnLog;
 import uff.br.infouffdtn.server.CommFile;
 
@@ -44,9 +49,29 @@ public class Client {
         System.out.println("Connection Established");
     }
 
-    public void readResponse() throws IOException{
+    public synchronized void  readResponse() throws IOException{
+        //  String userInput;
+        //  BufferedReader stdIn = new BufferedReader(new InputStreamReader(socketClient.getInputStream()));
+          //InputStream socketInputStream = socketClient.getInputStream();
+          //socketInputStream.
+      	String logList = "";
+      	try
+      	{
+      		InputStream is = socketClient.getInputStream();
+      		BufferedInputStream buffer = new BufferedInputStream( is );
+      		ObjectInput input = new ObjectInputStream ( buffer );	      
+    	    logList = (String) input.readObject();
+    	    System.out.print(logList);
+    	       
+      	}
+      	catch(Exception e)
+      	{
+      		Exception x = e;
+      	}  	 
 
-    }
+  	  
+
+      }
     
 
     public void sendDeleteMessage() 
@@ -90,6 +115,29 @@ public class Client {
       	   
       	   output.flush();
       	   output.close();
+
+    	}
+    	catch(Exception e)
+    	{
+    		
+    	}
+    }
+    public void fetchLog() 
+    {
+    	OutputStream os = null;
+	  	BufferedOutputStream buffer = null;   	   
+	  	ObjectOutput output = null;
+    	try
+    	{
+    		 //Send the message to the server   	  	
+      	   os = socketClient.getOutputStream();
+      	   buffer = new BufferedOutputStream( os );
+      	   output = new ObjectOutputStream ( buffer ); 
+     	  // output.writeUTF("Log");
+      	   output.writeUTF("GetLog");
+      	   
+      	   output.flush();
+      	  // output.close();
 
     	}
     	catch(Exception e)
@@ -157,8 +205,11 @@ public class Client {
         try {
             //trying to establish connection to the server
             client.connect();
+                      
+            client.fetchLog();
+            client.readResponse();
            // client.sendDeleteMessage();
-            client.sendImage("C:\\Users\\Guilherme\\Pictures\\cute_seal-4872.jpg", "Imagem de número 1!", 10);
+           // client.sendImage("C:\\Users\\Guilherme\\Pictures\\cute_seal-4872.jpg", "Imagem de número 1!", 10);
      
             //if successful, read response from server
            // client.readResponse();

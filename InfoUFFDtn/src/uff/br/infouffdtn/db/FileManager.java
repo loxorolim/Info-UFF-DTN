@@ -634,6 +634,8 @@ public class FileManager extends Activity
 	}
 	public static synchronized String writeValidation(String type,int num)
 	{
+		try
+		{
 		loadListFile();
 		String fp = appPath;
 		for(int i = 0; i < filesPaths.size();i++)
@@ -650,7 +652,13 @@ public class FileManager extends Activity
 			}
 		}
 		String x = fp+"/"+type;
-		return fp+"/"+type;			
+		return fp+"/"+type;	
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return null;
 	}
 	public static synchronized String getAvaiableFilepath()
 	{
