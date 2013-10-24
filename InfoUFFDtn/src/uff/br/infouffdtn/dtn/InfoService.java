@@ -54,6 +54,7 @@ public class InfoService extends IntentService
 
 	// this intent send out a PING message
 	public static final String SEND_CONTENT_INTENT = "uff.br.infouffdtn.PING";
+	public static final String ALERT_PRESENCE_INTENT = "uff.br.infouffdtn.PRESENCE";
 
 	// indicates updated data to other components
 	public static final String DATA_UPDATED = "uff.br.infouffdtn.DATA_UPDATED";
@@ -127,15 +128,16 @@ public class InfoService extends IntentService
 		return null;
 	}
 
-	private void sendContent()
-	{
-
-		
-			ArrayList<Content> files = FileManager.getFilesToSend();
-		
-		
+	private synchronized void sendDtnBundle(int mode)
+	{	
 			try
 			{
+				ArrayList<Content> files = new ArrayList<Content>();
+				if(mode == DtnMode.SENDCONTENT)			
+				{
+					files = FileManager.getFilesToSend();
+				}
+				
 				List<Node> neighbours = mClient.getDTNService().getNeighbors();
 				for (int i = 0; i < neighbours.size(); i++)
 				{
@@ -149,10 +151,11 @@ public class InfoService extends IntentService
 					b.setDestination(destination);
 	
 					// limit the lifetime of the bundle to 60 seconds
-					b.setLifetime(60L);
+					b.setLifetime(120L);
+					
 	
 					// set status report requests for bundle reception
-					// b.set(ProcFlags.REQUEST_REPORT_OF_BUNDLE_RECEPTION, true);
+					 b.set(ProcFlags.REQUEST_REPORT_OF_BUNDLE_RECEPTION, true);
 	
 					// set destination for status reports
 					 b.setReportto(SingletonEndpoint.ME);
@@ -169,39 +172,56 @@ public class InfoService extends IntentService
 						Session s = mClient.getSession();
 	
 
-	
+								
 						// send the bundle
 						//BundleID ret = s.send(b, payload.getBytes());
 						
-						for(int j = 0 ; j < files.size(); j++)
+						if(mode == DtnMode.ALERTPRESENCE)
 						{
-							
-							try 
-							{
-							  byte[] contentBytes = FileManager.prepareContentToSend(files.get(j));
-							  BundleID ret = s.send(b, contentBytes);
-							  
-							  	if (ret == null)
-								{
-									Log.e(TAG, "could not send the message");
-									DtnLog.writeErrorLog();
-								}
-								else
-								{
-									Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
-									DtnLog.writeSendLog(files.get(j), neighbours.get(i).endpoint.toString());
-									
-								}
-							} 
-							catch(Exception e)
+							byte[] modeBytes = new byte[1];
+							modeBytes[0] = DtnMode.ALERTPRESENCE;
+							s.send(b,modeBytes);		
+						}						
+						
+						if(mode == DtnMode.SENDCONTENT)
+						{
+							for(int j = 0 ; j < files.size(); j++)
 							{
 								
-							}
-							finally
-							{
+								try 
+								{
+								  byte[] contentBytes = FileManager.prepareContentToSend(files.get(j));
+								  byte[] bytes = new byte[1+contentBytes.length];
+								  byte[] modeBytes = new byte[1];
+								  modeBytes[0] = DtnMode.SENDCONTENT;
+								  System.arraycopy(modeBytes,0, bytes ,0, 1);							
+								  System.arraycopy(contentBytes, 0 , bytes, 1, contentBytes.length);
+								  
+								  BundleID ret = s.send(b, bytes);
+								  
+								  	if (ret == null)
+									{
+										Log.e(TAG, "could not send the message");
+										DtnLog.writeErrorLog();
+									}
+									else
+									{
+										Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
+										DtnLog.writeSendLog(files.get(j), neighbours.get(i).endpoint.toString());
+										
+									}
+								} 
+								catch(Exception e)
+								{
+									
+								}
+								finally
+								{
 
-							}													
+								}													
+							}
 						}
+						
 						
 					}
 					catch (SessionDestroyedException e)
@@ -279,13 +299,13 @@ public class InfoService extends IntentService
 				else
 					if (SEND_CONTENT_INTENT.equals(action))
 					{
-						// retrieve the ping destination
-						// SingletonEndpoint destination = new
-						// SingletonEndpoint(intent.getStringExtra("destination"));
-
-						// send out the ping
-						sendContent();
+						sendDtnBundle(DtnMode.SENDCONTENT);
 					}
+					else
+						if (ALERT_PRESENCE_INTENT.equals(action))
+						{
+							sendDtnBundle(DtnMode.ALERTPRESENCE);
+						}
 	}
 
 	SessionConnection mSession = new SessionConnection()
@@ -434,39 +454,31 @@ public class InfoService extends IntentService
 
 				try
 				{
-			    	/*String payload = new String(stream.toByteArray());
-					String[] contentStrings = payload.split("<CONTENTSPLIT>");
-					if(contentStrings[0].equals("WebPage"))
-					{
-						Content contentReceived = new Content(contentStrings[0], contentStrings[1], false, contentStrings[2]);
-					//	ContentsDatabase.writeContent(contentReceived, InfoService.this);
-					}
-					*/
 					
 					byte[] streamBytes = stream.toByteArray();
+					byte mode = streamBytes[0];
+					byte[] bundleBytes = new byte[streamBytes.length-1];
+					
 					//ByteArrayInputStream bis = new ByteArrayInputStream(streamBytes);
 					//ObjectInput in = null;
-					try 
+					if(mode == DtnMode.ALERTPRESENCE)
 					{
-					  //in = new ObjectInputStream(bis);
-					  //Content c = (Content) in.readObject(); 
-					  Content c = FileManager.getContentFromBytes(streamBytes,false);
+						String senderEndpoint = mBundle.getReportto().toString();
+					}
+					if(mode == DtnMode.SENDCONTENT)
+					{
+					 
+					  System.arraycopy(streamBytes, 1, bundleBytes, 0, streamBytes.length-1);
+						
+					  Content c = FileManager.getContentFromBytes(bundleBytes,false);
 					 
 					  FileManager.writeContent(c);
 					  
 					  
 					  DtnLog.writeReceiveLog( c,mBundle.getReportto().toString());
 						//FileManager.writeContentFromBytes(streamBytes, InfoService.this);
-
-					} 
-					catch(Exception e)
-					{
-						
 					}
-					finally 
-					{
 
-					}
 				}
 				catch(Exception e)
 				{

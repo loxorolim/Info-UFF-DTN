@@ -35,6 +35,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -47,6 +48,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import uff.br.infouffdtn.db.*;
+import uff.br.infouffdtn.dtn.DtnMode;
 import uff.br.infouffdtn.dtn.InfoService;
 import uff.br.infouffdtn.interfacepk.SlideTransition;
 import uff.br.infouffdtn.server.InfoClient;
@@ -63,8 +65,10 @@ public class MainActivity extends Activity
 	private boolean mBound = false;
 	private Timer timerFetch;
 	private Timer timerShare;
+	private Timer timerPresence;
 	private final int TIMETOFETCH = 10;
 	private final int TIMETOSHARE = 10;
+	private final int TIMETOPRESENCE = 1;
 
 
 	/** Called when the activity is first created. */
@@ -76,6 +80,11 @@ public class MainActivity extends Activity
 		setTitle("Info UFF DTN");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main3);
+		
+
+		
+		
+		
 		// mTextEid = (EditText)findViewById(R.id.editEid);
 		// editText = (TextView) findViewById(R.id.textView1);
 
@@ -97,7 +106,8 @@ public class MainActivity extends Activity
 				@Override
 				public void onClick(View v)
 				{
-					alertServiceToSend();
+					alertServiceToSend(DtnMode.SENDCONTENT);
+					alertServiceToSend(DtnMode.ALERTPRESENCE);
 				//	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				//	Date d1 = new Date();
 				//	String data = dateFormat.format(d1);
@@ -253,7 +263,7 @@ public class MainActivity extends Activity
 		{
 			try
 			{
-				alertServiceToSend();
+				alertServiceToSend(DtnMode.SENDCONTENT);
 			}
 			catch (Exception e)
 			{
@@ -295,20 +305,24 @@ public class MainActivity extends Activity
 		}
 	};
 
-	private void alertServiceToSend()
+	private void alertServiceToSend(byte mode)
 	{
 		try
 		{
-
-			Intent i = new Intent(this, InfoService.class);
-			i.setAction(InfoService.SEND_CONTENT_INTENT);
-			startService(i);
-			i = new Intent(this, InfoService.class);
-			// i.setAction(InfoService.PING_INTENT);
-
-			// i.putExtra("destination", mTextEid.getText().toString());
-			// i.putExtra("destination", "dtn://androidRolim");
-			// startService(i);
+			if(mode == DtnMode.ALERTPRESENCE)
+			{
+				Intent i = new Intent(this, InfoService.class);
+				i.setAction(InfoService.SEND_CONTENT_INTENT);
+				startService(i);
+				i = new Intent(this, InfoService.class);
+			}
+			if(mode == DtnMode.SENDCONTENT)
+			{
+				Intent i = new Intent(this, InfoService.class);
+				i.setAction(InfoService.ALERT_PRESENCE_INTENT);
+				startService(i);
+				i = new Intent(this, InfoService.class);
+			}
 		}
 		catch (Exception e)
 		{
