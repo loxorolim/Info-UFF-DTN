@@ -17,12 +17,12 @@ public class DtnLog
 	private static String cel1;
 	
 
-	public static void writeSendLog(Content c, String cel2)
+	public static void writeSendLog(Content c)
 	{
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date d1 = new Date();
 		String data = dateFormat.format(d1);
-		String slog = data + " :\n " + "Dispositivo " + cel1 + " enviando o Content do tipo " + c.getName() + " com data " + c.getDate() + " para " + cel2;
+		String slog = data + " :\n " + "Dispositivo " + cel1 + " enviando o Content do tipo " + c.getName() + " com data " + c.getDate() + " para seus vizinhos ";
 		logs.add(slog);
 	}
 	public static void writeReceiveLog(Content c, String cel2)
@@ -59,6 +59,10 @@ public class DtnLog
 	public static void setMyPhoneName(String n)
 	{
 		cel1 = n;
+	}
+	public static String getMyPhoneName()
+	{
+		return cel1;
 	}
 	public static ArrayList<String> getLog()
 	{

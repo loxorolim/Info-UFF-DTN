@@ -191,11 +191,16 @@ public class InfoService extends IntentService
 								try 
 								{
 								  byte[] contentBytes = FileManager.prepareContentToSend(files.get(j));
-								  byte[] bytes = new byte[1+contentBytes.length];
+								  byte[] bytes = new byte[1+16+contentBytes.length];
 								  byte[] modeBytes = new byte[1];
+								  byte[] androidIdBytes = DtnLog.getMyPhoneName().getBytes();
 								  modeBytes[0] = DtnMode.SENDCONTENT;
-								  System.arraycopy(modeBytes,0, bytes ,0, 1);							
-								  System.arraycopy(contentBytes, 0 , bytes, 1, contentBytes.length);
+								  
+								  //1 BYTE : MODO DE OPERAÇÃO 16 BYTES: ID DO ANDROID RESTANTE: CONTENT COM IMAGEM
+								  
+								  System.arraycopy(modeBytes,0, bytes ,0, 1);	
+								  System.arraycopy(androidIdBytes,0, bytes ,1, androidIdBytes.length);
+								  System.arraycopy(contentBytes, 0 , bytes, 1+androidIdBytes.length, contentBytes.length);
 								  
 								  BundleID ret = s.send(b, bytes);
 								  
@@ -207,17 +212,17 @@ public class InfoService extends IntentService
 									else
 									{
 										Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
-										DtnLog.writeSendLog(files.get(j), neighbours.get(i).endpoint.toString());
+										
 										
 									}
 								} 
 								catch(Exception e)
 								{
-									
+									Exception x = e;
 								}
 								finally
 								{
-
+									DtnLog.writeSendLog(files.get(j));
 								}													
 							}
 						}
@@ -317,6 +322,7 @@ public class InfoService extends IntentService
 			Log.d(TAG, "Session connected");
 
 			String localeid = getLocalEndpoint();
+			//DtnLog.setMyPhoneName(localeid);
 			if (localeid != null)
 			{
 				// notify other components of the updated EID
@@ -349,7 +355,8 @@ public class InfoService extends IntentService
 
 		// create a new DTN client
 		mClient = new DTNClient(mSession);
-		DtnLog.setMyPhoneName(getLocalEndpoint());
+		
+		
 		// create registration with "example-app" as endpoint
 		// if the EID of this device is "dtn://device" then the
 		// address of this app will be "dtn://device/example-app"
@@ -365,6 +372,8 @@ public class InfoService extends IntentService
 		{
 			// initialize the connection to the DTN service
 			mClient.initialize(this, registration);
+
+			
 			Log.d(TAG, "Connection to DTN service established.");
 		}
 		catch (ServiceNotAvailableException e)
@@ -377,6 +386,7 @@ public class InfoService extends IntentService
 			// The service has not been found
 			Log.e(TAG, "The app has no permission to access the DTN service. It is important to install the DTN service first and then the app.", e);
 		}
+
 	}
 
 	@Override
@@ -458,24 +468,29 @@ public class InfoService extends IntentService
 					byte[] streamBytes = stream.toByteArray();
 					byte mode = streamBytes[0];
 					byte[] bundleBytes = new byte[streamBytes.length-1];
+					System.arraycopy(streamBytes, 1, bundleBytes, 0, streamBytes.length-1);
 					
 					//ByteArrayInputStream bis = new ByteArrayInputStream(streamBytes);
 					//ObjectInput in = null;
 					if(mode == DtnMode.ALERTPRESENCE)
 					{
-						String senderEndpoint = mBundle.getReportto().toString();
+						String sender = mBundle.getReportto().toString();
 					}
 					if(mode == DtnMode.SENDCONTENT)
 					{
 					 
-					  System.arraycopy(streamBytes, 1, bundleBytes, 0, streamBytes.length-1);
+					  byte[] androidIdBytes = new byte[16];
+					  byte[] contentBytes = new byte[bundleBytes.length - 16];
+					  
+					  System.arraycopy(bundleBytes, 0, androidIdBytes, 0, androidIdBytes.length);
+					  System.arraycopy(bundleBytes, 16, contentBytes, 0, contentBytes.length);
 						
-					  Content c = FileManager.getContentFromBytes(bundleBytes,false);
-					 
+					  String androidId = new String(androidIdBytes,"Cp1252");
+					  Content c = FileManager.getContentFromBytes(contentBytes,false);					 
 					  FileManager.writeContent(c);
 					  
 					  
-					  DtnLog.writeReceiveLog( c,mBundle.getReportto().toString());
+					  DtnLog.writeReceiveLog( c,androidId);
 						//FileManager.writeContentFromBytes(streamBytes, InfoService.this);
 					}
 

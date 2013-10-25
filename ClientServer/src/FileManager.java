@@ -212,12 +212,13 @@ public class FileManager
 	        }
 			return image;
 	}
-	public static ArrayList<byte[]> getBytessToSend()
+	public synchronized static ArrayList<byte[]> getBytessToSend()
 	{
 		ArrayList<byte[]> ret = new ArrayList<byte[]>();
 		for(int i = 0;i<fileNames.size();i++)
 		{
-			ret.add(FileManager.prepareFileToSend(fileNames.get(i)));
+			if(fileNames.get(i).getCounter() > 0)
+				ret.add(FileManager.prepareFileToSend(fileNames.get(i)));
 		}
 		return ret;
 	}
@@ -260,7 +261,7 @@ public class FileManager
 		  byte[] intBytes = ByteBuffer.allocate(4).putInt(cBytes.length).array();
 		  int x = byteArrayToInt(intBytes);
 		  bmBytes = c.getImageBytes();
-		  byte[] retBytes = new byte[intBytes.length + intBytes.length];
+		  byte[] retBytes = new byte[intBytes.length + cBytes.length + bmBytes.length];
 		  System.arraycopy(intBytes, 0, retBytes, 0, intBytes.length);
 		  System.arraycopy(cBytes, 0, retBytes, intBytes.length, cBytes.length);
 		  System.arraycopy(bmBytes, 0, retBytes, intBytes.length + cBytes.length, bmBytes.length);
@@ -269,7 +270,7 @@ public class FileManager
 		}
 		catch(Exception e)
 		{
-			
+			Exception x = e;
 		}
 		
 		return null;
@@ -377,7 +378,7 @@ public class FileManager
 
 		log = list;		
 	}
-	public static void saveLog(ArrayList<String> list)
+	public synchronized static void  saveLog(ArrayList<String> list)
 	{
 		loadLogFile();
 		
@@ -388,7 +389,7 @@ public class FileManager
 		
 		saveLogFile();
 	}
-	public static String loadLog()
+	public synchronized static String loadLog()
 	{
 		loadLogFile();
 		String ret = "";

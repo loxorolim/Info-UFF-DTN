@@ -38,12 +38,8 @@ public class Server {
         
         FileManager.deleteAllFiles();
         
-        
-        ArrayList<String> teste = new ArrayList<String>();
-        teste.add("Xico");
-        teste.add("Kibe");
-        teste.add("Xapoca");
-        FileManager.saveLog(teste);
+        JOptionPane.showMessageDialog(null, "SERVIDOR INICIADO!");
+
         
         while(true)
         {

@@ -178,6 +178,8 @@ public class Client {
 		
 		return null;
     }
+
+    
     public byte[] getImageBytes(String filepath)
 	{
 		byte[] imageInByte = null;
@@ -201,7 +203,8 @@ public class Client {
 
     public static void main(String arg[]){
         //Creating a SocketClient object
-        Client client = new Client ("localhost",9990);
+      //  Client client = new Client ("rolim.no-ip.org",9990);
+        Client client = new Client ("rolim.no-ip.org",9990);
         try {
             //trying to establish connection to the server
             client.connect();
@@ -209,7 +212,8 @@ public class Client {
             client.fetchLog();
             client.readResponse();
            // client.sendDeleteMessage();
-           // client.sendImage("C:\\Users\\Guilherme\\Pictures\\cute_seal-4872.jpg", "Imagem de número 1!", 10);
+           // client.sendImage("C:\\Users\\Guilherme\\Pictures\\cute_seal-4872.jpg", "Teste", 10);
+
      
             //if successful, read response from server
            // client.readResponse();

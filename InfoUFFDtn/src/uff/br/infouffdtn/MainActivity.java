@@ -1,6 +1,9 @@
 package uff.br.infouffdtn;
 
 import java.io.File;
+
+import android.provider.Settings.Secure;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -48,6 +51,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import uff.br.infouffdtn.db.*;
+import uff.br.infouffdtn.dtn.DtnLog;
 import uff.br.infouffdtn.dtn.DtnMode;
 import uff.br.infouffdtn.dtn.InfoService;
 import uff.br.infouffdtn.interfacepk.SlideTransition;
@@ -77,6 +81,9 @@ public class MainActivity extends Activity
 	{
 		FileManager.setAppPath(MainActivity.this.getFilesDir().getAbsolutePath());
 		FileManager.setContext(MainActivity.this);
+		
+		String android_id = Secure.getString(MainActivity.this.getContentResolver(),Secure.ANDROID_ID);
+		DtnLog.setMyPhoneName(android_id);
 		setTitle("Info UFF DTN");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main3);
@@ -125,43 +132,43 @@ public class MainActivity extends Activity
 					try
 					{
 						
-						//Thread t = new Thread(new HtmlGetterThread("177.19.61.142 ", 9990,true));
-						//t.start();
+						Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+						t.start();
 						
-						
-						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-						Date d1 = new Date();
-						String data = dateFormat.format(d1);
-						String filepath = FileManager.getAvaiableFilepath();
-						Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-						
-						//String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
-						Content ct = new Content("JornalUFF", data, false,filepath,bm);
-						FileManager.writeContent(ct);
-
-
-						
-						
-						
-						//fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
-						ct = new Content("QuadroUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
-						//FileManager.writeContent(ct);
-						
-						byte[] b = FileManager.prepareContentToSend(ct);
-						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
-						Content x = FileManager.getContentFromBytes(b,true);
-						FileManager.writeContent(x);
-						
-						//fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
-						ct = new Content("NoticiasUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
-						FileManager.writeContent(ct);
-						
-						//String x1 = "Teste";
-								
-						
-					
-						
-						//recoverWebPage();
+//						
+//						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//						Date d1 = new Date();
+//						String data = dateFormat.format(d1);
+//						String filepath = FileManager.getAvaiableFilepath();
+//						Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+//						
+//						//String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
+//						Content ct = new Content("JornalUFF", data, false,filepath,bm);
+//						FileManager.writeContent(ct);
+//
+//
+//						
+//						
+//						
+//						//fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
+//						ct = new Content("QuadroUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+//						//FileManager.writeContent(ct);
+//						
+//						byte[] b = FileManager.prepareContentToSend(ct);
+//						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
+//						Content x = FileManager.getContentFromBytes(b,true);
+//						FileManager.writeContent(x);
+//						
+//						//fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
+//						ct = new Content("NoticiasUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
+//						FileManager.writeContent(ct);
+//						
+//						//String x1 = "Teste";
+//								
+//						
+//					
+//						
+//						//recoverWebPage();
 					}
 					catch (Exception e)
 					{
@@ -178,7 +185,7 @@ public class MainActivity extends Activity
 				{
 					try
 					{
-						Thread t = new Thread(new HtmlGetterThread("177.19.61.142 ", 9990,false));
+						Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,false));
 						t.start();
 						//Intent intent = new Intent(MainActivity.this, ShowLogActivity.class);
 						//startActivity(intent);

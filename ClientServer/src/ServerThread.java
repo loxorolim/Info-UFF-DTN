@@ -91,6 +91,7 @@ public class ServerThread implements Runnable
 	   		 	BufferedInputStream buffer = new BufferedInputStream( is );
 	   			ObjectInput input = new ObjectInputStream ( buffer );	      
 	 	        log = (ArrayList<String>) input.readObject();
+	 	        FileManager.saveLog(log);
 
 			}
 			catch(Exception e)
