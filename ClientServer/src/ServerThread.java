@@ -34,7 +34,7 @@ public class ServerThread implements Runnable
 		this.client = client;
 	}
 	@Override
-	public void run() 
+	public synchronized void run() 
 	{
 		// TODO Auto-generated method stub
 		InputStream is = null;

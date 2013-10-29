@@ -209,10 +209,10 @@ public class Client {
             //trying to establish connection to the server
             client.connect();
                       
-            client.fetchLog();
-            client.readResponse();
+           // client.fetchLog();
+           // client.readResponse();
            // client.sendDeleteMessage();
-           // client.sendImage("C:\\Users\\Guilherme\\Pictures\\cute_seal-4872.jpg", "Teste", 10);
+            client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 15);
 
      
             //if successful, read response from server

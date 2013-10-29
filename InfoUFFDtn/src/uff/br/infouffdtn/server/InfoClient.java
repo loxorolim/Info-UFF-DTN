@@ -77,10 +77,10 @@ public class InfoClient {
         for(int i = 0; i< bytesList.size(); i++)
         {
         	Content c =FileManager.getContentFromBytes(bytesList.get(i),true);
-        	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date d1 = new Date();
-			String data = dateFormat.format(d1);
-			c.setDate(data);
+        	//DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			//Date d1 = new Date();
+			//String data = dateFormat.format(d1);
+			//c.setDate(data);
         	FileManager.writeContent(c);
         	DtnLog.writeReceiveLogFromServer(c);
         }

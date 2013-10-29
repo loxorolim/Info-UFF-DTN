@@ -218,7 +218,10 @@ public class FileManager
 		for(int i = 0;i<fileNames.size();i++)
 		{
 			if(fileNames.get(i).getCounter() > 0)
+			{
 				ret.add(FileManager.prepareFileToSend(fileNames.get(i)));
+				fileNames.get(i).setCounter(fileNames.get(i).getCounter() - 1);
+			}
 		}
 		return ret;
 	}
