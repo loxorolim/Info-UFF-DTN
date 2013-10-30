@@ -204,8 +204,8 @@ public class Client {
     public static void main(String arg[]){
         //Creating a SocketClient object
       //  Client client = new Client ("rolim.no-ip.org",9990);
-        //Client client = new Client ("rolim.no-ip.org",9990);
-    	Client client = new Client ("177.133.135.105",9990);
+        Client client = new Client ("rolim.no-ip.org",9990);
+    	//Client client = new Client ("177.133.135.105",9990);
         try {
             //trying to establish connection to the server
             client.connect();
