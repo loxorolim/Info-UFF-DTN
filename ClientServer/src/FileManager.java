@@ -42,7 +42,10 @@ public class FileManager
 		
 		loadListFile();
 		//loadCounterListFile();
-		String fileName = getAvaiableFilepath();				
+		
+		if(!tryToOverwrite(name,img,counter))
+		{
+			String fileName = getAvaiableFilepath();				
 
 			//File file = new File(pathname+fileName);
 			//FileOutputStream fOut = new FileOutputStream(file);
@@ -65,10 +68,27 @@ public class FileManager
 			{
 			}
 					
+		}
+		
+		
 
 		
 		
 		
+	}
+	public static boolean tryToOverwrite(String name,BufferedImage img, int counter)
+	{
+		for(int i = 0; i < fileNames.size();i++)
+		{
+			if(fileNames.get(i).getName().equals(name))
+			{
+				fileNames.get(i).setCounter(counter);
+				FileManager.writeImageToFile(img, fileNames.get(i).getFilepath());
+				saveListFile();
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static void deleteFile(String fileName)
@@ -212,8 +232,9 @@ public class FileManager
 	        }
 			return image;
 	}
-	public synchronized static ArrayList<byte[]> getBytessToSend(ArrayList<Content> celContents)
+	public synchronized static ArrayList<byte[]> getBytessToSend(ArrayList<CommFile> celContents)
 	{
+		loadListFile();
 		ArrayList<byte[]> ret = new ArrayList<byte[]>();
 		ArrayList<ServerFile> filesToSend = getFilesToConvert(celContents);
 		for(int i = 0;i<filesToSend.size();i++)
@@ -224,18 +245,31 @@ public class FileManager
 				filesToSend.get(i).setCounter(filesToSend.get(i).getCounter() - 1);
 			}
 		}
+		saveListFile();
 		return ret;
 	}
-	public static ArrayList<ServerFile> getFilesToConvert(ArrayList<Content> celContents)
+	public static ArrayList<ServerFile> getFilesToConvert(ArrayList<CommFile> celContents)
 	{
+		
 		ArrayList<ServerFile> ret = new ArrayList<ServerFile>();
-		for(int i = 0; i < celContents.size() ; i++)
+		if(celContents.size() == 0)
 		{
-			for(int j = 0 ; j < fileNames.size() ; j++)
+			return fileNames;
+		}
+		else
+		{
+			for(int i = 0; i < fileNames.size() ; i++)
 			{
-				if(!celContents.get(i).getDate().equals(fileNames.get(j).getDate()))
+				for(int j = 0 ; j < celContents.size() ; j++)
 				{
-					ret.add(fileNames.get(j));
+					String celDate= celContents.get(j).getDate();
+					String svDate = fileNames.get(i).getDate();
+					String celName =celContents.get(j).getName();
+					String svName = fileNames.get(i).getName();
+					if(!celDate.equals(svDate) && celName.equals(svName))
+					{
+						ret.add(fileNames.get(i));
+					}
 				}
 			}
 		}

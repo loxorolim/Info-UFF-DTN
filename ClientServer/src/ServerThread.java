@@ -24,6 +24,7 @@ import org.apache.commons.io.IOUtils;
 
 import uff.br.infouffdtn.db.Content;
 import uff.br.infouffdtn.dtn.DtnLog;
+import uff.br.infouffdtn.server.CommFile;
 
 
 public class ServerThread implements Runnable
@@ -53,8 +54,16 @@ public class ServerThread implements Runnable
      	   }
      	   if(req.equals("Fetch"))
      	   {
-     		   ArrayList<Content> celContents = (ArrayList<Content>) input.readObject();
-     		   sendFiles(client,celContents);
+     		   try
+     		   {
+     			   ArrayList<CommFile> celContents = (ArrayList<CommFile>) input.readObject();
+     			   sendFiles(client,celContents);
+     		   }
+     		   catch(Exception e)
+     		   {
+     			   Exception x = e;
+     		   }
+     		  
      		  //sendWelcomeMessage(client);
      	   }
      	   if(req.equals("DeleteAll"))
@@ -102,7 +111,7 @@ public class ServerThread implements Runnable
 				
 			}
 	}
-	private void sendFiles(Socket client, ArrayList<Content> celFiles) throws IOException
+	private void sendFiles(Socket client, ArrayList<CommFile> celFiles) throws IOException
 	{
 		   OutputStream os = null;
 	  	   BufferedOutputStream buffer = null;

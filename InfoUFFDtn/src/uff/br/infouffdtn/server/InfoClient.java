@@ -111,7 +111,8 @@ public class InfoClient {
     		
     	}
     }
-    public void writeHeader(String header)
+
+    public void writeHeader(String header, boolean fetch)
     {
     	OutputStream os = null;
 	  	BufferedOutputStream buffer = null;   	   
@@ -123,6 +124,7 @@ public class InfoClient {
       	   buffer = new BufferedOutputStream( os );
       	   output = new ObjectOutputStream ( buffer ); 
      	   output.writeUTF(header);
+     	   if(fetch)
      	   output.writeObject(FileManager.getContentList());
       	   
       	   output.flush();
@@ -137,19 +139,21 @@ public class InfoClient {
     }
     public void initialize(boolean fetch)
     {
-    	 InfoClient client = new InfoClient (hostname,port);
+    	// InfoClient client = new InfoClient (hostname,port);
+    	InfoClient client = new InfoClient ("177.133.135.105",port);
          try {
              //trying to establish connection to the server
              client.connect();
              //if successful, read response from server
              if(fetch)
              {
-                 client.writeHeader("Fetch");
+                 client.writeHeader("Fetch",true);
+
             	 client.readResponse();
              }
              else
              {
-            	 client.writeHeader("Log");
+            	 client.writeHeader("Log",false);
             	 client.sendDtnLog();
              }
 

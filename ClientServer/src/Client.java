@@ -204,7 +204,8 @@ public class Client {
     public static void main(String arg[]){
         //Creating a SocketClient object
       //  Client client = new Client ("rolim.no-ip.org",9990);
-        Client client = new Client ("rolim.no-ip.org",9990);
+        //Client client = new Client ("rolim.no-ip.org",9990);
+    	Client client = new Client ("177.133.135.105",9990);
         try {
             //trying to establish connection to the server
             client.connect();
@@ -212,7 +213,8 @@ public class Client {
            // client.fetchLog();
            // client.readResponse();
            // client.sendDeleteMessage();
-            client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 15);
+           // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
+            client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computado4", 1);
 
      
             //if successful, read response from server

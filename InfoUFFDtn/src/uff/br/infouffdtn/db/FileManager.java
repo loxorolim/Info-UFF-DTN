@@ -632,10 +632,31 @@ public class FileManager extends Activity
 	{
 		return BitmapFactory.decodeFile(filepath);
 	}
-	public static ArrayList<Content> getContentList()
+	public static ArrayList<CommFile> getContentList()
 	{
 		loadListFile();
-		return filesPaths;
+		ArrayList<CommFile> ret = new ArrayList<CommFile>();
+		ArrayList<String> types = new ArrayList<String>();		
+		for(int i = 0;i<filesPaths.size();i++)
+		{
+
+			String type = filesPaths.get(i).getName();	
+			if(!checkIfTypeExists(type,types))
+			{
+				types.add(type);
+			}			
+		}
+		for(int i = 0; i < types.size();i++)
+		{
+		
+			Content c = getMostRecentContent(types.get(i));
+			if(c!=null)
+			{
+				ret.add(new CommFile(c.getName(),c.getDate()));
+			}
+		}
+		
+		return ret;
 		
 	}
 	public static synchronized String writeValidation(String type,int num)
