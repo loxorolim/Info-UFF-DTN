@@ -123,6 +123,7 @@ public class InfoClient {
       	   buffer = new BufferedOutputStream( os );
       	   output = new ObjectOutputStream ( buffer ); 
      	   output.writeUTF(header);
+     	   output.writeObject(FileManager.getContentList());
       	   
       	   output.flush();
       	  // output.close();

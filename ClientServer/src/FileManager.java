@@ -212,18 +212,35 @@ public class FileManager
 	        }
 			return image;
 	}
-	public synchronized static ArrayList<byte[]> getBytessToSend()
+	public synchronized static ArrayList<byte[]> getBytessToSend(ArrayList<Content> celContents)
 	{
 		ArrayList<byte[]> ret = new ArrayList<byte[]>();
-		for(int i = 0;i<fileNames.size();i++)
+		ArrayList<ServerFile> filesToSend = getFilesToConvert(celContents);
+		for(int i = 0;i<filesToSend.size();i++)
 		{
-			if(fileNames.get(i).getCounter() > 0)
+			if(filesToSend.get(i).getCounter() > 0)
 			{
-				ret.add(FileManager.prepareFileToSend(fileNames.get(i)));
-				fileNames.get(i).setCounter(fileNames.get(i).getCounter() - 1);
+				ret.add(FileManager.prepareFileToSend(filesToSend.get(i)));
+				filesToSend.get(i).setCounter(filesToSend.get(i).getCounter() - 1);
 			}
 		}
 		return ret;
+	}
+	public static ArrayList<ServerFile> getFilesToConvert(ArrayList<Content> celContents)
+	{
+		ArrayList<ServerFile> ret = new ArrayList<ServerFile>();
+		for(int i = 0; i < celContents.size() ; i++)
+		{
+			for(int j = 0 ; j < fileNames.size() ; j++)
+			{
+				if(!celContents.get(i).getDate().equals(fileNames.get(j).getDate()))
+				{
+					ret.add(fileNames.get(j));
+				}
+			}
+		}
+		return ret;
+		
 	}
 	public static ArrayList<BufferedImage> getImagesToSend()
 	{

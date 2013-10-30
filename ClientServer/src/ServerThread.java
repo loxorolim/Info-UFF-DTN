@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
 
+import uff.br.infouffdtn.db.Content;
 import uff.br.infouffdtn.dtn.DtnLog;
 
 
@@ -52,7 +53,9 @@ public class ServerThread implements Runnable
      	   }
      	   if(req.equals("Fetch"))
      	   {
-     		  sendWelcomeMessage(client);
+     		   ArrayList<Content> celContents = (ArrayList<Content>) input.readObject();
+     		   sendFiles(client,celContents);
+     		  //sendWelcomeMessage(client);
      	   }
      	   if(req.equals("DeleteAll"))
      	   {
@@ -99,34 +102,59 @@ public class ServerThread implements Runnable
 				
 			}
 	}
+	private void sendFiles(Socket client, ArrayList<Content> celFiles) throws IOException
+	{
+		   OutputStream os = null;
+	  	   BufferedOutputStream buffer = null;
+	  	   ObjectOutput output = null;
+	       try
+	       {
+	    	   ArrayList<byte[]> files = FileManager.getBytessToSend(celFiles);
+	    	   os = client.getOutputStream();
+	    	   buffer = new BufferedOutputStream( os );
+	    	   output = new ObjectOutputStream ( buffer ); 
+	   	    
+	    	   output.writeObject(files);	
+	       }
+	       catch(Exception e)
+	       {
+	    	   
+	       }
+	       finally
+	       {
+	    	   output.flush();
+	    	   output.close();
+	       }
+		
+	}
     
-    private void sendWelcomeMessage(Socket client) throws IOException 
-    {
-       OutputStream os = null;
-  	   BufferedOutputStream buffer = null;
-  	   ObjectOutput output = null;
-       try
-       {
-    	   ArrayList<byte[]> files = FileManager.getBytessToSend();
-    	   os = client.getOutputStream();
-    	   buffer = new BufferedOutputStream( os );
-    	   output = new ObjectOutputStream ( buffer ); 
-   	    
-    	   output.writeObject(files);	
-       }
-       catch(Exception e)
-       {
-    	   
-       }
-       finally
-       {
-    	   output.flush();
-    	   output.close();
-       }
-    	
-    	
-   
-    }
+//    private void sendWelcomeMessage(Socket client) throws IOException 
+//    {
+//       OutputStream os = null;
+//  	   BufferedOutputStream buffer = null;
+//  	   ObjectOutput output = null;
+//       try
+//       {
+//    	   ArrayList<byte[]> files = FileManager.getBytessToSend();
+//    	   os = client.getOutputStream();
+//    	   buffer = new BufferedOutputStream( os );
+//    	   output = new ObjectOutputStream ( buffer ); 
+//   	    
+//    	   output.writeObject(files);	
+//       }
+//       catch(Exception e)
+//       {
+//    	   
+//       }
+//       finally
+//       {
+//    	   output.flush();
+//    	   output.close();
+//       }
+//    	
+//    	
+//   
+//    }
     private void sendDtnLog(Socket client) throws IOException 
     {
        OutputStream os = null;

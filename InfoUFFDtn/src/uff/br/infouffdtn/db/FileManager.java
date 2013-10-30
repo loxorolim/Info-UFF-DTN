@@ -632,6 +632,12 @@ public class FileManager extends Activity
 	{
 		return BitmapFactory.decodeFile(filepath);
 	}
+	public static ArrayList<Content> getContentList()
+	{
+		loadListFile();
+		return filesPaths;
+		
+	}
 	public static synchronized String writeValidation(String type,int num)
 	{
 		try
