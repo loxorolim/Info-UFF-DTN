@@ -50,13 +50,13 @@ public class FileManager extends Activity
 {
 	// Lista que conter� o nome dos contents
 	private static int listSize = 10;
-	private static String regex = "teste";
+
 	private static ArrayList<Content> filesPaths = new ArrayList<Content>();
-	private static ArrayList<Content> contents = new ArrayList<Content>();
+
 	public static final String REFRESH = "uff.br.infouffdtn.REFRESH";
 	private static Context ctx = null;
 	private static String appPath = "";
-	//private static String contentFilePath ="/data/data/br.uff.pse.dest/contents/";
+
 
 	public static synchronized void writeContent(Content content) 
 	{
@@ -79,17 +79,12 @@ public class FileManager extends Activity
 					if(filesPaths.size() == listSize)
 					{
 						int pos = getLeastRecentDatePos();
-						//ctx.deleteFile(filesPaths.get(pos)[0]);
 						File f = new File(filesPaths.get(pos).getFilepath());
 						f.delete();
 						filesPaths.remove(pos);
 						
 					}
-						//	output.writeObject(content);	
-						//	String[] info = new String[3];
-						//	info[0] = fileName;
-						//	info[1] = content.getName();
-						//	info[2] = content.getDate();
+
 							filesPaths.add(content);
 							saveListFile();
 							Intent i = new Intent(REFRESH);
@@ -240,38 +235,7 @@ public class FileManager extends Activity
 		return false;
 
 	}
-/*	public static Content readContent(String fileName, Context ctx) 
-	{
-		loadListFile(ctx);
-		Content content = null;
-		try
-		{
-		      //use buffering
-		     // FileInputStream file = ctx.openFileInput(fileName);
-			  FileInputStream file = new FileInputStream(fileName);
-		      BufferedInputStream buffer = new BufferedInputStream( file );
-		      ObjectInput input = new ObjectInputStream ( buffer );
-		      try
-		      {
-		        content = (Content)input.readObject();
-		        
-		      }
-		      finally
-		      {
-		        input.close();
-		      }
-	    }
-	    catch(ClassNotFoundException ex)
-	    {
-	      ex.printStackTrace();
-	    }
-	    catch(IOException ex)
-	    {
-	     ex.printStackTrace();
-	    }
-		return content;
-		
-	}*/
+
 	public static ArrayList<Item> readAllFilesNames() throws ParseException
 	{		
 		loadListFile();
@@ -300,14 +264,7 @@ public class FileManager extends Activity
 				
 			}
 		}
-	/*	ArrayList<Item> ret = new ArrayList<Item>();
-		for(int i = 0; i< filesPaths.size();i++)
-		{
-			
-			ret.add(new ListItem(filesPaths.get(i)[1],filesPaths.get(i)[2]));
-			
-		}
-*/
+
 
 
 		return ret;
@@ -360,33 +317,7 @@ public class FileManager extends Activity
 		filesPaths.clear();
 		saveListFile();
 	}
-/*	public static String writeValidation(String filename,Context ctx, int num)
-	{
-		loadListFile(ctx);
-		for(int i = 0;i<filesPaths.size();i++)
-		{
-			if(filename.equals(filesPaths.get(i).getName()))		
-			{
-				if(num == 1)
-					return writeValidation(filename+"("+num+")",ctx,++num);
-				else
-				{
-					try
-					{
-					String file = filename.substring(0, filename.indexOf("("));
-					return writeValidation(file+"("+num+")",ctx,++num);
-					}
-					catch(Exception e)
-					{
-						System.out.print(e);
-					}
-					
-				}
-			}
-		}
-		return filename;
-	}
-	*/
+
 
 	public static void saveListFile()
 	{
@@ -482,34 +413,7 @@ public class FileManager extends Activity
 		
 	}
 	
-	//TESTAAAAAAAAAAAAR
-//	public static ArrayList<Content> getFilesToSend()
-//	{
-//		loadListFile();
-//		ArrayList<Content> ret = new ArrayList<Content>();
-//		ArrayList<String> types = new ArrayList<String>();		
-//		for(int i = 0;i<filesPaths.size();i++)
-//		{
-//
-//			String type = filesPaths.get(i).getName();	
-//			if(!checkIfTypeExists(type,types))
-//			{
-//				types.add(type);
-//			}			
-//		}
-//		for(int i = 0; i < types.size();i++)
-//		{
-//		
-//			Content c = getMostRecentContent(types.get(i));
-//			if(c!=null)
-//			{
-//				ret.add(c);
-//			}
-//		}
-//		
-//		return ret;
-//		
-//	}
+
 	public static ArrayList<byte[]> getContentBytesToSend(ArrayList<Content> list)
 	{
 		loadListFile();
@@ -639,39 +543,7 @@ public class FileManager extends Activity
 	}
 	
 	
-/*	public static void writeContentFromBytes(byte[] b, Context ctx)
-	{
-		byte[] tam = new byte[4];
-		tam[0] = b[0];
-		tam[1] = b[1];
-		tam[2] = b[2];
-		tam[3] = b[3];
-		int contentSize = byteArrayToInt(tam);
-		byte[] contentBytes = new byte[contentSize];
-		System.arraycopy(b, 4 , contentBytes, 0, contentBytes.length);
-		byte[] bitMapBytes = new byte[b.length - contentSize - 4];
-		System.arraycopy(b, contentSize + 4 , bitMapBytes, 0, b.length - contentSize - 4);
-		
-		try
-		{
-			ByteArrayInputStream bos = new ByteArrayInputStream(contentBytes);
-			ObjectInputStream ois = new ObjectInputStream(bos);
-			Content c = (Content) ois.readObject();
-			Bitmap bitmap = BitmapFactory.decodeByteArray(bitMapBytes , 0, bitMapBytes.length);
-			c.setBitmap(bitmap);
-			
-			FileManager.writeContent(c, ctx);
-		
-		}
-		catch(Exception e)
-		{
-			
-		}
-		
-		
-		
-	}
-	*/
+
 	public static Content getContentFromBytes(byte[] b, boolean fromWifi)
 	{
 		byte[] tam = new byte[4];
