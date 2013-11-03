@@ -1,5 +1,7 @@
 package uff.br.infouffdtn.db;
 
+
+
 import java.nio.ByteBuffer;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -481,30 +483,41 @@ public class FileManager extends Activity
 	}
 	
 	//TESTAAAAAAAAAAAAR
-	public static ArrayList<Content> getFilesToSend()
+//	public static ArrayList<Content> getFilesToSend()
+//	{
+//		loadListFile();
+//		ArrayList<Content> ret = new ArrayList<Content>();
+//		ArrayList<String> types = new ArrayList<String>();		
+//		for(int i = 0;i<filesPaths.size();i++)
+//		{
+//
+//			String type = filesPaths.get(i).getName();	
+//			if(!checkIfTypeExists(type,types))
+//			{
+//				types.add(type);
+//			}			
+//		}
+//		for(int i = 0; i < types.size();i++)
+//		{
+//		
+//			Content c = getMostRecentContent(types.get(i));
+//			if(c!=null)
+//			{
+//				ret.add(c);
+//			}
+//		}
+//		
+//		return ret;
+//		
+//	}
+	public static ArrayList<byte[]> getContentBytesToSend(ArrayList<Content> list)
 	{
 		loadListFile();
-		ArrayList<Content> ret = new ArrayList<Content>();
-		ArrayList<String> types = new ArrayList<String>();		
-		for(int i = 0;i<filesPaths.size();i++)
+		ArrayList<byte[]> ret = new ArrayList<byte[]>();
+		for(int i = 0 ; i < list.size();i++)
 		{
-
-			String type = filesPaths.get(i).getName();	
-			if(!checkIfTypeExists(type,types))
-			{
-				types.add(type);
-			}			
+			ret.add(FileManager.prepareContentToSend(list.get(i)));
 		}
-		for(int i = 0; i < types.size();i++)
-		{
-		
-			Content c = getMostRecentContent(types.get(i));
-			if(c!=null)
-			{
-				ret.add(c);
-			}
-		}
-		
 		return ret;
 		
 	}
@@ -523,7 +536,6 @@ public class FileManager extends Activity
 		  out.writeObject(comm);
 		  cBytes = bos.toByteArray();
 		  byte[] intBytes = ByteBuffer.allocate(4).putInt(cBytes.length).array();
-		  int x = byteArrayToInt(intBytes);
 		  bmBytes = c.getBitmapBytes();
 		  byte[] retBytes = new byte[cBytes.length + bmBytes.length + intBytes.length];
 		  System.arraycopy(intBytes, 0, retBytes, 0, intBytes.length);
@@ -539,6 +551,86 @@ public class FileManager extends Activity
 		
 		return null;
 	}
+	public static byte[] getObjectBytes(Object obj)
+	{
+		byte[] ret = null;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput out = null;
+		try
+		{
+			out = new ObjectOutputStream(bos);
+			out.writeObject(obj);
+			ret = bos.toByteArray();
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return ret;
+		
+	}
+	public static ArrayList<CommFile> getCommFileListFromBytes(byte[] bytes)
+	{
+		ArrayList<CommFile> ret = null;
+		ByteArrayInputStream bos = new ByteArrayInputStream(bytes);
+		ObjectInputStream ois;
+		try
+		{
+			ois = new ObjectInputStream(bos);
+			ret = (ArrayList<CommFile>) ois.readObject();			
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return ret;		
+	}
+	public static ArrayList<byte[]> getContentByteListFromBytes(byte[] bytes)
+	{
+		ArrayList<byte[]> ret = null;
+		ByteArrayInputStream bos = new ByteArrayInputStream(bytes);
+		ObjectInputStream ois;
+		try
+		{
+			ois = new ObjectInputStream(bos);
+			ret = (ArrayList<byte[]>) ois.readObject();			
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return ret;		
+	}
+	public static ArrayList<Content> getContentsToConvert(ArrayList<CommFile> celContents)
+	{
+		
+		ArrayList<Content> ret = new ArrayList<Content>();
+		if(celContents.size() == 0)
+		{
+			return filesPaths;
+		}
+		else
+		{
+			for(int i = 0; i < filesPaths.size() ; i++)
+			{
+				for(int j = 0 ; j < celContents.size() ; j++)
+				{
+					String celDate= celContents.get(j).getDate();
+					String svDate = filesPaths.get(i).getDate();
+					String celName =celContents.get(j).getName();
+					String svName = filesPaths.get(i).getName();
+					if(!celDate.equals(svDate) && celName.equals(svName))
+					{
+						ret.add(filesPaths.get(i));
+					}
+				}
+			}
+		}
+		return ret;
+		
+	}
+	
+	
 /*	public static void writeContentFromBytes(byte[] b, Context ctx)
 	{
 		byte[] tam = new byte[4];
@@ -678,7 +770,6 @@ public class FileManager extends Activity
 				}
 			}
 		}
-		String x = fp+"/"+type;
 		return fp+"/"+type;	
 		}
 		catch(Exception e)

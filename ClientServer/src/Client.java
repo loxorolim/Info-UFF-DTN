@@ -214,7 +214,7 @@ public class Client {
            // client.readResponse();
            // client.sendDeleteMessage();
            // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
-            client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computado4", 1);
+            client.sendImage("C:\\Users\\Guilherme\\Pictures\\fluffy-baby-seal.jpg", "Computado4", 10);
 
      
             //if successful, read response from server

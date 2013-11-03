@@ -17,6 +17,7 @@ import uff.br.infouffdtn.db.Content;
 
 
 import uff.br.infouffdtn.db.FileManager;
+import uff.br.infouffdtn.server.CommFile;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Binder;
@@ -128,15 +129,128 @@ public class InfoService extends IntentService
 		return null;
 	}
 
-	private synchronized void sendDtnBundle(int mode)
+//	private synchronized void sendDtnBundle(int mode)
+//	{	
+//			try
+//			{
+////				ArrayList<Content> files = new ArrayList<Content>();
+////				if(mode == DtnMode.SENDCONTENT)			
+////				{
+////					files = FileManager.getFilesToSend();
+////				}
+////				
+//				List<Node> neighbours = mClient.getDTNService().getNeighbors();
+//				for (int i = 0; i < neighbours.size(); i++)
+//				{
+//					String destAddress = neighbours.get(i).endpoint.toString() + "/InfoUffDtn";
+//					SingletonEndpoint destination = new SingletonEndpoint(destAddress);
+//	
+//					// create a new bundle
+//					Bundle b = new Bundle();
+//	
+//					// set the destination of the bundle
+//					b.setDestination(destination);
+//	
+//					// limit the lifetime of the bundle to 60 seconds
+//					b.setLifetime(120L);
+//					
+//	
+//					// set status report requests for bundle reception
+//					 b.set(ProcFlags.REQUEST_REPORT_OF_BUNDLE_RECEPTION, true);
+//	
+//					// set destination for status reports
+//					 b.setReportto(SingletonEndpoint.ME);
+//	
+//					// generate some payload
+//					
+//	
+//					try
+//					{
+//						
+//						// get the DTN session
+//						Session s = mClient.getSession();
+//	
+//
+//								
+//						// send the bundle
+//						//BundleID ret = s.send(b, payload.getBytes());
+//						
+//						if(mode == DtnMode.ALERTPRESENCE)
+//						{
+////							byte[] modeBytes = new byte[1];
+////							modeBytes[0] = DtnMode.ALERTPRESENCE;
+////							s.send(b,modeBytes);		
+//						}						
+//						
+//						if(mode == DtnMode.SENDCONTENT)
+//						{
+//							for(int j = 0 ; j < files.size(); j++)
+//							{
+//								
+//								try 
+//								{
+//								  byte[] contentBytes = FileManager.prepareContentToSend(files.get(j));
+//								  byte[] bytes = new byte[1+16+contentBytes.length];
+//								  byte[] modeBytes = new byte[1];
+//								  byte[] androidIdBytes = DtnLog.getMyPhoneName().getBytes();
+//								  modeBytes[0] = DtnMode.SENDCONTENT;
+//								  
+//								  //1 BYTE : MODO DE OPERAÇÃO 16 BYTES: ID DO ANDROID RESTANTE: CONTENT COM IMAGEM
+//								  
+//								  System.arraycopy(modeBytes,0, bytes ,0, 1);	
+//								  System.arraycopy(androidIdBytes,0, bytes ,1, androidIdBytes.length);
+//								  System.arraycopy(contentBytes, 0 , bytes, 1+androidIdBytes.length, contentBytes.length);
+//								  
+//								  BundleID ret = s.send(b, bytes);
+//								  
+//								  	if (ret == null)
+//									{
+//										Log.e(TAG, "could not send the message");
+//										DtnLog.writeErrorLog();
+//									}
+//									else
+//									{
+//										Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
+//										
+//										
+//									}
+//								} 
+//								catch(Exception e)
+//								{
+//									Exception x = e;
+//								}
+//								finally
+//								{
+//									DtnLog.writeSendLog(files.get(j));
+//								}													
+//							}
+//						}
+//						
+//						
+//					}
+//					catch (SessionDestroyedException e)
+//					{
+//						Log.e(TAG, "could not send the message", e);
+//						DtnLog.writeErrorLog();
+//					}
+//					catch (InterruptedException e)
+//					{
+//						Log.e(TAG, "could not send the message", e);
+//						DtnLog.writeErrorLog();
+//					}
+//				}
+//			}
+//			catch (Exception e)
+//			{
+//	
+//			}
+//		
+//
+//	}
+	private synchronized void sendInfoUffDtnRequestBundle()
 	{	
 			try
 			{
-				ArrayList<Content> files = new ArrayList<Content>();
-				if(mode == DtnMode.SENDCONTENT)			
-				{
-					files = FileManager.getFilesToSend();
-				}
 				
 				List<Node> neighbours = mClient.getDTNService().getNeighbors();
 				for (int i = 0; i < neighbours.size(); i++)
@@ -162,82 +276,25 @@ public class InfoService extends IntentService
 	
 					// generate some payload
 					
-
-					
 	
 					try
 					{
 						
 						// get the DTN session
 						Session s = mClient.getSession();
-	
-
-								
-						// send the bundle
-						//BundleID ret = s.send(b, payload.getBytes());
-						
-						if(mode == DtnMode.ALERTPRESENCE)
-						{
-							byte[] modeBytes = new byte[1];
-							modeBytes[0] = DtnMode.ALERTPRESENCE;
-							s.send(b,modeBytes);		
-						}						
-						
-						if(mode == DtnMode.SENDCONTENT)
-						{
-							for(int j = 0 ; j < files.size(); j++)
-							{
-								
-								try 
-								{
-								  byte[] contentBytes = FileManager.prepareContentToSend(files.get(j));
-								  byte[] bytes = new byte[1+16+contentBytes.length];
-								  byte[] modeBytes = new byte[1];
-								  byte[] androidIdBytes = DtnLog.getMyPhoneName().getBytes();
-								  modeBytes[0] = DtnMode.SENDCONTENT;
-								  
-								  //1 BYTE : MODO DE OPERAÇÃO 16 BYTES: ID DO ANDROID RESTANTE: CONTENT COM IMAGEM
-								  
-								  System.arraycopy(modeBytes,0, bytes ,0, 1);	
-								  System.arraycopy(androidIdBytes,0, bytes ,1, androidIdBytes.length);
-								  System.arraycopy(contentBytes, 0 , bytes, 1+androidIdBytes.length, contentBytes.length);
-								  
-								  BundleID ret = s.send(b, bytes);
-								  
-								  	if (ret == null)
-									{
-										Log.e(TAG, "could not send the message");
-										DtnLog.writeErrorLog();
-									}
-									else
-									{
-										Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
-										
-										
-									}
-								} 
-								catch(Exception e)
-								{
-									Exception x = e;
-								}
-								finally
-								{
-									DtnLog.writeSendLog(files.get(j));
-								}													
-							}
-						}
-						
-						
+						byte [] bytes = prepareRequestBundleToSend();
+						s.send(b, bytes);
+							
 					}
 					catch (SessionDestroyedException e)
 					{
 						Log.e(TAG, "could not send the message", e);
-						DtnLog.writeErrorLog();
+//						DtnLog.writeErrorLog();
 					}
 					catch (InterruptedException e)
 					{
 						Log.e(TAG, "could not send the message", e);
-						DtnLog.writeErrorLog();
+//						DtnLog.writeErrorLog();
 					}
 				}
 			}
@@ -246,7 +303,102 @@ public class InfoService extends IntentService
 	
 			}
 		
+	}
+	private synchronized void sendInfoUffDtnContentsBundle(ArrayList<byte[]> bundlebytes, String destinationAddress)
+	{	
+			try
+			{
+				
+				//List<Node> neighbours = mClient.getDTNService().getNeighbors();
 
+					String destAddress = destinationAddress ;
+					SingletonEndpoint destination = new SingletonEndpoint(destAddress);
+	
+					// create a new bundle
+					Bundle b = new Bundle();
+	
+					// set the destination of the bundle
+					b.setDestination(destination);
+	
+					// limit the lifetime of the bundle to 60 seconds
+					b.setLifetime(120L);
+					
+	
+					// set status report requests for bundle reception
+					 b.set(ProcFlags.REQUEST_REPORT_OF_BUNDLE_RECEPTION, true);
+	
+					// set destination for status reports
+					 b.setReportto(SingletonEndpoint.ME);
+	
+					// generate some payload
+					
+	
+					try
+					{
+						
+						// get the DTN session
+						Session s = mClient.getSession();
+						byte [] bytes = prepareContentsListBundleToSend(bundlebytes);
+						s.send(b, bytes);
+							
+					}
+					catch (SessionDestroyedException e)
+					{
+						Log.e(TAG, "could not send the message", e);
+//						DtnLog.writeErrorLog();
+					}
+					catch (InterruptedException e)
+					{
+						Log.e(TAG, "could not send the message", e);
+//						DtnLog.writeErrorLog();
+					}
+				
+			}
+			catch (Exception e)
+			{
+	
+			}
+		
+	}
+	
+	private byte[] prepareRequestBundleToSend()
+	{
+		//1 BYTE MODO
+		//16 BYTES ANDROID ID
+		//RESTANTE É A LISTA DE COMMFILE DOS SEUS ARQUIVOS MAIS ATUAIS
+		
+		byte[] modeBytes =  new byte[1];
+		modeBytes[0] = DtnMode.ALERTPRESENCE;
+		byte[] androidIdBytes = DtnLog.getMyPhoneName().getBytes();
+		ArrayList<CommFile> files = FileManager.getContentList();
+		byte[] filesBytes = FileManager.getObjectBytes(files);
+		byte[] ret = new byte[modeBytes.length + androidIdBytes.length + filesBytes.length];
+		
+		System.arraycopy(modeBytes,0, ret ,0, 1);	
+		System.arraycopy(androidIdBytes,0, ret ,1, androidIdBytes.length);
+		System.arraycopy(filesBytes, 0 , ret, 1+androidIdBytes.length, filesBytes.length);
+		  
+
+		return ret;	
+	}
+	
+	private byte[] prepareContentsListBundleToSend(ArrayList<byte[]> contentsBytes)
+	{
+		//1 BYTE MODO
+		//16 BYTES ANDROID ID
+		//RESTANTE É A LISTA DE COMMFILE DOS SEUS ARQUIVOS MAIS ATUAIS
+
+		byte[] modeBytes =  new byte[1];
+		modeBytes[0] = DtnMode.SENDCONTENT;
+		byte[] androidIdBytes = DtnLog.getMyPhoneName().getBytes();
+		byte[] filesBytes = FileManager.getObjectBytes(contentsBytes);
+		byte[] ret = new byte[modeBytes.length + androidIdBytes.length + filesBytes.length];
+		System.arraycopy(modeBytes,0, ret ,0, 1);	
+		System.arraycopy(androidIdBytes,0, ret ,1, androidIdBytes.length);
+		System.arraycopy(filesBytes, 0 , ret, 1+androidIdBytes.length, filesBytes.length);
+		  
+
+		return ret;	
 	}
 
 	@Override
@@ -302,15 +454,14 @@ public class InfoService extends IntentService
 					Log.d(TAG, "Status report received for " + bundleid.toString() + " from " + source.toString());
 				}
 				else
-					if (SEND_CONTENT_INTENT.equals(action))
+//					if (SEND_CONTENT_INTENT.equals(action))
+//					{
+//						sendDtnBundle(DtnMode.SENDCONTENT);
+//					}
+					if (ALERT_PRESENCE_INTENT.equals(action))
 					{
-						sendDtnBundle(DtnMode.SENDCONTENT);
+						sendInfoUffDtnRequestBundle();
 					}
-					else
-						if (ALERT_PRESENCE_INTENT.equals(action))
-						{
-							sendDtnBundle(DtnMode.ALERTPRESENCE);
-						}
 	}
 
 	SessionConnection mSession = new SessionConnection()
@@ -465,34 +616,64 @@ public class InfoService extends IntentService
 				try
 				{
 					
+					
 					byte[] streamBytes = stream.toByteArray();
 					byte mode = streamBytes[0];
-					byte[] bundleBytes = new byte[streamBytes.length-1];
-					System.arraycopy(streamBytes, 1, bundleBytes, 0, streamBytes.length-1);
+					byte[] androidIdBytes = new byte[16];
+					System.arraycopy(streamBytes, 1, androidIdBytes, 0, androidIdBytes.length);
+					String androidId = new String(androidIdBytes,"Cp1252");
 					
-					//ByteArrayInputStream bis = new ByteArrayInputStream(streamBytes);
-					//ObjectInput in = null;
 					if(mode == DtnMode.ALERTPRESENCE)
 					{
-						String sender = mBundle.getReportto().toString();
+						byte[] commFilesBytes = new byte[streamBytes.length - 17];
+						System.arraycopy(streamBytes, 17, commFilesBytes, 0, commFilesBytes.length);
+						ArrayList<CommFile> commfiles = FileManager.getCommFileListFromBytes(commFilesBytes);
+						ArrayList<Content> filesToSend = FileManager.getContentsToConvert(commfiles);
+						ArrayList<byte[]> contentsInBytes = FileManager.getContentBytesToSend(filesToSend);
+						sendInfoUffDtnContentsBundle(contentsInBytes, mBundle.getReportto().toString());
+						
 					}
 					if(mode == DtnMode.SENDCONTENT)
 					{
-					 
-					  byte[] androidIdBytes = new byte[16];
-					  byte[] contentBytes = new byte[bundleBytes.length - 16];
-					  
-					  System.arraycopy(bundleBytes, 0, androidIdBytes, 0, androidIdBytes.length);
-					  System.arraycopy(bundleBytes, 16, contentBytes, 0, contentBytes.length);
-						
-					  String androidId = new String(androidIdBytes,"Cp1252");
-					  Content c = FileManager.getContentFromBytes(contentBytes,false);					 
-					  FileManager.writeContent(c);
-					  
-					  
-					  DtnLog.writeReceiveLog( c,androidId);
-						//FileManager.writeContentFromBytes(streamBytes, InfoService.this);
+						byte[] contentsInBytes = new byte[streamBytes.length - 17];
+						System.arraycopy(streamBytes, 17, contentsInBytes, 0, contentsInBytes.length);
+						ArrayList<byte[]> contentsBytes = FileManager.getContentByteListFromBytes(contentsInBytes);
+						for(int i = 0 ; i < contentsBytes.size(); i++)
+						{
+							Content c = FileManager.getContentFromBytes(contentsBytes.get(i), false);
+							FileManager.writeContent(c);
+						}
 					}
+					
+
+//					byte[] streamBytes = stream.toByteArray();
+//					byte mode = streamBytes[0];
+//					byte[] bundleBytes = new byte[streamBytes.length-1];
+//					System.arraycopy(streamBytes, 1, bundleBytes, 0, streamBytes.length-1);
+//					
+//					//ByteArrayInputStream bis = new ByteArrayInputStream(streamBytes);
+//					//ObjectInput in = null;
+//					if(mode == DtnMode.ALERTPRESENCE)
+//					{
+//						String sender = mBundle.getReportto().toString();
+//					}
+//					if(mode == DtnMode.SENDCONTENT)
+//					{
+//					 
+//					  byte[] androidIdBytes = new byte[16];
+//					  byte[] contentBytes = new byte[bundleBytes.length - 16];
+//					  
+//					  System.arraycopy(bundleBytes, 0, androidIdBytes, 0, androidIdBytes.length);
+//					  System.arraycopy(bundleBytes, 16, contentBytes, 0, contentBytes.length);
+//						
+//					  String androidId = new String(androidIdBytes,"Cp1252");
+//					  Content c = FileManager.getContentFromBytes(contentBytes,false);					 
+//					  FileManager.writeContent(c);
+//					  
+//					  
+//					  DtnLog.writeReceiveLog( c,androidId);
+//						//FileManager.writeContentFromBytes(streamBytes, InfoService.this);
+//					}
 
 				}
 				catch(Exception e)

@@ -113,13 +113,8 @@ public class MainActivity extends Activity
 				@Override
 				public void onClick(View v)
 				{
-					alertServiceToSend(DtnMode.SENDCONTENT);
+
 					alertServiceToSend(DtnMode.ALERTPRESENCE);
-				//	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-				//	Date d1 = new Date();
-				//	String data = dateFormat.format(d1);
-				//	Content ct = new Content("JornalUFF", data, true, "teste");
-				//	FileManager.writeContent(ct, MainActivity.this);
 
 				}
 			});
@@ -135,33 +130,33 @@ public class MainActivity extends Activity
 						Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
 						t.start();
 						
-//						
-//						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//						Date d1 = new Date();
-//						String data = dateFormat.format(d1);
-//						String filepath = FileManager.getAvaiableFilepath();
-//						Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-//						
-//						//String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
-//						Content ct = new Content("JornalUFF", data, false,filepath,bm);
-//						FileManager.writeContent(ct);
-//
-//
-//						
-//						
-//						
-//						//fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
-//						ct = new Content("QuadroUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
-//						//FileManager.writeContent(ct);
-//						
-//						byte[] b = FileManager.prepareContentToSend(ct);
-//						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
-//						Content x = FileManager.getContentFromBytes(b,true);
-//						FileManager.writeContent(x);
-//						
-//						//fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
-//						ct = new Content("NoticiasUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
-//						FileManager.writeContent(ct);
+						
+						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+						Date d1 = new Date();
+						String data = dateFormat.format(d1);
+						String filepath = FileManager.getAvaiableFilepath();
+						Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+						
+						//String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
+						Content ct = new Content("JornalUFF", data, false,filepath,bm);
+						FileManager.writeContent(ct);
+
+
+						
+						
+						
+						//fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
+						ct = new Content("QuadroUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+						//FileManager.writeContent(ct);
+						
+						byte[] b = FileManager.prepareContentToSend(ct);
+						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
+						Content x = FileManager.getContentFromBytes(b,true);
+						FileManager.writeContent(x);
+						
+						//fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
+						ct = new Content("NoticiasUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
+						FileManager.writeContent(ct);
 //						
 //						//String x1 = "Teste";
 //								
@@ -316,20 +311,27 @@ public class MainActivity extends Activity
 	{
 		try
 		{
-			if(mode == DtnMode.ALERTPRESENCE)
-			{
-				Intent i = new Intent(this, InfoService.class);
-				i.setAction(InfoService.SEND_CONTENT_INTENT);
-				startService(i);
-				i = new Intent(this, InfoService.class);
-			}
-			if(mode == DtnMode.SENDCONTENT)
-			{
-				Intent i = new Intent(this, InfoService.class);
-				i.setAction(InfoService.ALERT_PRESENCE_INTENT);
-				startService(i);
-				i = new Intent(this, InfoService.class);
-			}
+			
+			Intent i = new Intent(this, InfoService.class);
+			i.setAction(InfoService.ALERT_PRESENCE_INTENT);
+			startService(i);
+			i = new Intent(this, InfoService.class);
+			
+//			FileManager.getObjectBytes(FileManager.getContentList());
+//			if(mode == DtnMode.ALERTPRESENCE)
+//			{
+//				Intent i = new Intent(this, InfoService.class);
+//				i.setAction(InfoService.SEND_CONTENT_INTENT);
+//				startService(i);
+//				i = new Intent(this, InfoService.class);
+//			}
+//			if(mode == DtnMode.SENDCONTENT)
+//			{
+//				Intent i = new Intent(this, InfoService.class);
+//				i.setAction(InfoService.ALERT_PRESENCE_INTENT);
+//				startService(i);
+//				i = new Intent(this, InfoService.class);
+//			}
 		}
 		catch (Exception e)
 		{
