@@ -67,12 +67,11 @@ public class MainActivity extends Activity
 	
 	private InfoService mService = null;
 	private boolean mBound = false;
-	private Timer timerFetch;
+
 	private Timer timerShare;
-	private Timer timerPresence;
-	private final int TIMETOFETCH = 10;
-	private final int TIMETOSHARE = 10;
-	private final int TIMETOPRESENCE = 1;
+
+	private final int TIMETOSHARE = 5; //5 min
+
 
 
 	/** Called when the activity is first created. */
@@ -88,21 +87,8 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main3);
 		
-
-		
-		
-		
-		// mTextEid = (EditText)findViewById(R.id.editEid);
-		// editText = (TextView) findViewById(R.id.textView1);
-
-	
-		
-		
-		//DESCOMENTAR DEPOIS
-		//timerFetch = new Timer();
-		//timerFetch.schedule(new FetchTask(), TIMETOFETCH * 2000);
-		//timerShare = new Timer();
-		//timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
+		timerShare = new Timer();
+		timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
 
 		// assign an action to the ping button
 		try
@@ -114,7 +100,7 @@ public class MainActivity extends Activity
 				public void onClick(View v)
 				{
 
-					alertServiceToSend(DtnMode.ALERTPRESENCE);
+					alertServiceToSend();
 
 				}
 			});
@@ -127,8 +113,8 @@ public class MainActivity extends Activity
 					try
 					{
 						
-						Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
-						t.start();
+					//	Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+					//	t.start();
 						
 						
 						DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -141,9 +127,7 @@ public class MainActivity extends Activity
 						Content ct = new Content("JornalUFF", data, false,filepath,bm);
 						FileManager.writeContent(ct);
 
-
-						
-						
+					
 						
 						//fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
 						ct = new Content("QuadroUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
@@ -157,11 +141,7 @@ public class MainActivity extends Activity
 						//fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
 						ct = new Content("NoticiasUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
 						FileManager.writeContent(ct);
-//						
-//						//String x1 = "Teste";
-//								
-//						
-//					
+				
 //						
 //						//recoverWebPage();
 					}
@@ -249,15 +229,6 @@ public class MainActivity extends Activity
 
 	}
 
-	class FetchTask extends TimerTask
-	{
-		public void run()
-		{
-			recoverWebPage();
-			// timer.cancel(); //Terminate the timer thread
-			timerFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
-		}
-	}
 
 	class ShareTask extends TimerTask
 	{
@@ -265,34 +236,17 @@ public class MainActivity extends Activity
 		{
 			try
 			{
-				alertServiceToSend(DtnMode.SENDCONTENT);
+				alertServiceToSend();
 			}
 			catch (Exception e)
 			{
 
 			}
-			// timer.cancel(); //Terminate the timer thread
+
 			timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
 		}
 	}
 
-	public void recoverWebPage()
-	{
-		PackageManager m = getPackageManager();
-		String s = getPackageName();
-		try
-		{
-			PackageInfo p = m.getPackageInfo(s, 0);
-			s = p.applicationInfo.dataDir;
-		}
-		catch (NameNotFoundException e)
-		{
-			Log.w("yourtag", "Error Package name not found ", e);
-		}
-	//	Thread t = new Thread(new HtmlGetterThread(s, this));
-	//	t.start();
-
-	}
 
 	private ServiceConnection mConnection = new ServiceConnection()
 	{
@@ -307,31 +261,16 @@ public class MainActivity extends Activity
 		}
 	};
 
-	private void alertServiceToSend(byte mode)
+	private void alertServiceToSend()
 	{
 		try
 		{
 			
 			Intent i = new Intent(this, InfoService.class);
-			i.setAction(InfoService.ALERT_PRESENCE_INTENT);
+			i.setAction(InfoService.DTN_REQUEST_INTENT);
 			startService(i);
 			i = new Intent(this, InfoService.class);
 			
-//			FileManager.getObjectBytes(FileManager.getContentList());
-//			if(mode == DtnMode.ALERTPRESENCE)
-//			{
-//				Intent i = new Intent(this, InfoService.class);
-//				i.setAction(InfoService.SEND_CONTENT_INTENT);
-//				startService(i);
-//				i = new Intent(this, InfoService.class);
-//			}
-//			if(mode == DtnMode.SENDCONTENT)
-//			{
-//				Intent i = new Intent(this, InfoService.class);
-//				i.setAction(InfoService.ALERT_PRESENCE_INTENT);
-//				startService(i);
-//				i = new Intent(this, InfoService.class);
-//			}
 		}
 		catch (Exception e)
 		{
@@ -344,39 +283,5 @@ public class MainActivity extends Activity
 	    this.finish();
 	    SlideTransition.backTransition(this);
 	}
-   /* class MyGestureDetector extends SimpleOnGestureListener {
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-	    Intent intent = new Intent(MainActivity.this.getBaseContext(), MainActivity.class);
- 
-            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) {
-                return false;
-            }
- 
-            // right to left swipe
-            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-    		startActivity(intent);
-    		MainActivity.this.overridePendingTransition(
-			R.anim.slide_in_right,
-			R.anim.slide_out_left
-    		);
-    	    // right to left swipe
-            }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-    		startActivity(intent);
-    		MainActivity.this.overridePendingTransition(
-			R.anim.slide_in_left, 
-			R.anim.slide_out_right
-    		);
-            }
- 
-            return false;
-        }
- 
-        // It is necessary to return true from onDown for the onFling event to register
-        @Override
-        public boolean onDown(MotionEvent e) {
-	        	return true;
-        }
-
-    }*/
+  
 }

@@ -524,7 +524,7 @@ public class FileManager extends Activity
 	public static byte[] prepareContentToSend(Content c)
 	{
 		//byte[] 0 a 1023 vai ter o Content, o resto será a imagem
-		
+		loadListFile();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutput out = null;
 		byte[] cBytes = new byte[1024];
@@ -603,7 +603,7 @@ public class FileManager extends Activity
 	}
 	public static ArrayList<Content> getContentsToConvert(ArrayList<CommFile> celContents)
 	{
-		
+		loadListFile();
 		ArrayList<Content> ret = new ArrayList<Content>();
 		if(celContents.size() == 0)
 		{
@@ -613,17 +613,25 @@ public class FileManager extends Activity
 		{
 			for(int i = 0; i < filesPaths.size() ; i++)
 			{
+				String thisCelDate = filesPaths.get(i).getDate();
+				String thisCelName = filesPaths.get(i).getName();
+				boolean found = false;
 				for(int j = 0 ; j < celContents.size() ; j++)
 				{
 					String celDate= celContents.get(j).getDate();
-					String svDate = filesPaths.get(i).getDate();
 					String celName =celContents.get(j).getName();
-					String svName = filesPaths.get(i).getName();
-					if(!celDate.equals(svDate) && celName.equals(svName))
+					if(celName.equals(thisCelName))
 					{
-						ret.add(filesPaths.get(i));
+						found = true;
+						if(dateComparison(thisCelDate,celDate))
+						{
+							ret.add(filesPaths.get(i));
+						}
 					}
 				}
+				if(!found)
+					ret.add(filesPaths.get(i));
+				
 			}
 		}
 		return ret;

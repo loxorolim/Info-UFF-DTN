@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
+import uff.br.infouffdtn.HtmlGetterThread;
 import uff.br.infouffdtn.db.Content;
 
 
@@ -54,8 +55,7 @@ public class InfoService extends IntentService
 	public static final String REPORT_DELIVERED_INTENT = "uff.br.infouffdtn.REPORT_DELIVERED";
 
 	// this intent send out a PING message
-	public static final String SEND_CONTENT_INTENT = "uff.br.infouffdtn.PING";
-	public static final String ALERT_PRESENCE_INTENT = "uff.br.infouffdtn.PRESENCE";
+	public static final String DTN_REQUEST_INTENT = "uff.br.infouffdtn.PRESENCE";
 
 	// indicates updated data to other components
 	public static final String DATA_UPDATED = "uff.br.infouffdtn.DATA_UPDATED";
@@ -129,124 +129,6 @@ public class InfoService extends IntentService
 		return null;
 	}
 
-//	private synchronized void sendDtnBundle(int mode)
-//	{	
-//			try
-//			{
-////				ArrayList<Content> files = new ArrayList<Content>();
-////				if(mode == DtnMode.SENDCONTENT)			
-////				{
-////					files = FileManager.getFilesToSend();
-////				}
-////				
-//				List<Node> neighbours = mClient.getDTNService().getNeighbors();
-//				for (int i = 0; i < neighbours.size(); i++)
-//				{
-//					String destAddress = neighbours.get(i).endpoint.toString() + "/InfoUffDtn";
-//					SingletonEndpoint destination = new SingletonEndpoint(destAddress);
-//	
-//					// create a new bundle
-//					Bundle b = new Bundle();
-//	
-//					// set the destination of the bundle
-//					b.setDestination(destination);
-//	
-//					// limit the lifetime of the bundle to 60 seconds
-//					b.setLifetime(120L);
-//					
-//	
-//					// set status report requests for bundle reception
-//					 b.set(ProcFlags.REQUEST_REPORT_OF_BUNDLE_RECEPTION, true);
-//	
-//					// set destination for status reports
-//					 b.setReportto(SingletonEndpoint.ME);
-//	
-//					// generate some payload
-//					
-//	
-//					try
-//					{
-//						
-//						// get the DTN session
-//						Session s = mClient.getSession();
-//	
-//
-//								
-//						// send the bundle
-//						//BundleID ret = s.send(b, payload.getBytes());
-//						
-//						if(mode == DtnMode.ALERTPRESENCE)
-//						{
-////							byte[] modeBytes = new byte[1];
-////							modeBytes[0] = DtnMode.ALERTPRESENCE;
-////							s.send(b,modeBytes);		
-//						}						
-//						
-//						if(mode == DtnMode.SENDCONTENT)
-//						{
-//							for(int j = 0 ; j < files.size(); j++)
-//							{
-//								
-//								try 
-//								{
-//								  byte[] contentBytes = FileManager.prepareContentToSend(files.get(j));
-//								  byte[] bytes = new byte[1+16+contentBytes.length];
-//								  byte[] modeBytes = new byte[1];
-//								  byte[] androidIdBytes = DtnLog.getMyPhoneName().getBytes();
-//								  modeBytes[0] = DtnMode.SENDCONTENT;
-//								  
-//								  //1 BYTE : MODO DE OPERAÇÃO 16 BYTES: ID DO ANDROID RESTANTE: CONTENT COM IMAGEM
-//								  
-//								  System.arraycopy(modeBytes,0, bytes ,0, 1);	
-//								  System.arraycopy(androidIdBytes,0, bytes ,1, androidIdBytes.length);
-//								  System.arraycopy(contentBytes, 0 , bytes, 1+androidIdBytes.length, contentBytes.length);
-//								  
-//								  BundleID ret = s.send(b, bytes);
-//								  
-//								  	if (ret == null)
-//									{
-//										Log.e(TAG, "could not send the message");
-//										DtnLog.writeErrorLog();
-//									}
-//									else
-//									{
-//										Log.d(TAG, "Bundle sent, BundleID: " + ret.toString());
-//										
-//										
-//									}
-//								} 
-//								catch(Exception e)
-//								{
-//									Exception x = e;
-//								}
-//								finally
-//								{
-//									DtnLog.writeSendLog(files.get(j));
-//								}													
-//							}
-//						}
-//						
-//						
-//					}
-//					catch (SessionDestroyedException e)
-//					{
-//						Log.e(TAG, "could not send the message", e);
-//						DtnLog.writeErrorLog();
-//					}
-//					catch (InterruptedException e)
-//					{
-//						Log.e(TAG, "could not send the message", e);
-//						DtnLog.writeErrorLog();
-//					}
-//				}
-//			}
-//			catch (Exception e)
-//			{
-//	
-//			}
-//		
-//
-//	}
 	private synchronized void sendInfoUffDtnRequestBundle()
 	{	
 			try
@@ -454,11 +336,7 @@ public class InfoService extends IntentService
 					Log.d(TAG, "Status report received for " + bundleid.toString() + " from " + source.toString());
 				}
 				else
-//					if (SEND_CONTENT_INTENT.equals(action))
-//					{
-//						sendDtnBundle(DtnMode.SENDCONTENT);
-//					}
-					if (ALERT_PRESENCE_INTENT.equals(action))
+					if (DTN_REQUEST_INTENT.equals(action))
 					{
 						sendInfoUffDtnRequestBundle();
 					}
@@ -638,42 +516,21 @@ public class InfoService extends IntentService
 						byte[] contentsInBytes = new byte[streamBytes.length - 17];
 						System.arraycopy(streamBytes, 17, contentsInBytes, 0, contentsInBytes.length);
 						ArrayList<byte[]> contentsBytes = FileManager.getContentByteListFromBytes(contentsInBytes);
-						for(int i = 0 ; i < contentsBytes.size(); i++)
+						if(contentsBytes.size() > 0)
 						{
-							Content c = FileManager.getContentFromBytes(contentsBytes.get(i), false);
-							FileManager.writeContent(c);
+							for(int i = 0 ; i < contentsBytes.size(); i++)
+							{
+								Content c = FileManager.getContentFromBytes(contentsBytes.get(i), false);
+								FileManager.writeContent(c);
+							}
+						}
+						else
+						{
+							Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+							t.start();
 						}
 					}
 					
-
-//					byte[] streamBytes = stream.toByteArray();
-//					byte mode = streamBytes[0];
-//					byte[] bundleBytes = new byte[streamBytes.length-1];
-//					System.arraycopy(streamBytes, 1, bundleBytes, 0, streamBytes.length-1);
-//					
-//					//ByteArrayInputStream bis = new ByteArrayInputStream(streamBytes);
-//					//ObjectInput in = null;
-//					if(mode == DtnMode.ALERTPRESENCE)
-//					{
-//						String sender = mBundle.getReportto().toString();
-//					}
-//					if(mode == DtnMode.SENDCONTENT)
-//					{
-//					 
-//					  byte[] androidIdBytes = new byte[16];
-//					  byte[] contentBytes = new byte[bundleBytes.length - 16];
-//					  
-//					  System.arraycopy(bundleBytes, 0, androidIdBytes, 0, androidIdBytes.length);
-//					  System.arraycopy(bundleBytes, 16, contentBytes, 0, contentBytes.length);
-//						
-//					  String androidId = new String(androidIdBytes,"Cp1252");
-//					  Content c = FileManager.getContentFromBytes(contentBytes,false);					 
-//					  FileManager.writeContent(c);
-//					  
-//					  
-//					  DtnLog.writeReceiveLog( c,androidId);
-//						//FileManager.writeContentFromBytes(streamBytes, InfoService.this);
-//					}
 
 				}
 				catch(Exception e)

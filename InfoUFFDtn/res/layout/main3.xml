@@ -34,7 +34,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/button1"
         android:background="@drawable/button"
-        android:text="Recover WebPage" />
+        android:text="Insert Test Files" />
 
     <ImageView
         android:id="@+id/imageView1"

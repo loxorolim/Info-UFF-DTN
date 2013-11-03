@@ -260,17 +260,25 @@ public class FileManager
 		{
 			for(int i = 0; i < fileNames.size() ; i++)
 			{
+				String svDate = fileNames.get(i).getDate();
+				String svName = fileNames.get(i).getName();
+				boolean found = false;
 				for(int j = 0 ; j < celContents.size() ; j++)
 				{
 					String celDate= celContents.get(j).getDate();
-					String svDate = fileNames.get(i).getDate();
 					String celName =celContents.get(j).getName();
-					String svName = fileNames.get(i).getName();
-					if(!celDate.equals(svDate) && celName.equals(svName))
+					if(celName.equals(svName))
 					{
-						ret.add(fileNames.get(i));
+						found = true;
+						if(!celDate.equals(svDate))
+						{
+							ret.add(fileNames.get(i));
+						}
 					}
 				}
+				if(!found)
+					ret.add(fileNames.get(i));
+				
 			}
 		}
 		return ret;
