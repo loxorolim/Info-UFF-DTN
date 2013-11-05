@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -71,6 +72,8 @@ public class InfoService extends IntentService
 	// The communication with the DTN service is done using the DTNClient
 	private DTNClient mClient = null;
 
+	private final int neighbourListSize = 10;
+	private LinkedList<String> neighbourList;
 	// Hold the last ping result
 	private Double mLastMeasurement = 0.0;
 
@@ -135,10 +138,18 @@ public class InfoService extends IntentService
 			{
 				
 				List<Node> neighbours = mClient.getDTNService().getNeighbors();
-				for (int i = 0; i < neighbours.size(); i++)
+				
+				for(int i = 0; i < neighbours.size();i++)
 				{
 					String destAddress = neighbours.get(i).endpoint.toString() + "/InfoUffDtn";
-					SingletonEndpoint destination = new SingletonEndpoint(destAddress);
+					addNeighbourToList(destAddress);
+				}
+			
+				
+				for (int i = 0; i < neighbourList.size(); i++)
+				{
+					//String destAddress = neighbours.get(i).endpoint.toString() + "/InfoUffDtn";
+					SingletonEndpoint destination = new SingletonEndpoint(neighbourList.get(i));
 	
 					// create a new bundle
 					Bundle b = new Bundle();
@@ -376,6 +387,21 @@ public class InfoService extends IntentService
 		i.putExtra("payload", payload);
 		sendBroadcast(i);
 	}
+	private void addNeighbourToList(String dest)
+	{
+		if(!neighbourList.contains(dest))
+		{
+			if(neighbourList.size() < neighbourListSize)
+			{
+				neighbourList.addFirst(dest);
+			}
+			else
+			{
+				neighbourList.removeLast();
+				neighbourList.addFirst(dest);
+			}
+		}
+	}
 
 	@Override
 	public void onCreate()
@@ -384,6 +410,9 @@ public class InfoService extends IntentService
 
 		// create a new DTN client
 		mClient = new DTNClient(mSession);
+		neighbourList = new LinkedList<String>();
+		
+		
 		
 		
 		// create registration with "example-app" as endpoint
