@@ -214,7 +214,7 @@ public class Client {
            // client.readResponse();
            // client.sendDeleteMessage();
            // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
-            client.sendImage("\\\\GAIVOTAS\\UserFolders$\\grolim\\Pictures\\Speaker_Icon_rtl.png", "Imagem Audio", 10);
+            client.sendImage("\\\\GAIVOTAS\\UserFolders$\\grolim\\Pictures\\Penguins.jpg", "Imagem Audio", 10);
 
      
             //if successful, read response from server

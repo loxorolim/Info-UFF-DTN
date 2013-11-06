@@ -68,5 +68,9 @@ public class DtnLog
 	{
 		return logs;
 	}
+	public static void restartLog()
+	{
+		logs.clear();
+	}
 	
 }

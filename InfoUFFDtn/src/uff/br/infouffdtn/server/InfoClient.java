@@ -155,6 +155,7 @@ public class InfoClient {
              {
             	 client.writeHeader("Log",false);
             	 client.sendDtnLog();
+            	 DtnLog.restartLog();
              }
 
          } catch (UnknownHostException e) {

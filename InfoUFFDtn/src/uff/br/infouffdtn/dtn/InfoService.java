@@ -571,6 +571,7 @@ public class InfoService extends IntentService
 							{
 								Content c = FileManager.getContentFromBytes(contentsBytes.get(i), false);
 								FileManager.writeContent(c);
+								DtnLog.writeReceiveLog(c, androidId);
 							}
 						}
 						else

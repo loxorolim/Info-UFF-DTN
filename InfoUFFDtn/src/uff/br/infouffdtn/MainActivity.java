@@ -66,15 +66,20 @@ public class MainActivity extends Activity
 
 	private Timer timerShare;
 
-	private final int TIMETOSHARE = 15; //15 min
+	private final int TIMETOSHARE = 15*60; //15 min
 	
 	private Timer timerRefreshNeighbours;
 
-	private final int TIMETOREFRESHNEIGHBOURS = 2; //2 min
+	private final int TIMETOREFRESHNEIGHBOURS = 2*60; //2 min
 	
 	private Timer timerToFetch;
 
-	private final int TIMETOFETCH= 720; //12 horas
+	private final int TIMETOFETCH= 360*60; //6 horas
+	
+	private Timer timerToSendLog;
+
+	private final int TIMETOSENDLOG= 30; //30 seg
+
 
 
 
@@ -91,14 +96,21 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main3);
 		
+		alertServiceToSend();
 		timerShare = new Timer();
 		timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
 		
 		timerRefreshNeighbours = new Timer();
 		timerRefreshNeighbours.schedule(new RefreshTask(), TIMETOREFRESHNEIGHBOURS * 1000);
 		
+		Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+		t.start();
 		timerToFetch = new Timer();
 		timerToFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
+		
+		timerToSendLog = new Timer();
+		timerToSendLog.schedule(new SendLogTask(), TIMETOSENDLOG * 1000);
+		
 		
 		
 
@@ -312,6 +324,23 @@ public class MainActivity extends Activity
 			}
 
 			timerToFetch.schedule(new ShareTask(), TIMETOFETCH * 1000);
+		}
+	}
+	class SendLogTask extends TimerTask
+	{
+		public void run()
+		{
+			try
+			{
+				Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,false));
+				t.start();
+			}
+			catch (Exception e)
+			{
+
+			}
+
+			timerToSendLog.schedule(new ShareTask(), TIMETOSENDLOG* 1000);
 		}
 	}
 
