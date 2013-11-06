@@ -84,6 +84,10 @@ public class FileManager
 			{
 				fileNames.get(i).setCounter(counter);
 				FileManager.writeImageToFile(img, fileNames.get(i).getFilepath());
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				Date d1 = new Date();
+				String data = dateFormat.format(d1);
+				fileNames.get(i).setDate(data);
 				saveListFile();
 				return true;
 			}
