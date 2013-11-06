@@ -57,6 +57,9 @@ public class InfoService extends IntentService
 
 	// this intent send out a PING message
 	public static final String DTN_REQUEST_INTENT = "uff.br.infouffdtn.PRESENCE";
+	
+
+	public static final String DTN_REFRESH_INTENT = "uff.br.infouffdtn.REFRESH";
 
 	// indicates updated data to other components
 	public static final String DATA_UPDATED = "uff.br.infouffdtn.DATA_UPDATED";
@@ -137,14 +140,8 @@ public class InfoService extends IntentService
 			try
 			{
 				
-				List<Node> neighbours = mClient.getDTNService().getNeighbors();
 				
-				for(int i = 0; i < neighbours.size();i++)
-				{
-					String destAddress = neighbours.get(i).endpoint.toString() + "/InfoUffDtn";
-					addNeighbourToList(destAddress);
-				}
-			
+				refreshNeighbours();
 				
 				for (int i = 0; i < neighbourList.size(); i++)
 				{
@@ -293,6 +290,24 @@ public class InfoService extends IntentService
 
 		return ret;	
 	}
+	private void refreshNeighbours()
+	{
+		try
+		{
+			List<Node> neighbours = mClient.getDTNService().getNeighbors();
+			
+			for(int i = 0; i < neighbours.size();i++)
+			{
+				String destAddress = neighbours.get(i).endpoint.toString() + "/InfoUffDtn";
+				addNeighbourToList(destAddress);
+			}
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+	}
 
 	@Override
 	protected void onHandleIntent(Intent intent)
@@ -351,6 +366,11 @@ public class InfoService extends IntentService
 					{
 						sendInfoUffDtnRequestBundle();
 					}
+					else
+						if(DTN_REFRESH_INTENT.equals(action))
+						{
+							refreshNeighbours();
+						}
 	}
 
 	SessionConnection mSession = new SessionConnection()
@@ -555,8 +575,8 @@ public class InfoService extends IntentService
 						}
 						else
 						{
-							Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
-							t.start();
+							//Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+							//t.start();
 						}
 					}
 					

@@ -66,7 +66,15 @@ public class MainActivity extends Activity
 
 	private Timer timerShare;
 
-	private final int TIMETOSHARE = 5; //5 min
+	private final int TIMETOSHARE = 15; //15 min
+	
+	private Timer timerRefreshNeighbours;
+
+	private final int TIMETOREFRESHNEIGHBOURS = 2; //2 min
+	
+	private Timer timerToFetch;
+
+	private final int TIMETOFETCH= 720; //12 horas
 
 
 
@@ -85,6 +93,14 @@ public class MainActivity extends Activity
 		
 		timerShare = new Timer();
 		timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
+		
+		timerRefreshNeighbours = new Timer();
+		timerRefreshNeighbours.schedule(new RefreshTask(), TIMETOREFRESHNEIGHBOURS * 1000);
+		
+		timerToFetch = new Timer();
+		timerToFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
+		
+		
 
 		// assign an action to the ping button
 		try
@@ -182,6 +198,29 @@ public class MainActivity extends Activity
 					SlideTransition.forwardTransition(MainActivity.this);
 				}
 			});
+			Button b5 = (Button) findViewById(R.id.button3);
+			b5.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+
+					Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+					t.start();
+
+				}
+			});
+			Button b6 = (Button) findViewById(R.id.button4);
+			b6.setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+
+						alertServiceToRefresh();
+
+				}
+			});
 				
 		}
 		catch (Exception e)
@@ -242,6 +281,39 @@ public class MainActivity extends Activity
 			timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
 		}
 	}
+	class RefreshTask extends TimerTask
+	{
+		public void run()
+		{
+			try
+			{
+				alertServiceToRefresh();
+			}
+			catch (Exception e)
+			{
+				
+			}
+
+			timerRefreshNeighbours.schedule(new RefreshTask(), TIMETOREFRESHNEIGHBOURS * 1000);
+		}
+	}
+	class FetchTask extends TimerTask
+	{
+		public void run()
+		{
+			try
+			{
+				Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+				t.start();
+			}
+			catch (Exception e)
+			{
+
+			}
+
+			timerToFetch.schedule(new ShareTask(), TIMETOFETCH * 1000);
+		}
+	}
 
 
 	private ServiceConnection mConnection = new ServiceConnection()
@@ -264,6 +336,22 @@ public class MainActivity extends Activity
 			
 			Intent i = new Intent(this, InfoService.class);
 			i.setAction(InfoService.DTN_REQUEST_INTENT);
+			startService(i);
+			i = new Intent(this, InfoService.class);
+			
+		}
+		catch (Exception e)
+		{
+
+		}
+	}
+	private void alertServiceToRefresh()
+	{
+		try
+		{
+			
+			Intent i = new Intent(this, InfoService.class);
+			i.setAction(InfoService.DTN_REFRESH_INTENT);
 			startService(i);
 			i = new Intent(this, InfoService.class);
 			
