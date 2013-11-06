@@ -138,8 +138,7 @@ public class InfoClient {
     	
     }
     public void initialize(boolean fetch)
-    {
-    	 InfoClient client = new InfoClient (hostname,port);
+    {   	 InfoClient client = new InfoClient (hostname,port);
     	//InfoClient client = new InfoClient ("177.133.135.105",port);
          try {
              //trying to establish connection to the server

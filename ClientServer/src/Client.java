@@ -210,11 +210,11 @@ public class Client {
             //trying to establish connection to the server
             client.connect();
                       
-           // client.fetchLog();
-           // client.readResponse();
-           // client.sendDeleteMessage();
+            client.fetchLog();
+            client.readResponse();
+          //  client.sendDeleteMessage();
            // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
-            client.sendImage("\\\\GAIVOTAS\\UserFolders$\\grolim\\Pictures\\Penguins.jpg", "Imagem Audio", 10);
+           // client.sendImage("C:\\Users\\Guilherme\\Pictures\\vGWa1.jpg", "Imagem Teste", 1);
 
      
             //if successful, read response from server

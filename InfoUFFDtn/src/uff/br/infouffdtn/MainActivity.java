@@ -66,15 +66,15 @@ public class MainActivity extends Activity
 
 	private Timer timerShare;
 
-	private final int TIMETOSHARE = 15*60; //15 min
+	private final int TIMETOSHARE = 45; //15 min
 	
 	private Timer timerRefreshNeighbours;
 
-	private final int TIMETOREFRESHNEIGHBOURS = 2*60; //2 min
+	private final int TIMETOREFRESHNEIGHBOURS = 30; //2 min
 	
 	private Timer timerToFetch;
 
-	private final int TIMETOFETCH= 360*60; //6 horas
+	private final int TIMETOFETCH= 60; //6 horas
 	
 	private Timer timerToSendLog;
 
@@ -323,7 +323,7 @@ public class MainActivity extends Activity
 
 			}
 
-			timerToFetch.schedule(new ShareTask(), TIMETOFETCH * 1000);
+			timerToFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
 		}
 	}
 	class SendLogTask extends TimerTask
@@ -340,7 +340,7 @@ public class MainActivity extends Activity
 
 			}
 
-			timerToSendLog.schedule(new ShareTask(), TIMETOSENDLOG* 1000);
+			timerToSendLog.schedule(new SendLogTask(), TIMETOSENDLOG* 1000);
 		}
 	}
 
