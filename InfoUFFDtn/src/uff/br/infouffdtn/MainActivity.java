@@ -96,22 +96,22 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main3);
 		
-		alertServiceToSend();
-		timerShare = new Timer();
-		timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
-		
-		timerRefreshNeighbours = new Timer();
-		timerRefreshNeighbours.schedule(new RefreshTask(), TIMETOREFRESHNEIGHBOURS * 1000);
-		
-		Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
-		t.start();
-		timerToFetch = new Timer();
-		timerToFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
-		
-		timerToSendLog = new Timer();
-		timerToSendLog.schedule(new SendLogTask(), TIMETOSENDLOG * 1000);
-		
-		
+//		alertServiceToSend();
+//		timerShare = new Timer();
+//		timerShare.schedule(new ShareTask(), TIMETOSHARE * 1000);
+//		
+//		timerRefreshNeighbours = new Timer();
+//		timerRefreshNeighbours.schedule(new RefreshTask(), TIMETOREFRESHNEIGHBOURS * 1000);
+//		
+//		Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+//		t.start();
+//		timerToFetch = new Timer();
+//		timerToFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
+//		
+//		timerToSendLog = new Timer();
+//		timerToSendLog.schedule(new SendLogTask(), TIMETOSENDLOG * 1000);
+//		
+//		
 		
 
 		// assign an action to the ping button

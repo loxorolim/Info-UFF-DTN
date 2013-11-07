@@ -194,6 +194,65 @@ public class InfoService extends IntentService
 			}
 		
 	}
+	private void sendInfoUffDtnBundle()
+	{	
+			try
+			{
+				
+
+					//String destAddress = neighbours.get(i).endpoint.toString() + "/InfoUffDtn";
+					//SingletonEndpoint destination = new SingletonEndpoint(neighbourList.get(i));
+	
+					// create a new bundle
+					Bundle b = new Bundle();
+	
+					// set the destination of the bundle
+					b.setDestination(PING_GROUP_EID);
+	
+					// limit the lifetime of the bundle to 60 seconds
+					b.setLifetime(60L);
+					
+	
+					// set status report requests for bundle reception
+					 b.set(ProcFlags.REQUEST_REPORT_OF_BUNDLE_RECEPTION, true);
+	
+					// set destination for status reports
+					 b.setReportto(SingletonEndpoint.ME);
+	
+					// generate some payload
+					
+	
+					try
+					{
+						
+						// get the DTN session
+						Session s = mClient.getSession();
+						ArrayList<byte[]> filesInBytes = FileManager.getContentBytesToSend();
+						if(filesInBytes.size() > 0)
+						{
+							byte [] bytes = prepareBundleToSend(filesInBytes);
+							s.send(b, bytes);
+						}
+							
+					}
+					catch (SessionDestroyedException e)
+					{
+						Log.e(TAG, "could not send the message", e);
+//						DtnLog.writeErrorLog();
+					}
+					catch (InterruptedException e)
+					{
+						Log.e(TAG, "could not send the message", e);
+//						DtnLog.writeErrorLog();
+					}
+				
+			}
+			catch (Exception e)
+			{
+	
+			}
+		
+	}
 	private synchronized void sendInfoUffDtnContentsBundle(ArrayList<byte[]> bundlebytes, String destinationAddress)
 	{	
 			try
@@ -270,6 +329,19 @@ public class InfoService extends IntentService
 		  
 
 		return ret;	
+	}
+	private byte[] prepareBundleToSend(ArrayList<byte[]> contentsBytes)
+	{
+		byte[] modeBytes =  new byte[1];
+		modeBytes[0] = DtnMode.SENDCONTENT;
+		byte[] androidIdBytes = DtnLog.getMyPhoneName().getBytes();
+		byte[] filesBytes = FileManager.getObjectBytes(contentsBytes);
+		byte[] ret = new byte[modeBytes.length + androidIdBytes.length + filesBytes.length];
+		System.arraycopy(modeBytes,0, ret ,0, 1);	
+		System.arraycopy(androidIdBytes,0, ret ,1, androidIdBytes.length);
+		System.arraycopy(filesBytes, 0 , ret, 1+androidIdBytes.length, filesBytes.length);
+		
+		return ret;
 	}
 	
 	private byte[] prepareContentsListBundleToSend(ArrayList<byte[]> contentsBytes)
@@ -364,7 +436,7 @@ public class InfoService extends IntentService
 				else
 					if (DTN_REQUEST_INTENT.equals(action))
 					{
-						sendInfoUffDtnRequestBundle();
+						sendInfoUffDtnBundle();
 					}
 					else
 						if(DTN_REFRESH_INTENT.equals(action))

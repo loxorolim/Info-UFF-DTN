@@ -425,6 +425,17 @@ public class FileManager extends Activity
 		return ret;
 		
 	}
+	public static ArrayList<byte[]> getContentBytesToSend()
+	{
+		loadListFile();
+		ArrayList<byte[]> ret = new ArrayList<byte[]>();
+		for(int i = 0 ; i < filesPaths.size();i++)
+		{
+			ret.add(FileManager.prepareContentToSend(filesPaths.get(i)));
+		}
+		return ret;
+		
+	}
 	public static byte[] prepareContentToSend(Content c)
 	{
 		//byte[] 0 a 1023 vai ter o Content, o resto será a imagem
@@ -658,6 +669,7 @@ public class FileManager extends Activity
 		}
 		return null;
 	}
+
 	public static synchronized String getAvaiableFilepath()
 	{
 		
