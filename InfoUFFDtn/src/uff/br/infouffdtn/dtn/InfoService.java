@@ -66,7 +66,7 @@ public class InfoService extends IntentService
 	public static final String PAYLOAD_UPDATED = "uff.br.infouffdtn.PAYLOAD_UPDATED";
 	public static final String REFRESH = "uff.br.infouffdtn.REFRESH";
 	// group EID of this app
-	public static final GroupEndpoint PING_GROUP_EID = new GroupEndpoint("dtn://broadcast.dtn/ping");
+	public static final GroupEndpoint PING_GROUP_EID = new GroupEndpoint("dtn://broadcast.dtn/infouffdtn");
 
 	// This is the object that receives interactions from clients. See
 	// RemoteService for a more complete example.
