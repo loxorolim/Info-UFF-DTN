@@ -33,6 +33,7 @@ import java.util.List;
 
 import android.graphics.BitmapFactory;
 import uff.br.infouffdtn.MainActivity;
+import uff.br.infouffdtn.dtn.DtnLog;
 import uff.br.infouffdtn.interfacepk.Header;
 import uff.br.infouffdtn.interfacepk.Item;
 import uff.br.infouffdtn.interfacepk.ListItem;
@@ -432,13 +433,14 @@ public class FileManager extends Activity
 		for(int i = 0 ; i < filesPaths.size();i++)
 		{
 			ret.add(FileManager.prepareContentToSend(filesPaths.get(i)));
+			DtnLog.writeSendLog(filesPaths.get(i));
 		}
 		return ret;
 		
 	}
 	public static byte[] prepareContentToSend(Content c)
 	{
-		//byte[] 0 a 1023 vai ter o Content, o resto será a imagem
+		//byte[] 0 a 1023 vai ter o Content, o resto serï¿½ a imagem
 		loadListFile();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutput out = null;

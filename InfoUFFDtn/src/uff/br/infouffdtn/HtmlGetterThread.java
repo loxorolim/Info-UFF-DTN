@@ -29,12 +29,14 @@ public class HtmlGetterThread implements Runnable
 	private String ip;
 	private int port;
 	private boolean fetch;
+	private Context ctx;
 
-	public HtmlGetterThread(String ip, int i, boolean fetch)
+	public HtmlGetterThread(String ip, int i, boolean fetch, Context ctx)
 	{
 		this.ip = ip;
 		this.port = i;
 		this.fetch = fetch;
+		this.ctx = ctx;
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class HtmlGetterThread implements Runnable
 		try
 		{
 
-			InfoClient ic = new InfoClient(ip,port);
+			InfoClient ic = new InfoClient(ip,port,ctx);
 			ic.initialize(fetch);
 
 		}

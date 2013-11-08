@@ -28,10 +28,14 @@ import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import uff.br.infouffdtn.db.Content;
 import uff.br.infouffdtn.db.FileManager;
 import uff.br.infouffdtn.dtn.DtnLog;
+import uff.br.infouffdtn.dtn.InfoService;
 
 
 /**
@@ -44,10 +48,12 @@ public class InfoClient {
     private String hostname;
     private int port;
     Socket socketClient;
+    private Context ctx;
 
-    public InfoClient(String hostname, int port){
+    public InfoClient(String hostname, int port,Context ctx){
         this.hostname = hostname;
         this.port = port;
+        this.ctx = ctx;
     }
 
     public void connect() throws UnknownHostException, IOException{
@@ -84,9 +90,26 @@ public class InfoClient {
         	FileManager.writeContent(c);
         	DtnLog.writeReceiveLogFromServer(c);
         }
-	  
+        alertServiceToSend();
 
     }
+    private void alertServiceToSend()
+	{
+		try
+		{
+			
+			Intent i = new Intent(ctx, InfoService.class);
+			i.setAction(InfoService.DTN_REQUEST_INTENT);
+			ctx.startService(i);
+			i = new Intent(ctx, InfoService.class);
+			
+		}
+		catch (Exception e)
+		{
+
+		}
+	}
+    
     public void sendDtnLog() 
     {
     	OutputStream os = null;
@@ -138,7 +161,7 @@ public class InfoClient {
     	
     }
     public void initialize(boolean fetch)
-    {   	 InfoClient client = new InfoClient (hostname,port);
+    {   	 InfoClient client = new InfoClient (hostname,port,ctx);
     	//InfoClient client = new InfoClient ("177.133.135.105",port);
          try {
              //trying to establish connection to the server

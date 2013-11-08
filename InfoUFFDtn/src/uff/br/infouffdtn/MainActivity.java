@@ -108,8 +108,8 @@ public class MainActivity extends Activity
 //		timerToFetch = new Timer();
 //		timerToFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
 //		
-//		timerToSendLog = new Timer();
-//		timerToSendLog.schedule(new SendLogTask(), TIMETOSENDLOG * 1000);
+		timerToSendLog = new Timer();
+		timerToSendLog.schedule(new SendLogTask(), TIMETOSENDLOG * 1000);
 //		
 //		
 		
@@ -184,7 +184,7 @@ public class MainActivity extends Activity
 				{
 					try
 					{
-						Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,false));
+						Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,false,MainActivity.this));
 						t.start();
 						//Intent intent = new Intent(MainActivity.this, ShowLogActivity.class);
 						//startActivity(intent);
@@ -217,7 +217,7 @@ public class MainActivity extends Activity
 				public void onClick(View v)
 				{
 
-					Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+					Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true,MainActivity.this));
 					t.start();
 
 				}
@@ -315,7 +315,7 @@ public class MainActivity extends Activity
 		{
 			try
 			{
-				Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+				Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true,MainActivity.this));
 				t.start();
 			}
 			catch (Exception e)
@@ -332,7 +332,7 @@ public class MainActivity extends Activity
 		{
 			try
 			{
-				Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,false));
+				Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,false,MainActivity.this));
 				t.start();
 			}
 			catch (Exception e)

@@ -210,7 +210,7 @@ public class InfoService extends IntentService
 					b.setDestination(PING_GROUP_EID);
 	
 					// limit the lifetime of the bundle to 60 seconds
-					b.setLifetime(60L);
+					b.setLifetime(60*60*3L);
 					
 	
 					// set status report requests for bundle reception
@@ -233,6 +233,7 @@ public class InfoService extends IntentService
 							byte [] bytes = prepareBundleToSend(filesInBytes);
 							s.send(b, bytes);
 						}
+						
 							
 					}
 					catch (SessionDestroyedException e)
@@ -314,7 +315,7 @@ public class InfoService extends IntentService
 	{
 		//1 BYTE MODO
 		//16 BYTES ANDROID ID
-		//RESTANTE É A LISTA DE COMMFILE DOS SEUS ARQUIVOS MAIS ATUAIS
+		//RESTANTE ï¿½ A LISTA DE COMMFILE DOS SEUS ARQUIVOS MAIS ATUAIS
 		
 		byte[] modeBytes =  new byte[1];
 		modeBytes[0] = DtnMode.ALERTPRESENCE;
@@ -348,7 +349,7 @@ public class InfoService extends IntentService
 	{
 		//1 BYTE MODO
 		//16 BYTES ANDROID ID
-		//RESTANTE É A LISTA DE COMMFILE DOS SEUS ARQUIVOS MAIS ATUAIS
+		//RESTANTE ï¿½ A LISTA DE COMMFILE DOS SEUS ARQUIVOS MAIS ATUAIS
 
 		byte[] modeBytes =  new byte[1];
 		modeBytes[0] = DtnMode.SENDCONTENT;
