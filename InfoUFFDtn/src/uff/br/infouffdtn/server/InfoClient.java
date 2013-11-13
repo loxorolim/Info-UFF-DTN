@@ -79,10 +79,12 @@ public class InfoClient {
     	catch(Exception e)
     	{
     		Exception x = e;
-    	}  	 
+    	}
+
         for(int i = 0; i< bytesList.size(); i++)
         {
         	Content c =FileManager.getContentFromBytes(bytesList.get(i),true);
+//        	toSendViaDtn.add(c);
         	//DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			//Date d1 = new Date();
 			//String data = dateFormat.format(d1);
@@ -90,6 +92,7 @@ public class InfoClient {
         	FileManager.writeContent(c);
         	DtnLog.writeReceiveLogFromServer(c);
         }
+        InfoService.toSendViaDtn = bytesList;       
         alertServiceToSend();
 
     }

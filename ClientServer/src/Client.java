@@ -210,11 +210,11 @@ public class Client {
             //trying to establish connection to the server
             client.connect();
                       
-           // client.fetchLog();
-           // client.readResponse();
+            client.fetchLog();
+            client.readResponse();
            //client.sendDeleteMessage();
            // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
-            client.sendImage("C:\\Users\\Rolim\\Pictures\\derp-cat.jpg", "Arquivo Teste!", 1);
+           // client.sendImage("C:\\Users\\Rolim\\Pictures\\derp-cat.jpg", "Arquivo Teste!", 1);
 
      
             //if successful, read response from server

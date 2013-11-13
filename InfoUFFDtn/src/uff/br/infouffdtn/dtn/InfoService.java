@@ -58,7 +58,7 @@ public class InfoService extends IntentService
 	// this intent send out a PING message
 	public static final String DTN_REQUEST_INTENT = "uff.br.infouffdtn.PRESENCE";
 	
-
+	public static ArrayList<byte[]> toSendViaDtn;
 	public static final String DTN_REFRESH_INTENT = "uff.br.infouffdtn.REFRESH";
 
 	// indicates updated data to other components
@@ -227,10 +227,10 @@ public class InfoService extends IntentService
 						
 						// get the DTN session
 						Session s = mClient.getSession();
-						ArrayList<byte[]> filesInBytes = FileManager.getContentBytesToSend();
-						if(filesInBytes.size() > 0)
+						//ArrayList<byte[]> filesInBytes = FileManager.getContentBytesToSend();
+						if(toSendViaDtn.size() > 0)
 						{
-							byte [] bytes = prepareBundleToSend(filesInBytes);
+							byte [] bytes = prepareBundleToSend(toSendViaDtn);
 							s.send(b, bytes);
 						}
 						
@@ -546,6 +546,7 @@ public class InfoService extends IntentService
 		// terminate the DTN service
 		mClient.terminate();
 		mClient = null;
+		toSendViaDtn = null;
 		
 		super.onDestroy();
 	}
