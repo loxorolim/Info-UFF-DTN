@@ -222,17 +222,7 @@ public class MainActivity extends Activity
 
 				}
 			});
-			Button b6 = (Button) findViewById(R.id.button4);
-			b6.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-
-						alertServiceToRefresh();
-
-				}
-			});
+	
 				
 		}
 		catch (Exception e)
