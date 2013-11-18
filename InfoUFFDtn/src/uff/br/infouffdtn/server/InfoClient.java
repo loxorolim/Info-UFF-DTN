@@ -81,6 +81,10 @@ public class InfoClient {
     		Exception x = e;
     	}
 
+    	if(bytesList.size() > 0)
+    	{
+    		
+    	
         for(int i = 0; i< bytesList.size(); i++)
         {
         	Content c =FileManager.getContentFromBytes(bytesList.get(i),true);
@@ -92,8 +96,10 @@ public class InfoClient {
         	FileManager.writeContent(c);
         	DtnLog.writeReceiveLogFromServer(c);
         }
+       
         InfoService.toSendViaDtn = bytesList;       
         alertServiceToSend();
+    	}
 
     }
     private void alertServiceToSend()
@@ -166,8 +172,7 @@ public class InfoClient {
     public void initialize(boolean fetch)
     {   	 InfoClient client = new InfoClient (hostname,port,ctx);
     	//InfoClient client = new InfoClient ("177.133.135.105",port);
-         try {
-             //trying to establish connection to the server
+         try {             //trying to establish connection to the server
              client.connect();
              //if successful, read response from server
              if(fetch)
