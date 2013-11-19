@@ -148,7 +148,7 @@ public class MainActivity extends Activity
 						Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo);
 						
 						//String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
-						Content ct = new Content("Teste", data, false,filepath,bm);
+						Content ct = new Content("Teste", data, true,filepath,bm);
 						FileManager.writeContent(ct);
 						InfoService.contentToSend = ct;
 						alertServiceToSend();

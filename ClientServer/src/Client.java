@@ -212,7 +212,7 @@ public class Client {
                       
             client.fetchLog();
             client.readResponse();
-           //client.sendDeleteMessage();
+          // client.sendDeleteMessage();
            // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
            // client.sendImage("C:\\Users\\Rolim\\Pictures\\derp-cat.jpg", "Arquivo Teste!", 1);
 
