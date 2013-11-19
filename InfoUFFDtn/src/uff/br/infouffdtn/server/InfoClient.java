@@ -94,11 +94,12 @@ public class InfoClient {
 			//String data = dateFormat.format(d1);
 			//c.setDate(data);
         	FileManager.writeContent(c);
+            InfoService.contentToSend = c;       
+            alertServiceToSend();
         	DtnLog.writeReceiveLogFromServer(c);
         }
        
-        InfoService.toSendViaDtn = bytesList;       
-        alertServiceToSend();
+
     	}
 
     }

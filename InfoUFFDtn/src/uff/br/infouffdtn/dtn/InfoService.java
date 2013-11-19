@@ -59,8 +59,9 @@ public class InfoService extends IntentService
 	public static final String DTN_REQUEST_INTENT = "uff.br.infouffdtn.PRESENCE";
 	
 	public static ArrayList<byte[]> toSendViaDtn;
+	public static Content contentToSend;
 	public static final String DTN_REFRESH_INTENT = "uff.br.infouffdtn.REFRESH";
-
+    
 	// indicates updated data to other components
 	public static final String DATA_UPDATED = "uff.br.infouffdtn.DATA_UPDATED";
 	public static final String PAYLOAD_UPDATED = "uff.br.infouffdtn.PAYLOAD_UPDATED";
@@ -172,6 +173,7 @@ public class InfoService extends IntentService
 						
 						// get the DTN session
 						Session s = mClient.getSession();
+						
 						byte [] bytes = prepareRequestBundleToSend();
 						s.send(b, bytes);
 							
@@ -228,9 +230,11 @@ public class InfoService extends IntentService
 						// get the DTN session
 						Session s = mClient.getSession();
 						//ArrayList<byte[]> filesInBytes = FileManager.getContentBytesToSend();
-						if(toSendViaDtn.size() > 0)
+						if(contentToSend != null)
 						{
-							byte [] bytes = prepareBundleToSend(toSendViaDtn);
+							
+							//byte [] bytes = prepareBundleToSend(toSendViaDtn);
+							byte[] bytes = prepareBundleToSend(contentToSend);
 							s.send(b, bytes);
 						}
 						
@@ -331,12 +335,12 @@ public class InfoService extends IntentService
 
 		return ret;	
 	}
-	private byte[] prepareBundleToSend(ArrayList<byte[]> contentsBytes)
+	private byte[] prepareBundleToSend(Content c)
 	{
 		byte[] modeBytes =  new byte[1];
 		modeBytes[0] = DtnMode.SENDCONTENT;
 		byte[] androidIdBytes = DtnLog.getMyPhoneName().getBytes();
-		byte[] filesBytes = FileManager.getObjectBytes(contentsBytes);
+		byte[] filesBytes = FileManager.prepareContentToSend(c);
 		byte[] ret = new byte[modeBytes.length + androidIdBytes.length + filesBytes.length];
 		System.arraycopy(modeBytes,0, ret ,0, 1);	
 		System.arraycopy(androidIdBytes,0, ret ,1, androidIdBytes.length);
@@ -638,21 +642,23 @@ public class InfoService extends IntentService
 					{
 						byte[] contentsInBytes = new byte[streamBytes.length - 17];
 						System.arraycopy(streamBytes, 17, contentsInBytes, 0, contentsInBytes.length);
-						ArrayList<byte[]> contentsBytes = FileManager.getContentByteListFromBytes(contentsInBytes);
-						if(contentsBytes.size() > 0)
-						{
-							for(int i = 0 ; i < contentsBytes.size(); i++)
-							{
-								Content c = FileManager.getContentFromBytes(contentsBytes.get(i), false);
-								FileManager.writeContent(c);
-								DtnLog.writeReceiveLog(c, androidId);
-							}
-						}
-						else
-						{
-							//Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
-							//t.start();
-						}
+						Content content = FileManager.getContentFromBytes(contentsInBytes,false);
+						FileManager.writeContent(content);
+						DtnLog.writeReceiveLog(content, androidId);
+						//						if(contentsBytes.size() > 0)
+//						{
+//							for(int i = 0 ; i < contentsBytes.size(); i++)
+//							{
+//								Content c = FileManager.getContentFromBytes(contentsBytes.get(i), false);
+//								FileManager.writeContent(c);
+//								DtnLog.writeReceiveLog(c, androidId);
+//							}
+//						}
+//						else
+//						{
+//							//Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
+//							//t.start();
+//						}
 					}
 					
 

@@ -145,27 +145,14 @@ public class MainActivity extends Activity
 						Date d1 = new Date();
 						String data = dateFormat.format(d1);
 						String filepath = FileManager.getAvaiableFilepath();
-						Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+						Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo);
 						
 						//String fp = FileManager.writeValidation("JornalUFF", MainActivity.this, 0);						
-						Content ct = new Content("JornalUFF", data, false,filepath,bm);
+						Content ct = new Content("Teste", data, false,filepath,bm);
 						FileManager.writeContent(ct);
+						InfoService.contentToSend = ct;
+						alertServiceToSend();
 
-					
-						
-						//fp = FileManager.writeValidation("QuadroUFF", MainActivity.this, 0);
-						ct = new Content("QuadroUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
-						//FileManager.writeContent(ct);
-						
-						byte[] b = FileManager.prepareContentToSend(ct);
-						ct.setBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
-						Content x = FileManager.getContentFromBytes(b,true);
-						FileManager.writeContent(x);
-						
-						//fp = FileManager.writeValidation("NoticiasUFF", MainActivity.this, 0);
-						ct = new Content("NoticiasUFF", data, true,FileManager.getAvaiableFilepath(),BitmapFactory.decodeResource(getResources(), R.drawable.infouffdtnlogo));
-						FileManager.writeContent(ct);
-				
 //						
 //						//recoverWebPage();
 					}
@@ -348,22 +335,22 @@ public class MainActivity extends Activity
 		}
 	};
 
-	private void alertServiceToSend()
-	{
-		try
+	 private void alertServiceToSend()
 		{
-			
-			Intent i = new Intent(this, InfoService.class);
-			i.setAction(InfoService.DTN_REQUEST_INTENT);
-			startService(i);
-			i = new Intent(this, InfoService.class);
-			
-		}
-		catch (Exception e)
-		{
+			try
+			{
+				
+				Intent i = new Intent(this, InfoService.class);
+				i.setAction(InfoService.DTN_REQUEST_INTENT);
+				this.startService(i);
+				i = new Intent(this, InfoService.class);
+				
+			}
+			catch (Exception e)
+			{
 
+			}
 		}
-	}
 	private void alertServiceToRefresh()
 	{
 		try
