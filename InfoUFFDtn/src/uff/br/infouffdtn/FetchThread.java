@@ -23,7 +23,7 @@ import android.text.Spanned;
 import android.util.Log;
 import android.webkit.WebView;
 
-public class HtmlGetterThread implements Runnable
+public class FetchThread implements Runnable
 {
 
 	private String ip;
@@ -31,7 +31,7 @@ public class HtmlGetterThread implements Runnable
 	private boolean fetch;
 	private Context ctx;
 
-	public HtmlGetterThread(String ip, int i, boolean fetch, Context ctx)
+	public FetchThread(String ip, int i, boolean fetch, Context ctx)
 	{
 		this.ip = ip;
 		this.port = i;

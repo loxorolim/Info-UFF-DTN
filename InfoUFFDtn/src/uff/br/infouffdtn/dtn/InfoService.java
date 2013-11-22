@@ -14,7 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import uff.br.infouffdtn.HtmlGetterThread;
+import uff.br.infouffdtn.FetchThread;
 import uff.br.infouffdtn.db.Content;
 
 
