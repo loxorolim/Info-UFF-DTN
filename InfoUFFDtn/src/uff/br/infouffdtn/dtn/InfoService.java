@@ -628,16 +628,16 @@ public class InfoService extends IntentService
 					System.arraycopy(streamBytes, 1, androidIdBytes, 0, androidIdBytes.length);
 					String androidId = new String(androidIdBytes,"Cp1252");
 					
-					if(mode == DtnMode.ALERTPRESENCE)
-					{
-						byte[] commFilesBytes = new byte[streamBytes.length - 17];
-						System.arraycopy(streamBytes, 17, commFilesBytes, 0, commFilesBytes.length);
-						ArrayList<CommFile> commfiles = FileManager.getCommFileListFromBytes(commFilesBytes);
-						ArrayList<Content> filesToSend = FileManager.getContentsToConvert(commfiles);
-						ArrayList<byte[]> contentsInBytes = FileManager.getContentBytesToSend(filesToSend);
-						sendInfoUffDtnContentsBundle(contentsInBytes, mBundle.getReportto().toString());
-						
-					}
+//					if(mode == DtnMode.ALERTPRESENCE)
+//					{
+//						byte[] commFilesBytes = new byte[streamBytes.length - 17];
+//						System.arraycopy(streamBytes, 17, commFilesBytes, 0, commFilesBytes.length);
+//						ArrayList<CommFile> commfiles = FileManager.getCommFileListFromBytes(commFilesBytes);
+//						ArrayList<Content> filesToSend = FileManager.getContentsToConvert(commfiles);
+//						ArrayList<byte[]> contentsInBytes = FileManager.getContentBytesToSend(filesToSend);
+//						sendInfoUffDtnContentsBundle(contentsInBytes, mBundle.getReportto().toString());
+//						
+//					}
 					if(mode == DtnMode.SENDCONTENT)
 					{
 						byte[] contentsInBytes = new byte[streamBytes.length - 17];

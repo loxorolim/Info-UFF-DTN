@@ -237,7 +237,7 @@ public class FileManager extends Activity
 
 	}
 
-	public static ArrayList<Item> readAllFilesNames() throws ParseException
+	public static ArrayList<Item> prepareContentList() throws ParseException
 	{		
 		loadListFile();
 

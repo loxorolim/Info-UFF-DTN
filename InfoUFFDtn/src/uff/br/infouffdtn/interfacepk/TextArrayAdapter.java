@@ -8,14 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-public class TwoTextArrayAdapter extends ArrayAdapter<Item> {
+public class TextArrayAdapter extends ArrayAdapter<Item> {
 	private LayoutInflater mInflater;
 
 	public enum RowType {
 		LIST_ITEM, HEADER_ITEM
 	}
 
-	public TwoTextArrayAdapter(Context context, List<Item> items) {
+	public TextArrayAdapter(Context context, List<Item> items) {
 		super(context, 0, items);
 		mInflater = LayoutInflater.from(context);
 	}

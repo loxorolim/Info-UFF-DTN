@@ -4,7 +4,7 @@ package uff.br.infouffdtn.interfacepk;
 
 import uff.br.infouffdtn.R;
 import uff.br.infouffdtn.db.Content;
-import uff.br.infouffdtn.interfacepk.TwoTextArrayAdapter.RowType;
+import uff.br.infouffdtn.interfacepk.TextArrayAdapter.RowType;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

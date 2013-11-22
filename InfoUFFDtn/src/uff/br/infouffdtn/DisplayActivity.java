@@ -30,7 +30,7 @@ import uff.br.infouffdtn.dtn.InfoService;
 import uff.br.infouffdtn.interfacepk.Item;
 import uff.br.infouffdtn.interfacepk.ListItem;
 import uff.br.infouffdtn.interfacepk.SlideTransition;
-import uff.br.infouffdtn.interfacepk.TwoTextArrayAdapter;
+import uff.br.infouffdtn.interfacepk.TextArrayAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -197,8 +197,8 @@ public class DisplayActivity extends Activity
 		// ImageView icon = (ImageView)findViewById(R.id.icon);
 		try
 		{
-			values = FileManager.readAllFilesNames();
-	        TwoTextArrayAdapter adapter = new TwoTextArrayAdapter(this, values);
+			values = FileManager.prepareContentList();
+	        TextArrayAdapter adapter = new TextArrayAdapter(this, values);
 	        listView.setAdapter(adapter);
 		}
 		catch (Exception e)
