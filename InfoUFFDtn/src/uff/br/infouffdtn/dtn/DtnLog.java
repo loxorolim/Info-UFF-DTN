@@ -22,7 +22,7 @@ public class DtnLog
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date d1 = new Date();
 		String data = dateFormat.format(d1);
-		String slog = data + " :\n " + "Dispositivo " + cel1 + " enviando o Content do tipo " + c.getName() + " com data " + c.getDate() + " em broadcast ";
+		String slog = data + " :\n " + "Dispositivo " + cel1 + " enviando o informativo do tipo " + c.getName() + " com data " + c.getDate() + " em broadcast ";
 		logs.add(slog);
 	}
 	public static void writeReceiveLog(Content c, String cel2)
@@ -30,7 +30,7 @@ public class DtnLog
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date d1 = new Date();
 		String data = dateFormat.format(d1);
-		String slog = data + " :\n " + "Dispositivo " + cel1 + " recebendo o Content do tipo " + c.getName() + " com data " + c.getDate() + " de " + cel2;
+		String slog = data + " :\n " + "Dispositivo " + cel1 + " recebendo o informativo do tipo " + c.getName() + " com data " + c.getDate() + " de " + cel2;
 		logs.add(slog);		
 	}
 	public static void writeReceiveLogFromServer(Content c)
@@ -38,7 +38,7 @@ public class DtnLog
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date d1 = new Date();
 		String data = dateFormat.format(d1);
-		String slog = data + " :\n " + "Dispositivo " + cel1 + " recebendo o Content do tipo " + c.getName() + " do servidor";
+		String slog = data + " :\n " + "Dispositivo " + cel1 + " recebendo o informativo do tipo " + c.getName() + " do servidor";
 		logs.add(slog);		
 	}
 	public static void writeErrorLog()
