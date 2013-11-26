@@ -97,6 +97,29 @@ public class Client {
     		
     	}
     }
+    public void sendStopTimer() 
+    {
+    	OutputStream os = null;
+	  	BufferedOutputStream buffer = null;   	   
+	  	ObjectOutput output = null;
+    	try
+    	{
+    		 //Send the message to the server   	  	
+    	  
+      	   os = socketClient.getOutputStream();
+      	   buffer = new BufferedOutputStream( os );
+      	   output = new ObjectOutputStream ( buffer ); 
+     	   output.writeUTF("StopTimer");
+      	   
+      	   output.flush();
+      	   output.close();
+
+    	}
+    	catch(Exception e)
+    	{
+    		
+    	}
+    }
     public void sendImage(String imagePath,String name, int counter) 
     {
     	OutputStream os = null;
@@ -178,6 +201,38 @@ public class Client {
 		
 		return null;
     }
+    public byte[] prepareStartTimerBytes(int timeRefresh,String name, int counter) 
+    {
+	
+
+		byte[] trBytes = null;
+		byte[] cntBytes = null;
+		byte[] strBytes = null;
+
+		try 
+		{
+		  //CommFile comm = new CommFile(c.getName(),c.getDate());
+		  //out = new ObjectOutputStream(bos);   
+		  //out.writeObject(comm);
+	      strBytes = name.getBytes();
+	 //     strSizeBytes = ByteBuffer.allocate(4).putInt(strBytes.length).array();
+	     
+		  trBytes = ByteBuffer.allocate(4).putInt(timeRefresh).array();
+		  cntBytes = ByteBuffer.allocate(4).putInt(counter).array();
+		  byte[] retBytes = new byte[ trBytes.length + cntBytes.length + strBytes.length ];
+		  System.arraycopy(trBytes, 0, retBytes, 0, trBytes.length);
+		  System.arraycopy(cntBytes, 0, retBytes, 4, cntBytes.length);
+		  System.arraycopy(strBytes, 0, retBytes, 8, strBytes.length);
+		  return retBytes;
+		
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return null;
+    }
 
     
     public byte[] getImageBytes(String filepath)
@@ -200,6 +255,31 @@ public class Client {
 		
 			   	
 	}
+    public void sendStartTimer(int timeRefresh,String name,int counter)
+    {
+    	OutputStream os = null;
+	  	BufferedOutputStream buffer = null;   	   
+	  	ObjectOutput output = null;
+    	try
+    	{
+    		 //Send the message to the server   	  	
+    	   byte [] bytes = prepareStartTimerBytes(timeRefresh, name, counter);
+      	   os = socketClient.getOutputStream();
+      	   buffer = new BufferedOutputStream( os );
+      	   output = new ObjectOutputStream ( buffer ); 
+     	  // output.writeUTF("Log");
+      	   output.writeUTF("StartTimer");
+      	   output.writeObject(bytes);
+      	   
+      	   output.flush();
+      	   output.close();
+
+    	}
+    	catch(Exception e)
+    	{
+    		
+    	}
+    }
 
     public static void main(String arg[]){
         //Creating a SocketClient object
@@ -210,8 +290,10 @@ public class Client {
             //trying to establish connection to the server
             client.connect();
                       
-            client.fetchLog();
-            client.readResponse();
+            //client.fetchLog();
+            //client.readResponse();
+            client.sendStartTimer(60, "Teste!", 1);
+           // client.sendStopTimer();
           // client.sendDeleteMessage();
            // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
            // client.sendImage("C:\\Users\\Rolim\\Pictures\\derp-cat.jpg", "Arquivo Teste!", 1);

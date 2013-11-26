@@ -22,9 +22,11 @@ public class Server {
     
     private ServerSocket serverSocket;
     private int port;
+    private FileGeneratorTest ft;
     
     public Server(int port) {
         this.port = port;
+        ft = new FileGeneratorTest();
     }
     
     public void start() throws IOException {
@@ -45,7 +47,7 @@ public class Server {
         {
 	        Socket client = serverSocket.accept();
 	        
-	        Thread t = new Thread(new ServerThread(client));
+	        Thread t = new Thread(new ServerThread(client,ft));
 	        t.start();
 	        //A client has connected to this server. Send welcome message
 	        //sendWelcomeMessage(client);
@@ -68,7 +70,10 @@ public class Server {
   
   
             Server socketServer = new Server(portNumber);
+           // FileGeneratorTest f = new FileGeneratorTest();
+           // f.setTimer("Teste",10, 1);
             socketServer.start();
+            
             
 
             

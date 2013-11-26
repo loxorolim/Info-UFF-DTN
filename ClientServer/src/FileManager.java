@@ -69,12 +69,7 @@ public class FileManager
 			}
 					
 		}
-		
-		
-
-		
-		
-		
+				
 	}
 	public static boolean tryToOverwrite(String name,BufferedImage img, int counter)
 	{
@@ -222,20 +217,7 @@ public class FileManager
 	        	e.printStackTrace();
 	     }
 	}
-	public static BufferedImage readImageFromFile(String filepath)
-	{
-		 BufferedImage image = null;
-		 	try 
-		 	{			 
-	            return ImageIO.read(new File(filepath));
-	         
-	        } 
-		 	catch (IOException e) 
-	        {
-	        	e.printStackTrace();
-	        }
-			return image;
-	}
+
 	public synchronized static ArrayList<byte[]> getBytessToSend(ArrayList<CommFile> celContents)
 	{
 		loadListFile();
@@ -288,28 +270,7 @@ public class FileManager
 		return ret;
 		
 	}
-	public static ArrayList<BufferedImage> getImagesToSend()
-	{
-		loadListFile();
-		ArrayList<BufferedImage> ret = new ArrayList<BufferedImage>();
-		for(int i = 0 ; i < fileNames.size() ; i++)
-		{
-			try
-			{
-				if(fileNames.get(i).getCounter() > 0)
-				{
-					ret.add(FileManager.readImageFromFile(fileNames.get(i).getFilepath()));
-					fileNames.get(i).setCounter(fileNames.get(i).getCounter() - 1);
-					saveListFile();
-				}
-			}
-			catch(Exception e)
-			{
-				
-			}
-		}
-		return ret;
-	}
+
 	public static byte[] prepareFileToSend(ServerFile c)
 	{
 		//byte[] 0 a 1023 vai ter o Content, o resto será a imagem
