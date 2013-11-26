@@ -37,7 +37,7 @@ public class FileManager
 	
 	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 	private static String pathname = "";
-	public static void writeFile(String name,BufferedImage img, int counter) 
+	public static synchronized void writeFile(String name,BufferedImage img, int counter) 
 	{
 		
 		loadListFile();
@@ -71,7 +71,7 @@ public class FileManager
 		}
 				
 	}
-	public static boolean tryToOverwrite(String name,BufferedImage img, int counter)
+	public static synchronized boolean tryToOverwrite(String name,BufferedImage img, int counter)
 	{
 		for(int i = 0; i < fileNames.size();i++)
 		{
@@ -90,7 +90,7 @@ public class FileManager
 		return false;
 	}
 
-	public static void deleteFile(String fileName)
+	public static synchronized void deleteFile(String fileName)
 	{
 		loadListFile();
 		int pos = getFileListPosition(fileName);
@@ -103,7 +103,7 @@ public class FileManager
 		}
 		saveListFile();
 	}
-	public static int getFileListPosition(String filename)
+	public static synchronized int getFileListPosition(String filename)
 	{
 		for(int i = 0 ; i < fileNames.size();i++)
 		{
@@ -112,7 +112,7 @@ public class FileManager
 		}
 		return -1;
 	}
-	public static void deleteAllFiles()
+	public static synchronized void deleteAllFiles()
 	{
 		loadListFile();
 		for(int i = 0; i < fileNames.size() ; i++)
@@ -129,7 +129,7 @@ public class FileManager
 		saveLogFile();
 	}
 
-	public static void saveListFile()
+	public static synchronized void saveListFile()
 	{
 		try
 		{
@@ -154,7 +154,7 @@ public class FileManager
 		    ex.printStackTrace();
 		}	
 	}
-	public static void loadListFile()
+	public static synchronized void loadListFile()
 	{
 		ArrayList<ServerFile> list = new ArrayList<ServerFile>();
 		try
@@ -180,7 +180,7 @@ public class FileManager
 		fileNames = list;
 		
 	}
-	public static String writeValidation(String type,int num)
+	public static synchronized String writeValidation(String type,int num)
 	{
 		loadListFile();
 		String fp = pathname;
@@ -200,12 +200,12 @@ public class FileManager
 		String x = fp+type;
 		return fp+type;			
 	}
-	public static String getAvaiableFilepath()
+	public static synchronized String getAvaiableFilepath()
 	{
 		
 		return writeValidation("InfoUffServerFile",0);
 	}
-	public static void writeImageToFile(BufferedImage img, String dest)
+	public static synchronized void writeImageToFile(BufferedImage img, String dest)
 	{
 		 try
 		 {
@@ -234,7 +234,7 @@ public class FileManager
 		saveListFile();
 		return ret;
 	}
-	public static ArrayList<ServerFile> getFilesToConvert(ArrayList<CommFile> celContents)
+	public static synchronized ArrayList<ServerFile> getFilesToConvert(ArrayList<CommFile> celContents)
 	{
 		
 		ArrayList<ServerFile> ret = new ArrayList<ServerFile>();
@@ -271,7 +271,7 @@ public class FileManager
 		
 	}
 
-	public static byte[] prepareFileToSend(ServerFile c)
+	public static synchronized byte[] prepareFileToSend(ServerFile c)
 	{
 		//byte[] 0 a 1023 vai ter o Content, o resto será a imagem
 		
@@ -302,7 +302,7 @@ public class FileManager
 		
 		return null;
 	}
-	public static Content writeImageFromBytes(byte[] b)
+	public static synchronized Content writeImageFromBytes(byte[] b)
 	{
 		byte[] tam = new byte[4];
 		tam[0] = b[0];
@@ -340,14 +340,14 @@ public class FileManager
 		
 		
 	}
-	public static int byteArrayToInt(byte[] b) 
+	public static synchronized int byteArrayToInt(byte[] b) 
 	{
 	    return   b[3] & 0xFF |
 	            (b[2] & 0xFF) << 8 |
 	            (b[1] & 0xFF) << 16 |
 	            (b[0] & 0xFF) << 24;
 	}
-	public static BufferedImage createImageFromBytes(byte[] imageData) {
+	public static synchronized BufferedImage createImageFromBytes(byte[] imageData) {
 	    ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
 	    try {
 	        return ImageIO.read(bais);
@@ -355,7 +355,7 @@ public class FileManager
 	        throw new RuntimeException(e);
 	    }
 	}
-	public static void saveLogFile()
+	public static synchronized void saveLogFile()
 	{
 		try
 		{
@@ -380,7 +380,7 @@ public class FileManager
 		    ex.printStackTrace();
 		}	
 	}
-	public static void loadLogFile()
+	public static synchronized void loadLogFile()
 	{
 		ArrayList<String> list = new ArrayList<String>();
 		try
