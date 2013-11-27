@@ -292,7 +292,7 @@ public class Client {
                       
             //client.fetchLog();
             //client.readResponse();
-         //   client.sendStartTimer(10, "Teste!", 1);
+           // client.sendStartTimer(10, "Teste!", 1);
             client.sendStopTimer();
           // client.sendDeleteMessage();
            // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
