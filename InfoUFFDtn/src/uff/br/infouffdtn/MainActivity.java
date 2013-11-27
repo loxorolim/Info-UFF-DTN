@@ -74,11 +74,11 @@ public class MainActivity extends Activity
 	
 	private Timer timerToFetch;
 
-	private final int TIMETOFETCH= 60; //6 horas
+	private final int TIMETOFETCH= 120; //6 horas
 	
 	private Timer timerToSendLog;
 
-	private final int TIMETOSENDLOG= 30; //30 seg
+	private final int TIMETOSENDLOG= 60; //30 seg
 
 
 
@@ -105,8 +105,8 @@ public class MainActivity extends Activity
 //		
 //		Thread t = new Thread(new HtmlGetterThread("rolim.no-ip.org", 9990,true));
 //		t.start();
-//		timerToFetch = new Timer();
-//		timerToFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
+		timerToFetch = new Timer();
+		timerToFetch.schedule(new FetchTask(), TIMETOFETCH * 1000);
 //		
 		timerToSendLog = new Timer();
 		timerToSendLog.schedule(new SendLogTask(), TIMETOSENDLOG * 1000);
