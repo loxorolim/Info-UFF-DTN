@@ -507,7 +507,7 @@ public class InfoService extends IntentService
 
 		// create a new DTN client
 		mClient = new DTNClient(mSession);
-		neighbourList = new LinkedList<String>();
+		//neighbourList = new LinkedList<String>();
 		
 		
 		
@@ -543,7 +543,7 @@ public class InfoService extends IntentService
 		}
 
 	}
-
+    
 	@Override
 	public void onDestroy()
 	{

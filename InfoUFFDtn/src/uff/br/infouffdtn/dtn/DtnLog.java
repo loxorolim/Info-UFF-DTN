@@ -38,7 +38,7 @@ public class DtnLog
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date d1 = new Date();
 		String data = dateFormat.format(d1);
-		String slog = data + " :\n " + "Dispositivo " + cel1 + " recebendo o informativo do tipo " + c.getName() + " do servidor";
+		String slog = data + " :\n " + "Dispositivo " + cel1 + " recebendo o informativo do tipo " + c.getName() + " e data "+c.getDate()+" do servidor";
 		logs.add(slog);		
 	}
 	public static void writeErrorLog()
