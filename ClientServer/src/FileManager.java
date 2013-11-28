@@ -120,7 +120,7 @@ public class FileManager
 			File file = new File(fileNames.get(i).getFilepath());
 			file.delete();
 		}
-
+		
 		
 		fileNames.clear();
 		log.clear();
@@ -411,7 +411,14 @@ public class FileManager
 		
 		for(int i = 0 ; i< list.size(); i++)
 		{
-			log.add(list.get(i));
+			boolean write = true;
+			for(int j = 0; j < log.size();j++)
+			{
+				if(list.get(i).equals(log.get(j)))
+					write = false;
+			}
+			if(write)
+				log.add(list.get(i));
 		}
 		
 		saveLogFile();

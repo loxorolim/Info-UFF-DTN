@@ -152,6 +152,7 @@ public class MainActivity extends Activity
 						FileManager.writeContent(ct);
 						InfoService.contentToSend = ct;
 						alertServiceToSend();
+						DtnLog.writeReceiveLogFromServer(ct);
 
 //						
 //						//recoverWebPage();

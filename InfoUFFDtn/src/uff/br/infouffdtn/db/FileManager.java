@@ -316,6 +316,7 @@ public class FileManager extends Activity
 			f.delete();
 		}
 		filesPaths.clear();
+		DtnLog.restartLog();
 		saveListFile();
 	}
 
