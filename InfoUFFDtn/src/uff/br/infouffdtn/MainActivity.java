@@ -74,7 +74,7 @@ public class MainActivity extends Activity
 	
 	private Timer timerToFetch;
 
-	private final int TIMETOFETCH= 120; //6 horas
+	private final int TIMETOFETCH= 130; //6 horas
 	
 	private Timer timerToSendLog;
 
