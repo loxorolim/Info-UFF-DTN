@@ -290,11 +290,21 @@ public class Client {
             //trying to establish connection to the server
             client.connect();
                       
-            //client.fetchLog();
-            //client.readResponse();
-           // client.sendStartTimer(10, "Teste!", 1);
-            client.sendStopTimer();
-          // client.sendDeleteMessage();
+          //  client.fetchLog();
+           // client.readResponse();
+           client.sendStartTimer(60*10, "Teste10min2cont!", 2);
+           client.sendStartTimer(60*10, "Teste10min3cont!", 3);
+           client.sendStartTimer(60*10, "Teste10min4cont!", 4);
+           client.sendStartTimer(60*30, "Teste30min1cont!", 1);
+           client.sendStartTimer(60*30, "Teste30min2cont!", 2);
+           client.sendStartTimer(60*30, "Teste30min3cont!", 3);
+           client.sendStartTimer(60*30, "Teste30min4cont!", 4);
+           client.sendStartTimer(60*60, "Teste60min1cont!", 1);
+           client.sendStartTimer(60*60, "Teste60min2cont!", 2);
+           client.sendStartTimer(60*60, "Teste60min3cont!", 3);
+           client.sendStartTimer(60*60, "Teste60min4cont!", 4);
+          // client.sendStopTimer();
+         //  client.sendDeleteMessage();
            // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
            // client.sendImage("C:\\Users\\Rolim\\Pictures\\derp-cat.jpg", "Arquivo Teste!", 1);
 
