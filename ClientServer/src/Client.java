@@ -281,29 +281,41 @@ public class Client {
     	}
     }
 
-    public static void main(String arg[]){
+    public static void main(String arg[]) throws UnknownHostException, IOException{
+    	//startTestTimers();
+    	stopTimers();
+    	deleteServerFiles();
+    	//getLog();
+    	
+    	
+    	
+    	
+    	
         //Creating a SocketClient object
       //  Client client = new Client ("rolim.no-ip.org",9990);
-        Client client = new Client ("rolim.no-ip.org",9990);
+       // Client client = new Client ("rolim.no-ip.org",9990);
     	//Client client = new Client ("177.133.135.105",9990);
-        try {
+//        try {
             //trying to establish connection to the server
-            client.connect();
+          //  client.connect();
                       
           //  client.fetchLog();
            // client.readResponse();
-           client.sendStartTimer(60*10, "Teste10min1cont!", 1);
-           client.sendStartTimer(60*10, "Teste10min2cont!", 2);
-           client.sendStartTimer(60*10, "Teste10min3cont!", 3);
-           client.sendStartTimer(60*10, "Teste10min4cont!", 4);
-           client.sendStartTimer(60*30, "Teste30min1cont!", 1);
-           client.sendStartTimer(60*30, "Teste30min2cont!", 2);
-           client.sendStartTimer(60*30, "Teste30min3cont!", 3);
-           client.sendStartTimer(60*30, "Teste30min4cont!", 4);
-           client.sendStartTimer(60*60, "Teste60min1cont!", 1);
-           client.sendStartTimer(60*60, "Teste60min2cont!", 2);
-           client.sendStartTimer(60*60, "Teste60min3cont!", 3);
-           client.sendStartTimer(60*60, "Teste60min4cont!", 4);
+         //   client.sendStartTimer(10, "teste1!", 1);
+          //   client.sendStartTimer(20, "teste2!", 2);
+          //   client.sendStartTimer(30, "teste3!", 3);
+//           client.sendStartTimer(60*10, "Teste10min1cont!", 1);
+//           client.sendStartTimer(60*10, "Teste10min2cont!", 2);
+//           client.sendStartTimer(60*10, "Teste10min3cont!", 3);
+//           client.sendStartTimer(60*10, "Teste10min4cont!", 4);
+//           client.sendStartTimer(60*30, "Teste30min1cont!", 1);
+//           client.sendStartTimer(60*30, "Teste30min2cont!", 2);
+//           client.sendStartTimer(60*30, "Teste30min3cont!", 3);
+//           client.sendStartTimer(60*30, "Teste30min4cont!", 4);
+//           client.sendStartTimer(60*60, "Teste60min1cont!", 1);
+//           client.sendStartTimer(60*60, "Teste60min2cont!", 2);
+//           client.sendStartTimer(60*60, "Teste60min3cont!", 3);
+//           client.sendStartTimer(60*60, "Teste60min4cont!", 4);
           // client.sendStopTimer();
          //  client.sendDeleteMessage();
            // client.sendImage("C:\\Users\\Guilherme\\Pictures\\server-999px.png", "Computador", 3);
@@ -313,10 +325,60 @@ public class Client {
             //if successful, read response from server
            // client.readResponse();
 
-        } catch (UnknownHostException e) {
-            System.err.println("Host unknown. Cannot establish connection");
-        } catch (IOException e) {
-            System.err.println("Cannot establish connection. Server may not be up."+e.getMessage());
-        }
+//        } catch (UnknownHostException e) {
+//            System.err.println("Host unknown. Cannot establish connection");
+//        } catch (IOException e) {
+//            System.err.println("Cannot establish connection. Server may not be up."+e.getMessage());
+//        }
     }
+    public static void startTestTimers() throws UnknownHostException, IOException
+    {
+    	 Client client = new Client ("rolim.no-ip.org",9990);
+    	  client.connect();
+	      client.sendStartTimer(60*10, "Teste10min1cont!", 1);
+	      client.connect();
+	      client.sendStartTimer(60*10, "Teste10min2cont!", 2);
+	      client.connect();
+	      client.sendStartTimer(60*10, "Teste10min3cont!", 3);
+	      client.connect();
+	      client.sendStartTimer(60*10, "Teste10min4cont!", 4);
+	      client.connect();
+	      client.sendStartTimer(60*30, "Teste30min1cont!", 1);
+	      client.connect();
+	      client.sendStartTimer(60*30, "Teste30min2cont!", 2);
+	      client.connect();
+	      client.sendStartTimer(60*30, "Teste30min3cont!", 3);
+	      client.connect();
+	      client.sendStartTimer(60*30, "Teste30min4cont!", 4);
+	      client.connect();
+	      client.sendStartTimer(60*60, "Teste60min1cont!", 1);
+	      client.connect();
+	      client.sendStartTimer(60*60, "Teste60min2cont!", 2);
+	      client.connect();
+	      client.sendStartTimer(60*60, "Teste60min3cont!", 3);
+	      client.connect();
+	      client.sendStartTimer(60*60, "Teste60min4cont!", 4);
+    	
+    }
+    public static void deleteServerFiles() throws UnknownHostException, IOException
+    {
+    	Client client = new Client ("rolim.no-ip.org",9990);
+    	client.connect();
+    	client.sendDeleteMessage();
+    }
+    public static void getLog() throws UnknownHostException, IOException
+    {
+    	Client client = new Client ("rolim.no-ip.org",9990);
+    	client.connect();
+    	client.fetchLog();
+        client.readResponse();
+    }
+    public static void stopTimers() throws UnknownHostException, IOException
+    {
+    	Client client = new Client ("rolim.no-ip.org",9990);
+    	client.connect();
+    	client.sendStopTimer();
+    }
+    
+    
 }
