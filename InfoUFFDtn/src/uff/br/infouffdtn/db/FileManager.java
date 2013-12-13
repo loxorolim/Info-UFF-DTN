@@ -50,7 +50,7 @@ import android.os.Environment;
 public class FileManager extends Activity
 {
 	// Lista que conter� o nome dos contents
-	private static int listSize = 10;
+	private static int listSize = 20;
 
 	private static ArrayList<Content> filesPaths = new ArrayList<Content>();
 

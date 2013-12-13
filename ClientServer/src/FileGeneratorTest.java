@@ -35,12 +35,12 @@ public class FileGeneratorTest
 	class Task implements Runnable
 	{
 		public int counter;
-		public int num;
+	//	public int num;
 		public String name;
 		public Task(int counter,int num,String filename)
 		{
 			this.counter = counter;
-			this.num = num;
+		//	this.num = num;
 			this.name = filename;
 		}
 		@Override
@@ -52,8 +52,8 @@ public class FileGeneratorTest
 				originalImage = ImageIO.read(new File("src/teste.jpg"));
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				ImageIO.write( originalImage, "png", baos );
-				FileManager.writeFile(name+num,originalImage, counter);
-				num++;
+				FileManager.writeFile(name,originalImage, counter);
+				//num++;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

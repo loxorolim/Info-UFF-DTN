@@ -292,6 +292,7 @@ public class Client {
                       
           //  client.fetchLog();
            // client.readResponse();
+           client.sendStartTimer(60*10, "Teste10min1cont!", 1);
            client.sendStartTimer(60*10, "Teste10min2cont!", 2);
            client.sendStartTimer(60*10, "Teste10min3cont!", 3);
            client.sendStartTimer(60*10, "Teste10min4cont!", 4);
